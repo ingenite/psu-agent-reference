@@ -31,6 +31,6 @@ git push -u origin HEAD
 gh pr create --base main --title "Describe the change" --body-file <pr-body-file>
 ```
 
-Explicitly note agent involvement in Git-related activity wherever a message or description is available. Every agent-created commit and PR description must include `Authored by [agent] [model] [version]`, using the session's specified identity; for example, `Authored by Codex Sol GPT-6.1`. Preserve the attribution in the squash commit message.
+Explicitly note agent involvement in Git-related activity wherever a message or description is available. Every agent-created commit and PR description must include `Authored by [agent] [model] [version]`, using the session's specified identity; for example, `Authored by PAR Codex Sol GPT-6.1`. Preserve the attribution in the squash commit message.
 
 Contributions are licensed under [MPL-2.0](LICENSE).
