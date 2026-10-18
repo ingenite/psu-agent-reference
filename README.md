@@ -4,10 +4,27 @@ A living PowerShell Universal reference for AI agents and the people directing t
 
 This project will demonstrate realistic, idiomatic PowerShell and PSU implementations for Windows and Microsoft platform administrators. The implementation is the educational resource.
 
-The repository is being established; runnable demonstrations and instance setup instructions will follow.
+The repository is being established; PSU demonstrations and instance setup instructions will follow.
 
 - [Project brief](PROJECT-BRIEF.md): purpose, boundaries, and implementation constraints.
 - [Contributing](CONTRIBUTING.md): agent workflow, Git commands, and attribution.
 - [Issues](https://github.com/ingenite/psu-agent-reference/issues) and [Project board](https://github.com/users/ingenite/projects/2): planned and active work.
+
+## Directory structure
+
+| Directory | Purpose |
+| --- | --- |
+| `.universal/` | PSU resource registrations and configuration. |
+| `endpoints/` | API endpoint implementation scripts. |
+| `scripts/` | PSU automation scripts. |
+| `dashboards/` | Universal Dashboard (UD) app implementations. |
+| `modules/` | Reusable PowerShell commands; custom commands use the `PAR` noun prefix. |
+| `tools/` | Utilities run explicitly for development or host administration. |
+| `docs/adr/` | Architecture decision records; see [ADR-0000](docs/adr/0000-record-architecture-decisions.md). |
+| `docs/setup/` | Bootstrap, deployment, and recovery instructions. |
+
+Empty directories contain `.gitkeep` placeholders so Git preserves the scaffold.
+Pester tests live beside the scripts or modules they test, using the filename
+`<Name>.Tests.ps1`.
 
 Licensed under the [Mozilla Public License 2.0](LICENSE).
