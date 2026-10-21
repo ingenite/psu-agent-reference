@@ -1,0 +1,3 @@
+interface:
+  display_name: "submit-work"
+  short_description: "Send reviewed changes to GitHub for review"

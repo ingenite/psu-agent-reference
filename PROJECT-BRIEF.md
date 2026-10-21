@@ -26,7 +26,7 @@ Keep explanations practical and concise. Present material design decisions and a
 
 ### Agent attribution
 
-Explicitly note agent involvement in Git-related activity wherever a message or description is available. Agent-created commit messages and pull request descriptions must include `Authored by [agent] [model] [version]`, using the identity specified for that session. For example: `Authored by PAR Codex Sol GPT-6.1`.
+Explicitly note agent involvement in Git-related activity wherever a message or description is available. Agent-created commit messages and pull request descriptions must include `Authored by [agent designation] [model designation]`, using the verified session identity as defined in [ADR-0003](docs/adr/0003-define-par-identity.md). For example: `Authored by PAR Codex Sol GPT-6.1`.
 
 ## GitHub workflow and license
 
