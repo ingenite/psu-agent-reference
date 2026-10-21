@@ -22,15 +22,17 @@ General-purpose tools do not need the project prefix; see
 
 Use `PAR Codex` only for this project's designated Codex contributor. Other agents
 use their own agent designation. Retain the attribution format
-`Authored by [agent] [model] [version]` with the actual model and version for the
-session, for example `Authored by PAR Codex Sol GPT-6.1`. If either is unavailable,
-record `unknown` for that field; do not guess
-or block the work. Preserve that attribution in the squash commit, as required
+`Authored by [agent designation] [model designation]`. The agent designation
+identifies the contributor, such as `PAR Codex`; the model designation includes
+its variant and release, such as `Sol GPT-6.1` (model ID `gpt-6.1-sol`). Use verified
+session metadata or the owner's explicit session identification. If the model
+designation is unavailable, record `unknown`; do not guess or block the work.
+Preserve that attribution in the squash commit, as required
 by [Contributing](../../CONTRIBUTING.md).
 
 The contribution standards apply to anyone working in this repository, regardless
 of the agent they use. Downstream consumers adapting examples identify their own
-agents, models, and versions in their attributions.
+agent and model designations in their attributions.
 
 ## Consequences
 

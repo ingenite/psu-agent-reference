@@ -1,0 +1,3 @@
+interface:
+  display_name: "start-work"
+  short_description: "Check local files and prepare a new task branch"
