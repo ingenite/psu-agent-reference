@@ -5,7 +5,7 @@ description: Submit a completed, user-reviewed change to GitHub as a pull reques
 
 # submit-work
 
-Read [AGENTS.md](../../../AGENTS.md), [CONTRIBUTING.md](../../../CONTRIBUTING.md), and any attribution rules linked there. Use the **/submit-work** phase of CONTRIBUTING's Git reference for command syntax.
+Follow applicable repository instructions. If not already loaded, read [AGENTS.md](../../../AGENTS.md); consult the **/submit-work** phase of [CONTRIBUTING's Git reference](../../../CONTRIBUTING.md#git-reference) for command syntax. Follow any attribution rules linked there.
 
 1. Inspect the current branch, all staged and unstaged changes, untracked files, and the task's issue. Confirm this is the intended work branch, not main, and identify the exact files belonging to the reviewed task. Preserve unrelated work.
 2. Run appropriate checks and review the complete intended patch, including new files and anything already staged. If checks fail or the patch needs material changes, resolve them within scope and return the changed result for review before publication.

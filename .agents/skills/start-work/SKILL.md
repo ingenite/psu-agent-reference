@@ -5,7 +5,7 @@ description: Check whether local files match GitHub or prepare a branch before c
 
 # start-work
 
-Read the repository's [AGENTS.md](../../../AGENTS.md) and [CONTRIBUTING.md](../../../CONTRIBUTING.md). Use the **/start-work** phase of CONTRIBUTING's Git reference for command syntax.
+Follow applicable repository instructions. If not already loaded, read [AGENTS.md](../../../AGENTS.md); consult the **/start-work** phase of [CONTRIBUTING's Git reference](../../../CONTRIBUTING.md#git-reference) for command syntax.
 
 1. Identify the intended repository, task, and any linked issue. For a status question, inspect local changes, refresh remote references, and compare the current branch and local main with origin/main. Report differences in plain language and stop; do not change working files or create a branch. An explicit request to update local files permits a clean fast-forward, but does not imply a new task.
 2. Before the first file addition, edit, or removal for a new task, require a clean working tree, including staged and untracked files. If it is dirty, report the files and stop task preparation. Never silently stash, discard, commit, or carry unrelated work into a new task.

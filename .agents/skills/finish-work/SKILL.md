@@ -5,7 +5,7 @@ description: Update local files and remove the completed work branches after a p
 
 # finish-work
 
-Read [AGENTS.md](../../../AGENTS.md) and [CONTRIBUTING.md](../../../CONTRIBUTING.md). Use the **/finish-work** phase of CONTRIBUTING's Git reference for command syntax.
+Follow applicable repository instructions. If not already loaded, read [AGENTS.md](../../../AGENTS.md); consult the **/finish-work** phase of [CONTRIBUTING's Git reference](../../../CONTRIBUTING.md#git-reference) for command syntax.
 
 1. Confirm cleanup is authorized and identify the exact PR and work branch. Verify live GitHub state says the PR merged into main; record its head commit and merge commit. An open or closed-but-unmerged PR is not ready for cleanup. A status question alone requests inspection, not deletion.
 2. Require a clean working tree, including staged and untracked files. Refresh origin and inspect both work-branch tips. Each existing tip must match the merged PR's head commit; stop if additional commits, local changes, or a reused branch name could contain unfinished work. Never stash, discard, or delete that work.

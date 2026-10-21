@@ -2,7 +2,7 @@
 
 Contributions are currently limited to invited collaborators.
 
-Agents: read [AGENTS.md](AGENTS.md) before working and use the appropriate repository skill below. Changes to the running PSU instance require separate authorization; its managed Repository is read-only for agents.
+Agents: follow [AGENTS.md](AGENTS.md) before working. Changes to the running PSU instance require separate authorization; its managed Repository is read-only for agents.
 
 ## Workflow
 
