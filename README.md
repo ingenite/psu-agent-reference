@@ -4,10 +4,12 @@ A living PowerShell Universal reference for AI agents and the people directing t
 
 This project will demonstrate realistic, idiomatic PowerShell and PSU implementations for Windows and Microsoft platform administrators. The implementation is the educational resource.
 
-The repository is being established; PSU demonstrations and instance setup instructions will follow.
+The repository is being established; PSU demonstrations will follow.
 
 - [Project brief](PROJECT-BRIEF.md): purpose, boundaries, and implementation constraints.
 - [Contributing](CONTRIBUTING.md): agent workflow, Git commands, and attribution.
+- [SSH key API tool](docs/setup/ssh-key-api.md): manage PSU SSH keys with named PowerShell parameters.
+- [Git settings API tool](docs/setup/git-settings-api.md): manage saved Git configurations with named parameters and a settings hashtable.
 - [Issues](https://github.com/ingenite/psu-agent-reference/issues) and [Project board](https://github.com/users/ingenite/projects/2): planned and active work.
 
 ## Directory structure
