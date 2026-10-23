@@ -1,0 +1,1 @@
+Set-PSUSetting -ScriptBaseFolder 'scripts'
