@@ -1,6 +1,8 @@
 # Contributing
 
-Contributions are currently limited to invited collaborators.
+Code contributions are limited to invited collaborators. Public pull requests
+are not accepted. Public participation is intended to focus on feature requests
+and bug reports; the intake location is still to be decided.
 
 Agents: follow [AGENTS.md](AGENTS.md) before working. Changes to the running PSU instance require separate authorization; its managed Repository is read-only for agents.
 
@@ -42,7 +44,7 @@ git diff --stat
 git add <changed-files>
 git diff --cached
 git diff --cached --check
-git commit -m "Describe the change" -m "Authored by <agent-designation> <model-designation>"
+git commit -m "Describe the change" -m "Authored by PAR Codex"
 git push -u origin HEAD
 gh pr create --base main --title "Describe the change" --body-file <pr-body-file>
 gh pr view <pr-number> --json url,state,baseRefName,headRefName,headRefOid
@@ -76,6 +78,10 @@ git ls-remote --heads origin <work-branch>
 
 After submission, verify the PR targets `main` and contains the intended commit, issue link, and attribution. Do not merge as part of submission. After cleanup, verify both work branches are absent and local `main` matches the freshly fetched remote. Update and verify the linked issue and Project status for the completed phase.
 
-Explicitly note agent involvement in Git-related activity wherever a message or description is available. Every agent-created commit and PR description must include `Authored by [agent designation] [model designation]`, using the session's verified agent and model labels; for example, `Authored by PAR Codex Sol GPT-6.1`. Preserve the attribution in the squash commit message.
+Explicitly note agent involvement in Git-related activity wherever a message or
+description is available. For this project's designated Codex contributor, every
+commit and PR description must include exactly `Authored by PAR Codex`, without
+model or version values. Preserve the attribution in the squash commit message.
+ADR-0009 defines the attribution convention.
 
 Contributions are licensed under [MPL-2.0](LICENSE).

@@ -4,6 +4,9 @@
 
 Accepted
 
+The attribution portion is superseded by [ADR-0009](0009-use-fixed-agent-attribution.md).
+The project and command naming decisions remain accepted.
+
 ## Context
 
 Project commands need a recognizable identity that distinguishes them from vendor
@@ -20,22 +23,16 @@ Use `PAR` / `Par` as the noun prefix for custom module commands, for example
 General-purpose tools do not need the project prefix; see
 [ADR-0002](0002-standardize-powershell-names.md).
 
-Use `PAR Codex` only for this project's designated Codex contributor. Other agents
-use their own agent designation. Retain the attribution format
-`Authored by [agent designation] [model designation]`. The agent designation
-identifies the contributor, such as `PAR Codex`; the model designation includes
-its variant and release, such as `Sol GPT-6.1` (model ID `gpt-6.1-sol`). Use verified
-session metadata or the owner's explicit session identification. If the model
-designation is unavailable, record `unknown`; do not guess or block the work.
-Preserve that attribution in the squash commit, as required
-by [Contributing](../../CONTRIBUTING.md).
+Use `PAR Codex` only for this project's designated Codex contributor. The earlier
+attribution decision also identified the model and release to distinguish agent
+contributions. ADR-0009 replaces that requirement with fixed agent attribution.
 
 The contribution standards apply to anyone working in this repository, regardless
-of the agent they use. Downstream consumers adapting examples identify their own
-agent and model designations in their attributions.
+of the agent they use. Other agents and downstream consumers identify their own
+contributors rather than adopting this project's designated agent identity.
 
 ## Consequences
 
 Readers can identify project-owned commands without confusing them with PSU's
-commands. Attributions identify both the project agent and the model used, so
-future contributions remain distinguishable.
+commands. Attributions distinguish the project contributor from downstream
+contributors without requiring model metadata under the current convention.
