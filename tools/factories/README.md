@@ -21,8 +21,9 @@ parent directory when needed. Dates are UTC ISO 8601 strings and enrollment type
 CSV does not retain SDK types or distinguish null from an empty string.
 [Intune fixture retrieval](../../docs/setup/intune-fixture-retrieval.md) restores
 SDK models and dates and treats empty user-association cells as missing. The
-factory itself preserves null, empty, and whitespace user IDs. Reporting and UI
-remain subsequent work.
+factory itself preserves null, empty, and whitespace user IDs. The
+[Windows devices without a primary user report](../../docs/reports/intune-devices-without-primary-user.md)
+consumes the retrieved objects. UI remains subsequent work.
 
 ## Create a dataset
 
