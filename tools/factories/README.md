@@ -18,10 +18,11 @@ rows and add new ones; a missing file is created. Append does not deduplicate de
 IDs. An incompatible existing header is rejected by `Export-Csv`. It creates the
 parent directory when needed. Dates are UTC ISO 8601 strings and enrollment type is text.
 
-CSV does not retain SDK types or distinguish null from an empty string. A future
-retrieval provider must parse dates, restore model types, and treat empty user
-association cells as missing. The factory itself preserves null, empty, and
-whitespace user IDs. The retrieval provider and reporting UI are not implemented.
+CSV does not retain SDK types or distinguish null from an empty string.
+[Intune fixture retrieval](../../docs/setup/intune-fixture-retrieval.md) restores
+SDK models and dates and treats empty user-association cells as missing. The
+factory itself preserves null, empty, and whitespace user IDs. Reporting and UI
+remain subsequent work.
 
 ## Create a dataset
 
