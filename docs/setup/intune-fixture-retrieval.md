@@ -130,4 +130,5 @@ hashtable serialization, empty datasets, and invalid fixtures. Shared-variable
 tests set a global variable in the test process. No authentication or Graph
 requests are made.
 These checks do not verify live PSU variable injection or Graph retrieval.
-Reports, dashboard UI, and HTTP endpoints remain subsequent work.
+The [Windows devices without a primary user report](../reports/intune-devices-without-primary-user.md)
+consumes this retrieval contract. Dashboard UI and HTTP endpoints remain subsequent work.

@@ -12,6 +12,7 @@ The repository is being established; PSU demonstrations will follow.
 - [Git settings API tool](docs/setup/git-settings-api.md): manage saved Git configurations with named parameters and a settings hashtable.
 - [Synthetic device factories](tools/factories/README.md): create offline Intune SDK models and CSV fixtures.
 - [Intune fixture retrieval](docs/setup/intune-fixture-retrieval.md): configure offline retrieval of managed-device SDK models for dashboard and reporting consumers.
+- [Windows devices without a primary user](docs/reports/intune-devices-without-primary-user.md): query missing Intune user associations with reusable report transformations.
 - [Issues](https://github.com/ingenite/psu-agent-reference/issues) and [Project board](https://github.com/users/ingenite/projects/2): planned and active work.
 
 ## Directory structure
@@ -39,6 +40,7 @@ Keep helpers used only within one dashboard in its companion module, for example
 Code shared across multiple PSU resources belongs in top-level `modules/`.
 `ParData` owns shared source-data retrieval; each command defines its own source
 model contract and dependencies, allowing Graph and other model types to coexist.
+`ParReports` owns shared report queries and transformations over those source objects.
 
 Shared PSU variables are defined in `.universal/variables.ps1` and use the
 `PAR_` prefix, for example `$PAR_FixturePaths`. Reusable modules provide local
