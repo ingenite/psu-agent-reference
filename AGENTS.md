@@ -4,7 +4,11 @@ Build realistic, idiomatic PowerShell Universal examples for AI agents and Windo
 
 ## Project Structure & Module Organization
 
-Before choosing file locations, read [README's directory guide](README.md#directory-structure). Separate presentation, orchestration, and reusable operations. Prefer PSU's integrated documentation for resource behavior; verify its source is versioned.
+Use `docs/README.md` as the documentation entry point and read `docs/errata.md`
+before making claims about live behavior. Before choosing file locations, read
+`docs/directory-guide.md` and ADR-0007. Shared PSU configuration follows ADR-0006.
+Documentation ownership follows ADR-0008; keep command contracts in PowerShell
+help and known verification gaps in errata. Keep links sparse outside the index.
 
 ## Build, Test, and Development Commands
 
@@ -25,7 +29,11 @@ Use four-space indentation and descriptive variables, with plural collections an
 
 Never guess command syntax or outputs. Before using new or unfamiliar PowerShell cmdlets, attempt local discovery with `Get-Help Unfamiliar-Cmdlet` or inspect output from a safe, authorized invocation using `Unfamiliar-Cmdlet | Get-Member`.
 
-For PSU syntax, configuration, and behavior, consult vendor documentation through the configured `product-guides-reference` MCP. Verify version-specific assumptions against the installed environment.
+For PSU syntax, configuration, and behavior, consult vendor documentation through
+the `product-guides-reference` MCP; its setup command is in the root README.
+If unavailable, use official vendor documentation and installed help, and report
+unresolved assumptions. Verify version-specific assumptions against the installed
+environment.
 
 When local discovery is unavailable or insufficient, write a probe script for the user to run. Save all probes in `tools/`; all project guidelines, including implementation and authorization constraints, apply.
 
@@ -37,8 +45,14 @@ Use sibling Pester tests with behavior-focused assertions and reusable setup. No
 
 ## Commit & Pull Request Guidelines
 
-Before editing, use [start-work](.agents/skills/start-work/SKILL.md). For reviewed changes, use [submit-work](.agents/skills/submit-work/SKILL.md); after merge, use [finish-work](.agents/skills/finish-work/SKILL.md). Follow [CONTRIBUTING.md](CONTRIBUTING.md) for Git commands and [ADR-0003](docs/adr/0003-define-par-identity.md) for attribution.
+Before editing, use [start-work](.agents/skills/start-work/SKILL.md). For reviewed changes, use [submit-work](.agents/skills/submit-work/SKILL.md); after merge, use [finish-work](.agents/skills/finish-work/SKILL.md). Follow [CONTRIBUTING.md](CONTRIBUTING.md) for Git commands and [ADR-0009](docs/adr/0009-use-fixed-agent-attribution.md) for attribution.
 
 ## Agent & Deployment Boundaries
 
 Direct requests authorize scoped work; installation, commits, pushes, and server configuration require separate authorization. PSU's managed Repository is read-only, including indirect writes. Before deployment, synchronization, or credential work, read and follow [ADR-0005](docs/adr/0005-develop-in-source-deploy-through-git.md).
+
+Use synthetic data and personal development environments. Do not introduce
+employer systems, data, credentials, or business logic. Scenario ideas are not
+approved integrations; keep external operations within the requested scope.
+Owner-designated demonstration credentials may be used as directed; that
+designation does not extend to independently discovered values.

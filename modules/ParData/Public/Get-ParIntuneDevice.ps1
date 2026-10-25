@@ -7,6 +7,25 @@ function Get-ParIntuneDevice {
     outside PSU. Explicit import configuration through -ArgumentList takes precedence.
     Returns no objects for an empty dataset. Invalid fixtures terminate before any
     devices are emitted. No authentication or Graph requests are performed.
+    Loads Microsoft.Graph.DeviceManagement 2.41.2 when called. Importing ParData
+    alone does not require Graph. Each call reads the configured file literally;
+    retrieval creates or modifies no files.
+
+    Returns all records in stored order without filtering, deduplication, or
+    assignment interpretation. Missing or unreadable files, malformed CSV,
+    incompatible headers, and invalid records raise terminating errors. All records
+    are restored before output, so a bad later record emits no partial dataset.
+    Record errors identify the path and one-based data-record number, including
+    when quoted cells span lines. The fixture guide owns the CSV format contract.
+    .INPUTS
+    None
+
+    Pipeline input is not accepted.
+    .OUTPUTS
+    Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice
+
+    Zero or more actual SDK managed-device models. Consumers depend on the source
+    model, not CSV rows or report fields. Wrap the call in @() for a collection.
     .EXAMPLE
     Import-Module ./modules/ParData/ParData.psd1
     $devices = @(Get-ParIntuneDevice)
