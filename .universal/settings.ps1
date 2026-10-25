@@ -1,1 +1,1 @@
-Set-PSUSetting -ScriptBaseFolder 'scripts'
+Set-PSUSetting -ScriptBaseFolder 'scripts' -ApiBaseFolder 'endpoints'
