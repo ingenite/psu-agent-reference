@@ -11,12 +11,29 @@ function Get-ParIntuneDevice {
     alone does not require Graph. Each call reads the configured file literally;
     retrieval creates or modifies no files.
 
+    Requires these 15 case-sensitive column names, each exactly once, in any order:
+    id, userId, deviceName, enrolledDateTime, lastSyncDateTime, operatingSystem,
+    osVersion, emailAddress, azureADDeviceId, userPrincipalName, model, manufacturer,
+    serialNumber, userDisplayName, deviceEnrollmentType. Accepts UTF-8 CSV, quoted
+    commas, doubled quotes, multiline cells, LF/CRLF separators, and an optional final
+    newline. Zero-byte, whitespace-only, and valid header-only files return no objects.
+    Blank records within a nonempty fixture are invalid.
+
+    id and deviceName must be nonblank. Identifiers remain opaque strings. Empty
+    userId, emailAddress, userPrincipalName, and userDisplayName cells become null.
+    Other string cells retain their values, including whitespace and empty hardware
+    strings. CSV cannot distinguish an original null from an empty string.
+    Empty timestamps become null; nonempty timestamps must be valid ISO 8601 with
+    Z or a numeric offset and at most seven fractional digits. They normalize to UTC
+    before deserialization. Empty deviceEnrollmentType is omitted; nonempty text is
+    passed unchanged to the SDK's extensible enum.
+
     Returns all records in stored order without filtering, deduplication, or
     assignment interpretation. Missing or unreadable files, malformed CSV,
     incompatible headers, and invalid records raise terminating errors. All records
     are restored before output, so a bad later record emits no partial dataset.
     Record errors identify the path and one-based data-record number, including
-    when quoted cells span lines. The fixture guide owns the CSV format contract.
+    when quoted cells span lines.
     .INPUTS
     None
 
@@ -37,17 +54,6 @@ function Get-ParIntuneDevice {
     Import-Module Microsoft.Graph.DeviceManagement -RequiredVersion '2.41.2' -ErrorAction Stop
 
     $path = $script:SourceFixturePaths.IntuneDevice
-    try {
-        $csv = Get-Content -LiteralPath $path -Raw -Encoding utf8 -ErrorAction Stop
-    }
-    catch {
-        throw "Cannot read Intune device fixture '$path': $($_.Exception.Message)"
-    }
-
-    if ($null -eq $csv -or $csv.Trim() -eq '') {
-        return
-    }
-
     $columns = @(
         'id', 'userId', 'deviceName', 'enrolledDateTime', 'lastSyncDateTime',
         'operatingSystem', 'osVersion', 'emailAddress', 'azureADDeviceId',
@@ -55,21 +61,7 @@ function Get-ParIntuneDevice {
         'userDisplayName', 'deviceEnrollmentType'
     )
 
-    # Native CSV conversion tolerates broken quotes and surplus cells; validate structure first.
-    # Quoted cells may contain commas, doubled quotes, and line breaks.
-    $cellPattern = '(?:"(?:[^"]|"")*"|[^",\r\n]*)'
-    $recordPattern = "$cellPattern(?:,$cellPattern){14}"
-    if ($csv -cnotmatch "\A$recordPattern(?:\r?\n$recordPattern)*(?:\r?\n)?\z") {
-        throw "Invalid Intune device fixture '$path': expected CSV records with 15 cells and balanced quotes."
-    }
-
-    $header = $csv | ConvertFrom-Csv -Header $columns | Select-Object -First 1
-    $headerNames = @($header.PSObject.Properties.Value)
-    if (Compare-Object -ReferenceObject $columns -DifferenceObject $headerNames -CaseSensitive) {
-        throw "Incompatible Intune device fixture '$path': expected the exporter's 15 column names, each exactly once."
-    }
-
-    $rows = @($csv | ConvertFrom-Csv)
+    $rows = @(Read-ParFixtureCsv -Path $path -SourceDescription 'Intune device' -Columns $columns)
     $recordNumber = 0
     $devices = @(
         foreach ($row in $rows) {

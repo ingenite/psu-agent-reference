@@ -8,6 +8,8 @@ $ErrorActionPreference = 'Stop'
 
 $script:SourceFixturePaths = @{
     IntuneDevice = (Join-Path $PSScriptRoot '../../data/intune-devices.csv')
+    EntraUser = (Join-Path $PSScriptRoot '../../data/entra-users.csv')
+    CmdbAsset = (Join-Path $PSScriptRoot '../../data/cmdb-assets.csv')
 }
 
 $sharedFixtureVariable = Get-Variable -Name 'PAR_FixturePaths' -Scope Global -ErrorAction SilentlyContinue
@@ -39,6 +41,9 @@ foreach ($sourceName in @($script:SourceFixturePaths.Keys)) {
     }
 }
 
+. (Join-Path $PSScriptRoot 'Private/Read-ParFixtureCsv.ps1')
 . (Join-Path $PSScriptRoot 'Public/Get-ParIntuneDevice.ps1')
+. (Join-Path $PSScriptRoot 'Public/Get-ParEntraUser.ps1')
+. (Join-Path $PSScriptRoot 'Public/Get-ParCmdbAsset.ps1')
 
-Export-ModuleMember -Function Get-ParIntuneDevice
+Export-ModuleMember -Function Get-ParIntuneDevice, Get-ParEntraUser, Get-ParCmdbAsset

@@ -49,15 +49,3 @@ For GitHub SSH access, register the PSU key's public key as a read-only reposito
 deploy key. Keep the private key on the PSU side. Configure the external Git
 client, SSH remote, key selection, and pull-only behavior separately. Consult
 errata for the unresolved key-reference mapping and deployment verification gaps.
-
-## Reference and verification
-
-```powershell
-Get-Help ./tools/Invoke-SshKeyApi.ps1 -Full
-Invoke-Pester -Path ./tools/Invoke-SshKeyApi.Tests.ps1 -Output Detailed
-```
-
-Command help owns parameter details, API mappings, and preview behavior. Use your
-instance's `/swagger/index.html` for version-specific schemas and confirm that
-the token permits the requested operation. The sibling tests exercise request
-construction and response handling with mocked HTTP calls.
