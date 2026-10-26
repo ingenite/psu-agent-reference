@@ -5,7 +5,7 @@
     Author = 'PAR'
     Description = 'Shared source-data retrieval commands for PSU scripts, endpoints, and dashboards.'
     PowerShellVersion = '7.1'
-    FunctionsToExport = @('Get-ParIntuneDevice')
+    FunctionsToExport = @('Get-ParIntuneDevice', 'Get-ParEntraUser', 'Get-ParCmdbAsset')
     CmdletsToExport = @()
     VariablesToExport = @()
     AliasesToExport = @()

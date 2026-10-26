@@ -11,8 +11,9 @@ The same documentation serves both audiences; there is no separate agent manual.
 | --- | --- |
 | Ask an agent to explain or adapt an example | [Example prompts](prompts.md) |
 | Understand known limitations and verification gaps | [Errata](errata.md) |
-| Generate synthetic Intune devices, Entra users, and CMDB assets | [Synthetic data factories](../tools/factories/README.md) |
-| Configure and retrieve offline Intune device models | [Intune fixture retrieval](setup/intune-fixture-retrieval.md) |
+| Generate synthetic Intune devices, Entra users, and CMDB assets | [Fixture generation](setup/fixture-generation.md) |
+| Configure and retrieve offline Intune devices, Entra users, and CMDB assets | [Fixture retrieval](setup/fixture-retrieval.md) |
+| Inspect offline SDK model construction and serialization | [Intune probe](../tools/factories/Test-IntuneDeviceModel.ps1), [Entra probe](../tools/factories/Test-EntraUserModel.ps1) |
 | Report Windows devices with a missing user association | [Intune report](reports/intune-devices-without-primary-user.md) |
 | Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |
 | Manage saved PSU Git configurations | [Git settings API](setup/git-settings-api.md) |
@@ -28,6 +29,9 @@ Get-Help ./tools/Invoke-GitSettingsApi.ps1 -Full
 Import-Module ./modules/ParReports/ParReports.psd1
 Get-Help Get-ParIntuneDeviceWithoutPrimaryUserReport -Full
 ```
+
+For PSU Management API request and response schemas, use your instance's
+`/swagger/index.html`.
 
 ## Work in the repository
 

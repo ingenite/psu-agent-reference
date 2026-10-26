@@ -77,15 +77,3 @@ SSH requires a PSU key, registration of its public key with the Git host, and
 separate configuration of PSU's external Git client and key selection. The client
 must be installed and usable by the PSU service account. Check the errata before
 choosing this path; it records the unresolved key-reference mapping.
-
-## Reference and verification
-
-```powershell
-Get-Help ./tools/Invoke-GitSettingsApi.ps1 -Full
-Invoke-Pester -Path ./tools/Invoke-GitSettingsApi.Tests.ps1 -Output Detailed
-```
-
-Command help owns parameter details, API mappings, and preview behavior. Use your
-instance's `/swagger/index.html` for version-specific request and response schemas.
-The sibling tests exercise request construction and response handling with mocked
-HTTP calls. Compatibility and live verification limits are maintained in errata.
