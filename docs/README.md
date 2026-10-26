@@ -7,18 +7,19 @@ The same documentation serves both audiences; there is no separate agent manual.
 
 ## Explore and use the examples
 
+The synthetic workflow uses related Intune devices, Entra users, and CMDB assets.
+Factories generate source objects, `ParData` retrieves them from fixtures, and
+`ParReports` applies report and resolution rules. The guides below cover these
+stages of the same workflow.
+
 | Task | Reference |
 | --- | --- |
 | Ask an agent to explain or adapt an example | [Example prompts](prompts.md) |
 | Understand known limitations and verification gaps | [Errata](errata.md) |
-| Generate synthetic Intune devices, Entra users, and CMDB assets | [Fixture generation](setup/fixture-generation.md) |
-| Configure and retrieve offline Intune devices, Entra users, and CMDB assets | [Fixture retrieval](setup/fixture-retrieval.md) |
-| Inspect offline SDK model construction and serialization | [Intune probe](../tools/factories/Test-IntuneDeviceModel.ps1), [Entra probe](../tools/factories/Test-EntraUserModel.ps1) |
-| Report Windows devices with a missing user association | [Intune report](reports/intune-devices-without-primary-user.md) |
-| Correlate Intune records with candidate CMDB assets | [Device correlation](reports/intune-cmdb-correlation.md) |
+| Prepare synthetic device, user, and asset data | [Generation](setup/fixture-generation.md), [retrieval](setup/fixture-retrieval.md), SDK probes: [Intune](../tools/factories/Test-IntuneDeviceModel.ps1) and [Entra](../tools/factories/Test-EntraUserModel.ps1) |
+| Investigate device assignments | [Missing-user report](reports/intune-devices-without-primary-user.md), [device correlation](reports/intune-cmdb-correlation.md), [assigned-user resolution](reports/cmdb-assigned-user-resolution.md) |
 | Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |
-| Manage saved PSU Git configurations | [Git settings API](setup/git-settings-api.md) |
-| Manage PSU SSH keys | [SSH key API](setup/ssh-key-api.md) |
+| Manage PSU Git configuration and access | [Git settings API](setup/git-settings-api.md), [SSH key API](setup/ssh-key-api.md) |
 | Generate a JWT signing key locally | [Signing-key tool and help](../tools/New-JwtSigningKey.ps1) |
 | Inspect the optional contributor-local vault setup | [SecretStore tool and help](../tools/Initialize-SecretVault.ps1) |
 

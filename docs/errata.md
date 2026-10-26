@@ -15,10 +15,10 @@ The report uses a missing `UserId` as its demonstration selection rule. It does
 not inspect Graph's primary-user relationship. No verified mapping from Autopilot
 deployment modes to the synthetic enrollment types is provided.
 
-The CMDB schema is a demonstration projection, not a vendor API representation.
-Intentional fixture relationships do not establish device correlation or user
-identity mapping. Matching display names, UPNs, or mail values do not establish
-identity equality; CMDB person references are not assumed to be Entra IDs.
+The CMDB schema and person-to-UPN mappings are demonstration choices, not a vendor
+API contract or verified identity directory. CMDB person references are distinct
+from Entra IDs. Unique matches in supplied datasets do not independently verify
+identity or the accuracy, freshness, and completeness of live sources.
 
 Serial numbers can occur on multiple Intune device records, although uncommon; a serial-number match identifies a candidate CMDB asset, not a unique Intune record.
 

@@ -9,6 +9,7 @@
         'Get-ParIntuneDeviceWithoutPrimaryUserReport'
         'ConvertTo-ParIntuneDeviceWithoutPrimaryUserReport'
         'Resolve-ParIntuneDeviceCmdbAsset'
+        'Resolve-ParCmdbAssignedUser'
     )
     CmdletsToExport = @()
     VariablesToExport = @()
