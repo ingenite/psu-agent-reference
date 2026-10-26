@@ -20,6 +20,8 @@ Intentional fixture relationships do not establish device correlation or user
 identity mapping. Matching display names, UPNs, or mail values do not establish
 identity equality; CMDB person references are not assumed to be Entra IDs.
 
+Serial numbers can occur on multiple Intune device records, although uncommon; a serial-number match identifies a candidate CMDB asset, not a unique Intune record.
+
 ## PSU execution
 
 Offline shared-variable tests set a global PowerShell variable in the test
