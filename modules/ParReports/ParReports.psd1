@@ -8,6 +8,7 @@
     FunctionsToExport = @(
         'Get-ParIntuneDeviceWithoutPrimaryUserReport'
         'ConvertTo-ParIntuneDeviceWithoutPrimaryUserReport'
+        'Resolve-ParIntuneDeviceCmdbAsset'
     )
     CmdletsToExport = @()
     VariablesToExport = @()

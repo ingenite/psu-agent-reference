@@ -15,6 +15,7 @@ The same documentation serves both audiences; there is no separate agent manual.
 | Configure and retrieve offline Intune devices, Entra users, and CMDB assets | [Fixture retrieval](setup/fixture-retrieval.md) |
 | Inspect offline SDK model construction and serialization | [Intune probe](../tools/factories/Test-IntuneDeviceModel.ps1), [Entra probe](../tools/factories/Test-EntraUserModel.ps1) |
 | Report Windows devices with a missing user association | [Intune report](reports/intune-devices-without-primary-user.md) |
+| Correlate Intune records with candidate CMDB assets | [Device correlation](reports/intune-cmdb-correlation.md) |
 | Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |
 | Manage saved PSU Git configurations | [Git settings API](setup/git-settings-api.md) |
 | Manage PSU SSH keys | [SSH key API](setup/ssh-key-api.md) |
