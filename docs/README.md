@@ -11,7 +11,7 @@ The same documentation serves both audiences; there is no separate agent manual.
 | --- | --- |
 | Ask an agent to explain or adapt an example | [Example prompts](prompts.md) |
 | Understand known limitations and verification gaps | [Errata](errata.md) |
-| Generate synthetic Intune devices and CMDB assets | [Synthetic data factories](../tools/factories/README.md) |
+| Generate synthetic Intune devices, Entra users, and CMDB assets | [Synthetic data factories](../tools/factories/README.md) |
 | Configure and retrieve offline Intune device models | [Intune fixture retrieval](setup/intune-fixture-retrieval.md) |
 | Report Windows devices with a missing user association | [Intune report](reports/intune-devices-without-primary-user.md) |
 | Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |

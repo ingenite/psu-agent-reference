@@ -48,6 +48,7 @@ Use **PowerShell 7.4 or higher**. Module versions in the reference environment:
 | Module | Version | Required for |
 | --- | --- | --- |
 | `Microsoft.Graph.DeviceManagement` | 2.41.2 (exact) | Intune data retrieval and factories |
+| `Microsoft.Graph.Users` | 2.41.2 (exact) | Entra user factory, exporter, and offline model probe |
 | `Pester` | 6.1.0 | Repository tests |
 | `Microsoft.PowerShell.SecretManagement` | 1.1.2 | Vault-backed AppToken access |
 | `Microsoft.PowerShell.SecretStore` | 1.0.6 | Optional local SecretStore example; other vault providers may be used |
