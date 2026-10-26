@@ -2,18 +2,19 @@
 
 ## Synopsis
 
-Create synthetic Intune SDK device models and plain PowerShell CMDB asset records
-for the retrieval and reporting examples. Use explicit identifiers and timestamps
-where applicable for repeatable records.
+Create synthetic Intune device and Entra user SDK models and plain PowerShell
+CMDB asset records for the retrieval and reporting examples. Use explicit
+identifiers and timestamps where applicable for repeatable records.
 
 ## Requirements
 
 Run locally with PowerShell 7.1 or later. Intune tools also require
 `Microsoft.Graph.DeviceManagement` version 2.41.2 installed; its Authentication
-dependency loads with the SDK. CMDB tools require no additional modules. The
-tools do not authenticate or make service requests.
+dependency loads with the SDK. Entra tools require `Microsoft.Graph.Users`
+version 2.41.2. CMDB tools require no additional modules. The tools do not
+authenticate or make service requests.
 
-Command help owns defaults, parameters, output, and export behavior. Both exporters
+Command help owns defaults, parameters, output, and export behavior. The exporters
 replace the destination unless `-Append` is supplied. Append retains existing rows
 without deduplicating IDs and creates a missing CSV. Review the path before running
 a dataset example. The Intune fixture guide owns the Intune CSV format contract.
@@ -147,6 +148,62 @@ support later tests without selecting a candidate, resolving a person reference,
 or establishing assignment matches or mismatches. The shared Intune device remains
 intentionally userless; the CMDB records do not establish an assignment problem.
 
+## Create an Entra user dataset
+
+From the repository root, regenerate `data/entra-users.csv`:
+
+```powershell
+$userParameters = @(
+    @{
+        Id = '10000000-0000-4000-8000-000000000001'
+        DisplayName = 'Alex Example'
+        UserPrincipalName = 'alex@example.invalid'
+        Mail = 'alex@example.invalid'
+        AccountEnabled = $true
+    }
+    @{
+        Id = '10000000-0000-4000-8000-000000000002'
+        DisplayName = 'Blair Sample'
+        UserPrincipalName = 'blair@example.invalid'
+        AccountEnabled = $false
+    }
+    @{
+        Id = '10000000-0000-4000-8000-000000000003'
+        DisplayName = 'Casey Demo'
+    }
+)
+
+$users = @(
+    foreach ($parameters in $userParameters) {
+        & ./tools/factories/New-FakeEntraUser.ps1 @parameters
+    }
+)
+
+$users | & ./tools/factories/Export-FakeEntraUser.ps1
+```
+
+To export to a separate file or append supplied models:
+
+```powershell
+$users | & ./tools/factories/Export-FakeEntraUser.ps1 -Path ./tools/output/example-users.csv
+$users | & ./tools/factories/Export-FakeEntraUser.ps1 -Path ./tools/output/example-users.csv -Append
+```
+
+The five fields come from Microsoft's [Graph user resource](https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0):
+`id` identifies the source object; `displayName`, `userPrincipalName` (sign-in name),
+and `mail` (SMTP address) support investigation; `accountEnabled` describes account
+state. Graph documents `id` as opaque and read-only in the service and requires
+`$select` to retrieve `accountEnabled`. These offline source models are not user
+creation requests. Command help defines the factory's validation and defaults.
+
+The three fixed records cover Alex Example with the existing Intune `UserId`
+`10000000-0000-4000-8000-000000000001` and `alex@example.invalid`, Blair Sample
+with a false account state and missing mail, and Casey Demo with unspecified UPN,
+mail, and account state. Names, UPNs, and mail do not establish identity equality.
+CMDB person references remain separate; there is no person-to-Entra mapping.
+The fixture adds no report outcomes or assignment judgments. Entra retrieval and
+investigation/report integration remain later slices.
+
 ## Reference and verification
 
 ```powershell
@@ -154,8 +211,11 @@ Get-Help ./tools/factories/New-FakeIntuneDevice.ps1 -Full
 Get-Help ./tools/factories/Export-FakeIntuneDevice.ps1 -Full
 Get-Help ./tools/factories/New-FakeCmdbAsset.ps1 -Full
 Get-Help ./tools/factories/Export-FakeCmdbAsset.ps1 -Full
+Get-Help ./tools/factories/New-FakeEntraUser.ps1 -Full
+Get-Help ./tools/factories/Export-FakeEntraUser.ps1 -Full
 Invoke-Pester -Path ./tools/factories -Output Detailed
 & ./tools/factories/Test-IntuneDeviceModel.ps1
+& ./tools/factories/Test-EntraUserModel.ps1
 ```
 
 The retained model probe compares JSON and dictionary construction and JSON round
@@ -166,3 +226,14 @@ and the SDK model interface. Project-wide verification gaps are recorded in
 errata, available from the documentation index. CMDB tests cover optional values,
 repeatable identifiers, CSV export, invalid input before writes, exact fixture
 regeneration, and the intentional relationships above.
+
+The Entra probe independently compares direct assignment, dictionary construction,
+and JSON construction across six scenarios. All five selected SDK properties have
+setters in 2.41.2, including `Id`; `AccountEnabled` is nullable Boolean. Explicit
+null strings became empty strings through assignment and dictionary construction.
+JSON construction preserved the tested values, including false and null, through
+default SDK, IncludeReadOnly, and selected-property JSON round trips. The probe
+records these observations, installed help, property metadata, and environment
+details in `tools/output/entra-user-model-*`. Entra tests cover source constraints,
+CSV Boolean representation and restoration, append headers, and exact fixture
+regeneration. The exporter help owns the CSV contract and its null/empty limits.

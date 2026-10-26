@@ -1,0 +1,4 @@
+"id","displayName","userPrincipalName","mail","accountEnabled"
+"10000000-0000-4000-8000-000000000001","Alex Example","alex@example.invalid","alex@example.invalid","True"
+"10000000-0000-4000-8000-000000000002","Blair Sample","blair@example.invalid",,"False"
+"10000000-0000-4000-8000-000000000003","Casey Demo",,,
