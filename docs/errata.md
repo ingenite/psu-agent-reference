@@ -19,6 +19,16 @@ The report uses a missing `UserId` as its demonstration selection rule. It does
 not inspect Graph's primary-user relationship. No verified mapping from Autopilot
 deployment modes to the synthetic enrollment types is provided.
 
+## CMDB assets
+
+The CMDB asset schema is a small demonstration projection grounded in public
+Atlassian Assets documentation, not a vendor API representation. Verification
+uses local PowerShell objects and synthetic CSV fixtures only. No live CMDB
+provider or API compatibility has been verified. CMDB retrieval through ParData,
+device correlation, person-reference resolution to Entra users, and assignment
+comparison are not implemented. Intentional fixture relationships do not establish
+a correlation rule or a user mapping.
+
 ## PSU execution
 
 Offline shared-variable tests set a global PowerShell variable in the test
