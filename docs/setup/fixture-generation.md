@@ -135,9 +135,21 @@ The CMDB fixture intentionally has these relationships to the Intune data:
 The Entra fixture covers Alex Example with the existing Intune `UserId`
 `10000000-0000-4000-8000-000000000001` and `alex@example.invalid`, Blair Sample
 with a false account state and missing mail, and Casey Demo with unspecified UPN,
-mail, and account state. Names, UPNs, and mail do not establish identity equality.
-CMDB person references remain separate; these fixture relationships do not select
-a device candidate, map a person to Entra, or establish an assignment problem.
+mail, and account state. The separate `data/cmdb-person-mappings.csv` explicitly
+maps `CMDB-PERSON-001` to `alex@example.invalid` and `CMDB-PERSON-002` to
+`blair@example.invalid` for the assigned-user resolver. It can be recreated with:
+
+```powershell
+@(
+    [pscustomobject]@{ personReference = 'CMDB-PERSON-001'; userPrincipalName = 'alex@example.invalid' }
+    [pscustomobject]@{ personReference = 'CMDB-PERSON-002'; userPrincipalName = 'blair@example.invalid' }
+) | Export-Csv -LiteralPath ./data/cmdb-person-mappings.csv -NoTypeInformation
+```
+
+These explicit demonstration mappings do not independently verify identity,
+select a device candidate, or establish an assignment problem. Detailed resolution
+behavior and composition examples are in `Get-Help Resolve-ParCmdbAssignedUser -Full`
+after importing `ParReports`.
 
 The CMDB projection draws on Atlassian's [hardware asset schema](https://support.atlassian.com/assets/docs/what-is-the-hardware-assets-system-schema/)
 and [object attributes](https://support.atlassian.com/assets/docs/what-are-attributes/).

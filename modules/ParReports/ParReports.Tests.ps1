@@ -587,3 +587,350 @@ Describe 'Device correlation with offline fixture retrieval' {
         }
     }
 }
+
+Describe 'Resolve-ParCmdbAssignedUser' {
+    BeforeAll {
+        function New-TestPersonAsset {
+            param(
+                [AllowNull()]
+                [AllowEmptyString()]
+                $Reference = 'CMDB-PERSON-001',
+                [string] $AssetId = 'CMDB-ASSET-001'
+            )
+            [pscustomobject]@{ assetId = $AssetId; assignedUserReference = $Reference }
+        }
+
+        function New-TestPersonMapping {
+            param(
+                [AllowNull()]
+                [AllowEmptyString()]
+                $Reference = 'CMDB-PERSON-001',
+                [AllowNull()]
+                [AllowEmptyString()]
+                $Upn = 'alex@example.invalid'
+            )
+            [pscustomobject]@{ personReference = $Reference; userPrincipalName = $Upn }
+        }
+
+        function New-TestPersonUser {
+            param(
+                [AllowNull()]
+                [AllowEmptyString()]
+                $Upn = 'alex@example.invalid',
+                [AllowNull()]
+                [AllowEmptyString()]
+                $Id = 'ENTRA-USER-001'
+            )
+            [pscustomobject]@{
+                Id = $Id
+                UserPrincipalName = $Upn
+                DisplayName = 'Alex Example'
+                Mail = 'different@example.invalid'
+                AccountEnabled = $false
+            }
+        }
+    }
+
+    It 'resolves through a unique reference-to-UPN mapping and retains original evidence and IDs' {
+        $asset = New-TestPersonAsset -Reference " cmdb-person-001 `t"
+        $mapping = New-TestPersonMapping -Reference "`tCMDB-PERSON-001 " -Upn ' Alex@Example.invalid '
+        $user = New-TestPersonUser -Upn "`talex@example.INVALID " -Id ' ENTRA-USER-001 '
+
+        $row = $asset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+
+        @($row.PSObject.Properties.Name) | Should -Be @(
+            'CmdbAssetId', 'CmdbAsset', 'AssignedUserReference', 'ComparisonPersonReference',
+            'MappingCount', 'MappingCandidates', 'ComparisonUserPrincipalName',
+            'EntraCandidateCount', 'EntraCandidates', 'EntraObjectId', 'Outcome', 'Reason'
+        )
+        $row.Outcome | Should -BeExactly 'Unique'
+        $row.Reason | Should -BeExactly 'OneMappedEntraUser'
+        $row.CmdbAssetId | Should -BeExactly $asset.assetId
+        $row.CmdbAsset | Should -Be $asset
+        $row.AssignedUserReference | Should -BeExactly " cmdb-person-001 `t"
+        $row.ComparisonPersonReference | Should -BeExactly 'cmdb-person-001'
+        $row.MappingCount | Should -Be 1
+        ($row.MappingCandidates -is [array]) | Should -BeTrue
+        $row.MappingCandidates | Should -HaveCount 1
+        $row.MappingCandidates[0] | Should -Be $mapping
+        $row.MappingCandidates[0].userPrincipalName | Should -BeExactly ' Alex@Example.invalid '
+        $row.ComparisonUserPrincipalName | Should -BeExactly 'Alex@Example.invalid'
+        $row.EntraCandidateCount | Should -Be 1
+        ($row.EntraCandidates -is [array]) | Should -BeTrue
+        $row.EntraCandidates | Should -HaveCount 1
+        $row.EntraCandidates[0] | Should -Be $user
+        $row.EntraCandidates[0].UserPrincipalName | Should -BeExactly "`talex@example.INVALID "
+        $row.EntraObjectId | Should -BeExactly ' ENTRA-USER-001 '
+    }
+
+    It 'does not infer a mapping from a reference resembling an ID, UPN, or display name' -ForEach @(
+        @{ Reference = 'ENTRA-USER-001' },
+        @{ Reference = 'alex@example.invalid' },
+        @{ Reference = 'Alex Example' }
+    ) {
+        $row = New-TestPersonAsset -Reference $Reference |
+            Resolve-ParCmdbAssignedUser -PersonMapping (New-TestPersonMapping) -EntraUser (New-TestPersonUser)
+
+        $row.Outcome | Should -BeExactly 'Missing'
+        $row.Reason | Should -BeExactly 'NoPersonMapping'
+        $row.MappingCount | Should -Be 0
+        $row.MappingCandidates | Should -HaveCount 0
+        ($null -eq $row.ComparisonUserPrincipalName) | Should -BeTrue
+        $row.EntraCandidateCount | Should -Be 0
+        $row.EntraCandidates | Should -HaveCount 0
+        ($null -eq $row.EntraObjectId) | Should -BeTrue
+    }
+
+    It 'does not fall back to mail, display name, or ID when UPN does not match' {
+        $user = New-TestPersonUser -Upn 'other@example.invalid' -Id 'alex@example.invalid'
+        $user.Mail = 'alex@example.invalid'
+        $user.DisplayName = 'alex@example.invalid'
+
+        $row = New-TestPersonAsset |
+            Resolve-ParCmdbAssignedUser -PersonMapping (New-TestPersonMapping) -EntraUser $user
+
+        $row.Outcome | Should -BeExactly 'Missing'
+        $row.Reason | Should -BeExactly 'NoMatchingEntraUser'
+        $row.MappingCount | Should -Be 1
+        $row.MappingCandidates | Should -HaveCount 1
+        $row.ComparisonUserPrincipalName | Should -BeExactly 'alex@example.invalid'
+        $row.EntraCandidateCount | Should -Be 0
+        $row.EntraCandidates | Should -HaveCount 0
+        ($null -eq $row.EntraObjectId) | Should -BeTrue
+    }
+
+    It 'compares <Key> literally, retaining <Difference>' -ForEach @(
+        @{ Key = 'reference'; Difference = 'internal whitespace'; Left = 'CMDB PERSON'; Right = 'CMDBPERSON' },
+        @{ Key = 'reference'; Difference = 'punctuation'; Left = 'CMDB-PERSON'; Right = 'CMDBPERSON' },
+        @{ Key = 'reference'; Difference = 'leading zeroes'; Left = 'CMDB-001'; Right = 'CMDB-1' },
+        @{ Key = 'reference'; Difference = 'wildcard and regex characters'; Left = 'CMDB-*.[1]'; Right = 'CMDB-ANY.1' },
+        @{ Key = 'UPN'; Difference = 'internal whitespace'; Left = 'alex user@example.invalid'; Right = 'alexuser@example.invalid' },
+        @{ Key = 'UPN'; Difference = 'punctuation'; Left = 'alex.user@example.invalid'; Right = 'alexuser@example.invalid' },
+        @{ Key = 'UPN'; Difference = 'wildcard and regex characters'; Left = 'alex*[1]@example.invalid'; Right = 'alexANY1@example.invalid' }
+    ) {
+        $asset = New-TestPersonAsset
+        $mapping = New-TestPersonMapping
+        $user = New-TestPersonUser
+        if ($Key -eq 'reference') {
+            $asset.assignedUserReference = $Left
+            $mapping.personReference = $Right
+        }
+        else {
+            $mapping.userPrincipalName = $Left
+            $user.UserPrincipalName = $Right
+        }
+
+        $row = $asset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+
+        $row.Outcome | Should -BeExactly 'Missing'
+        $row.EntraCandidateCount | Should -Be 0
+        ($null -eq $row.EntraObjectId) | Should -BeTrue
+    }
+
+    It 'matches identical literal wildcard characters in references and UPNs' {
+        $row = New-TestPersonAsset -Reference 'CMDB-*.[1]' |
+            Resolve-ParCmdbAssignedUser -PersonMapping (New-TestPersonMapping -Reference 'CMDB-*.[1]' -Upn 'alex*[1]@example.invalid') `
+                -EntraUser (New-TestPersonUser -Upn 'alex*[1]@example.invalid')
+
+        $row.Outcome | Should -BeExactly 'Unique'
+    }
+
+    It 'keeps multiple mappings ambiguous even with <Kind>' -ForEach @(
+        @{ Kind = 'conflicting UPNs'; OtherUpn = 'other@example.invalid'; Repeat = $false },
+        @{ Kind = 'identical values'; OtherUpn = 'alex@example.invalid'; Repeat = $false },
+        @{ Kind = 'the same object repeated'; OtherUpn = 'alex@example.invalid'; Repeat = $true },
+        @{ Kind = 'a blank UPN'; OtherUpn = ''; Repeat = $false }
+    ) {
+        $mapping = New-TestPersonMapping
+        $otherMapping = New-TestPersonMapping -Reference ' cmdb-person-001 ' -Upn $OtherUpn
+        if ($Repeat) {
+            $otherMapping = $mapping
+        }
+        $mappings = @($mapping, (New-TestPersonMapping -Reference 'OTHER'), $otherMapping)
+
+        $row = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping $mappings -EntraUser (New-TestPersonUser)
+
+        $row.Outcome | Should -BeExactly 'Ambiguous'
+        $row.Reason | Should -BeExactly 'MultiplePersonMappings'
+        $row.MappingCount | Should -Be 2
+        $row.MappingCandidates | Should -HaveCount 2
+        $row.MappingCandidates[0] | Should -Be $mapping
+        $row.MappingCandidates[1] | Should -Be $otherMapping
+        ($null -eq $row.ComparisonUserPrincipalName) | Should -BeTrue
+        $row.EntraCandidateCount | Should -Be 0
+        $row.EntraCandidates | Should -HaveCount 0
+        ($null -eq $row.EntraObjectId) | Should -BeTrue
+    }
+
+    It 'keeps duplicate Entra UPNs ambiguous with <Kind> and retains every candidate in order' -ForEach @(
+        @{ Kind = 'different IDs'; OtherId = 'ENTRA-USER-002'; Repeat = $false },
+        @{ Kind = 'identical IDs'; OtherId = 'ENTRA-USER-001'; Repeat = $false },
+        @{ Kind = 'the same object repeated'; OtherId = 'ENTRA-USER-001'; Repeat = $true },
+        @{ Kind = 'one blank ID'; OtherId = $null; Repeat = $false }
+    ) {
+        $user = New-TestPersonUser
+        $otherUser = New-TestPersonUser -Upn ' ALEX@example.invalid ' -Id $OtherId
+        if ($Repeat) {
+            $otherUser = $user
+        }
+        $users = @($otherUser, (New-TestPersonUser -Upn 'other@example.invalid'), $user)
+
+        $row = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping (New-TestPersonMapping) -EntraUser $users
+
+        $row.Outcome | Should -BeExactly 'Ambiguous'
+        $row.Reason | Should -BeExactly 'MultipleMatchingEntraUsers'
+        $row.MappingCount | Should -Be 1
+        $row.EntraCandidateCount | Should -Be 2
+        $row.EntraCandidates | Should -HaveCount 2
+        $row.EntraCandidates[0] | Should -Be $otherUser
+        $row.EntraCandidates[1] | Should -Be $user
+        ($null -eq $row.EntraObjectId) | Should -BeTrue
+    }
+
+    It 'handles <Name> keys without matching blank values or emitting a blank ID' -ForEach @(
+        @{ Name = 'null'; Blank = $null },
+        @{ Name = 'empty'; Blank = '' },
+        @{ Name = 'spaces'; Blank = '   ' },
+        @{ Name = 'mixed whitespace'; Blank = " `t`r`n" }
+    ) {
+        $asset = New-TestPersonAsset -Reference $Blank
+        $mapping = New-TestPersonMapping -Reference $Blank -Upn $Blank
+        $user = New-TestPersonUser -Upn $Blank -Id $Blank
+
+        $blankReference = $asset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+        $blankReference.Outcome | Should -BeExactly 'Missing'
+        $blankReference.Reason | Should -BeExactly 'BlankAssignedUserReference'
+        $blankReference.ComparisonPersonReference | Should -BeExactly ''
+        $blankReference.MappingCount | Should -Be 0
+        ($null -eq $blankReference.EntraObjectId) | Should -BeTrue
+        if ($null -eq $Blank) {
+            ($null -eq $blankReference.AssignedUserReference) | Should -BeTrue
+        }
+        else {
+            $blankReference.AssignedUserReference | Should -BeExactly $Blank
+        }
+
+        $noMapping = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+        $noMapping.Reason | Should -BeExactly 'NoPersonMapping'
+        $noMapping.MappingCount | Should -Be 0
+
+        $mapping.personReference = 'CMDB-PERSON-001'
+        $blankUpn = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+        $blankUpn.Outcome | Should -BeExactly 'Missing'
+        $blankUpn.Reason | Should -BeExactly 'BlankMappedUserPrincipalName'
+        $blankUpn.MappingCount | Should -Be 1
+        $blankUpn.MappingCandidates[0] | Should -Be $mapping
+        $blankUpn.ComparisonUserPrincipalName | Should -BeExactly ''
+        $blankUpn.EntraCandidateCount | Should -Be 0
+
+        $mapping.userPrincipalName = 'alex@example.invalid'
+        $noUser = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+        $noUser.Reason | Should -BeExactly 'NoMatchingEntraUser'
+        $noUser.EntraCandidateCount | Should -Be 0
+
+        $user.UserPrincipalName = 'alex@example.invalid'
+        $blankId = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping $mapping -EntraUser $user
+        $blankId.Outcome | Should -BeExactly 'Missing'
+        $blankId.Reason | Should -BeExactly 'BlankEntraObjectId'
+        $blankId.EntraCandidateCount | Should -Be 1
+        $blankId.EntraCandidates[0] | Should -Be $user
+        ($null -eq $blankId.EntraObjectId) | Should -BeTrue
+    }
+
+    It 'preserves asset order and duplicates for both array and pipeline input without consuming mappings' {
+        $first = New-TestPersonAsset -AssetId 'CMDB-SECOND'
+        $second = New-TestPersonAsset -AssetId 'CMDB-FIRST'
+        $assets = @($first, $null, $second, $first)
+        $mappings = @($null, (New-TestPersonMapping))
+        $users = @($null, (New-TestPersonUser))
+
+        $arrayRows = @(Resolve-ParCmdbAssignedUser -InputObject $assets -PersonMapping $mappings -EntraUser $users)
+        $pipelineRows = @($assets | Resolve-ParCmdbAssignedUser -PersonMapping $mappings -EntraUser $users)
+
+        $arrayRows | Should -HaveCount 3
+        $arrayRows.CmdbAssetId | Should -Be @('CMDB-SECOND', 'CMDB-FIRST', 'CMDB-SECOND')
+        $arrayRows.Outcome | Should -Be @('Unique', 'Unique', 'Unique')
+        $arrayRows.EntraObjectId | Should -Be @('ENTRA-USER-001', 'ENTRA-USER-001', 'ENTRA-USER-001')
+        ($pipelineRows | ConvertTo-Json -Depth 5) | Should -BeExactly ($arrayRows | ConvertTo-Json -Depth 5)
+    }
+
+    It 'returns no results for null assets, empty arrays, or an empty pipeline' {
+        $parameters = @{ PersonMapping = @(New-TestPersonMapping); EntraUser = @(New-TestPersonUser) }
+
+        @(Resolve-ParCmdbAssignedUser -InputObject $null @parameters) | Should -HaveCount 0
+        @(Resolve-ParCmdbAssignedUser -InputObject @() @parameters) | Should -HaveCount 0
+        @(Resolve-ParCmdbAssignedUser -InputObject @($null, $null) @parameters) | Should -HaveCount 0
+        @(@() | Resolve-ParCmdbAssignedUser @parameters) | Should -HaveCount 0
+    }
+
+    It 'treats null, empty, and null-only candidate datasets as missing' {
+        foreach ($emptyDataset in @($null, @(), @($null))) {
+            $noMapping = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping $emptyDataset -EntraUser (New-TestPersonUser)
+            $noMapping.Outcome | Should -BeExactly 'Missing'
+            $noMapping.Reason | Should -BeExactly 'NoPersonMapping'
+            $noMapping.MappingCount | Should -Be 0
+            ($noMapping.MappingCandidates -is [array]) | Should -BeTrue
+            $noMapping.MappingCandidates | Should -HaveCount 0
+            ($null -eq $noMapping.EntraObjectId) | Should -BeTrue
+
+            $noUser = New-TestPersonAsset | Resolve-ParCmdbAssignedUser -PersonMapping (New-TestPersonMapping) -EntraUser $emptyDataset
+            $noUser.Outcome | Should -BeExactly 'Missing'
+            $noUser.Reason | Should -BeExactly 'NoMatchingEntraUser'
+            $noUser.EntraCandidateCount | Should -Be 0
+            ($noUser.EntraCandidates -is [array]) | Should -BeTrue
+            $noUser.EntraCandidates | Should -HaveCount 0
+            ($null -eq $noUser.EntraObjectId) | Should -BeTrue
+        }
+    }
+
+    It 'leaves all source properties unchanged across unique, missing, and ambiguous outcomes' {
+        $assets = @(
+            (New-TestPersonAsset),
+            (New-TestPersonAsset -Reference $null),
+            (New-TestPersonAsset -Reference 'CMDB-PERSON-002')
+        )
+        $mappings = @((New-TestPersonMapping), (New-TestPersonMapping -Reference 'CMDB-PERSON-002' -Upn 'duplicate@example.invalid'))
+        $users = @((New-TestPersonUser), (New-TestPersonUser -Upn 'duplicate@example.invalid'), (New-TestPersonUser -Upn 'duplicate@example.invalid'))
+        $before = ConvertTo-Json -InputObject @($assets, $mappings, $users) -Depth 5
+
+        $rows = @($assets | Resolve-ParCmdbAssignedUser -PersonMapping $mappings -EntraUser $users)
+        $rows[0].EntraObjectId = 'result-only'
+
+        $rows.Outcome | Should -Be @('Unique', 'Missing', 'Ambiguous')
+        (ConvertTo-Json -InputObject @($assets, $mappings, $users) -Depth 5) | Should -BeExactly $before
+    }
+}
+
+Describe 'CMDB assigned-user resolution with offline fixture retrieval' {
+    It 'resolves explicit synthetic mappings against restored Entra SDK models and retains blank references' {
+        $fixturePaths = @{
+            EntraUser = Join-Path $PSScriptRoot '../../data/entra-users.csv'
+            CmdbAsset = Join-Path $PSScriptRoot '../../data/cmdb-assets.csv'
+        }
+        Import-Module $dataModulePath -ArgumentList $fixturePaths -Force
+        try {
+            $assets = @(Get-ParCmdbAsset)
+            $users = @(Get-ParEntraUser)
+            $mappings = @(Import-Csv -LiteralPath (Join-Path $PSScriptRoot '../../data/cmdb-person-mappings.csv'))
+
+            $rows = @($assets | Resolve-ParCmdbAssignedUser -PersonMapping $mappings -EntraUser $users)
+
+            $rows | Should -HaveCount 3
+            $rows.CmdbAssetId | Should -Be @($assets.assetId)
+            $rows.Outcome | Should -Be @('Unique', 'Unique', 'Missing')
+            $rows.Reason | Should -Be @('OneMappedEntraUser', 'OneMappedEntraUser', 'BlankAssignedUserReference')
+            $rows[0].EntraObjectId | Should -BeExactly '10000000-0000-4000-8000-000000000001'
+            $rows[1].EntraObjectId | Should -BeExactly '10000000-0000-4000-8000-000000000002'
+            ($null -eq $rows[2].EntraObjectId) | Should -BeTrue
+            $rows[0].EntraCandidates[0] | Should -BeOfType 'Microsoft.Graph.PowerShell.Models.MicrosoftGraphUser'
+            $rows[1].EntraCandidates[0].AccountEnabled | Should -BeFalse
+            $rows[0].MappingCandidates[0] | Should -Be $mappings[0]
+            $rows[1].MappingCandidates[0] | Should -Be $mappings[1]
+            $rows[2].MappingCandidates | Should -HaveCount 0
+            $rows[2].EntraCandidates | Should -HaveCount 0
+        }
+        finally {
+            Remove-Module ParData -ErrorAction SilentlyContinue
+        }
+    }
+}
