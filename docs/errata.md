@@ -11,9 +11,12 @@ extend that verification scope.
 
 ## Interpretation limits
 
-The report uses a missing `UserId` as its demonstration selection rule. It does
-not inspect Graph's primary-user relationship. No verified mapping from Autopilot
-deployment modes to the synthetic enrollment types is provided.
+The primary-user report uses a missing `UserId` as its demonstration selection
+rule. Primary User is the intended terminology for the single-user Windows
+scenario; this limitation does not require a different report label. The current
+implementation does not separately query Graph's primary-user relationship.
+No verified mapping from Autopilot deployment modes to the synthetic enrollment
+types is provided.
 
 The CMDB schema and person-to-UPN mappings are demonstration choices, not a vendor
 API contract or verified identity directory. CMDB person references are distinct
