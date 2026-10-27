@@ -1,0 +1,6 @@
+"personReference","userPrincipalName"
+"COMPARE-PERSON-ALEX","alex@example.invalid"
+"COMPARE-PERSON-DUPLICATE","alex@example.invalid"
+"COMPARE-PERSON-DUPLICATE","alex@example.invalid"
+"COMPARE-PERSON-ABSENT","absent@example.invalid"
+"COMPARE-PERSON-DUPLICATE-UPN","duplicate@example.invalid"

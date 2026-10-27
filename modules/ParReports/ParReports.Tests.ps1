@@ -80,6 +80,300 @@ AfterAll {
     }
 }
 
+Describe 'Compare-ParDeviceAssignedUser' {
+    BeforeAll {
+        function New-TestAssignmentContext {
+            @{
+                InputObject = New-TestCorrelationDevice
+                CmdbAsset = New-TestCorrelationAsset
+                PersonMapping = [pscustomobject]@{ personReference = 'CMDB-PERSON'; userPrincipalName = 'alex@example.invalid' }
+                EntraUser = [pscustomobject]@{ Id = 'SYNTH-USER'; UserPrincipalName = 'alex@example.invalid'; AccountEnabled = $false }
+            }
+        }
+    }
+
+    It 'compares IDs literally with case and outer whitespace normalization: <Name>' -ForEach @(
+        @{ Name = 'same ID'; Left = 'SYNTH-USER'; Right = 'SYNTH-USER'; Expected = 'Match'; ExpectedReason = 'SameUserId' },
+        @{ Name = 'case and whitespace'; Left = " synth-user `t"; Right = ' SYNTH-USER '; Expected = 'Match'; ExpectedReason = 'SameUserId' },
+        @{ Name = 'different IDs'; Left = 'SYNTH-OTHER'; Right = 'SYNTH-USER'; Expected = 'Mismatch'; ExpectedReason = 'DifferentUserIds' },
+        @{ Name = 'internal whitespace'; Left = 'SYNTH USER'; Right = 'SYNTHUSER'; Expected = 'Mismatch'; ExpectedReason = 'DifferentUserIds' },
+        @{ Name = 'punctuation'; Left = 'SYNTH-USER'; Right = 'SYNTHUSER'; Expected = 'Mismatch'; ExpectedReason = 'DifferentUserIds' },
+        @{ Name = 'leading zeroes'; Left = 'USER-001'; Right = 'USER-1'; Expected = 'Mismatch'; ExpectedReason = 'DifferentUserIds' },
+        @{ Name = 'wildcard and regex characters'; Left = 'USER-*.[1]'; Right = 'USER-ANY.1'; Expected = 'Mismatch'; ExpectedReason = 'DifferentUserIds' },
+        @{ Name = 'identical wildcard characters'; Left = 'USER-*.[1]'; Right = 'USER-*.[1]'; Expected = 'Match'; ExpectedReason = 'SameUserId' }
+    ) {
+        $parameters = New-TestAssignmentContext
+        $parameters.InputObject.UserId = $Left
+        $parameters.EntraUser.Id = $Right
+
+        $row = Compare-ParDeviceAssignedUser @parameters
+
+        $row.Outcome | Should -BeExactly $Expected
+        $row.Reason | Should -BeExactly $ExpectedReason
+        $row.IntuneUserId | Should -BeExactly $Left
+        $row.CmdbEntraObjectId | Should -BeExactly $Right
+        $row.ComparisonIntuneUserId | Should -BeExactly $Left.Trim()
+        $row.ComparisonCmdbEntraObjectId | Should -BeExactly $Right.Trim()
+    }
+
+    It 'distinguishes each side and both missing assignments for <Name> values' -ForEach @(
+        @{ Name = 'null'; Blank = $null },
+        @{ Name = 'empty'; Blank = '' },
+        @{ Name = 'spaces'; Blank = '   ' },
+        @{ Name = 'mixed whitespace'; Blank = " `t`r`n" }
+    ) {
+        $parameters = New-TestAssignmentContext
+        $parameters.InputObject.UserId = $Blank
+        $intuneMissing = Compare-ParDeviceAssignedUser @parameters
+        $intuneMissing.Outcome | Should -BeExactly 'MissingAssignment'
+        $intuneMissing.Reason | Should -BeExactly 'IntuneAssignmentMissing'
+        $intuneMissing.ComparisonIntuneUserId | Should -BeExactly ''
+        $intuneMissing.CmdbEntraObjectId | Should -BeExactly 'SYNTH-USER'
+        if ($null -eq $Blank) {
+            ($null -eq $intuneMissing.IntuneUserId) | Should -BeTrue
+        }
+        else {
+            $intuneMissing.IntuneUserId | Should -BeExactly $Blank
+        }
+
+        $parameters.CmdbAsset.assignedUserReference = $Blank
+        $bothMissing = Compare-ParDeviceAssignedUser @parameters
+        $bothMissing.Outcome | Should -BeExactly 'MissingAssignment'
+        $bothMissing.Reason | Should -BeExactly 'BothAssignmentsMissing'
+        ($null -eq $bothMissing.CmdbEntraObjectId) | Should -BeTrue
+        ($null -eq $bothMissing.ComparisonCmdbEntraObjectId) | Should -BeTrue
+        $bothMissing.AssignedUserResolution.Reason | Should -BeExactly 'BlankAssignedUserReference'
+
+        $parameters.InputObject.UserId = 'SYNTH-USER'
+        $cmdbMissing = Compare-ParDeviceAssignedUser @parameters
+        $cmdbMissing.Outcome | Should -BeExactly 'MissingAssignment'
+        $cmdbMissing.Reason | Should -BeExactly 'CmdbAssignmentMissing'
+        ($null -eq $cmdbMissing.CmdbEntraObjectId) | Should -BeTrue
+    }
+
+    It 'keeps <Failure> unresolved even when Intune is unassigned' -ForEach @(
+        @{ Failure = 'blank serial'; ExpectedReason = 'CmdbAssetMissing'; Detail = 'BlankSerialNumber' },
+        @{ Failure = 'missing asset'; ExpectedReason = 'CmdbAssetMissing'; Detail = 'NoMatchingSerialNumber' },
+        @{ Failure = 'duplicate asset'; ExpectedReason = 'CmdbAssetAmbiguous'; Detail = 'MultipleMatchingCmdbRecords' },
+        @{ Failure = 'missing mapping'; ExpectedReason = 'CmdbAssignedUserUnresolved'; Detail = 'NoPersonMapping' },
+        @{ Failure = 'duplicate mapping'; ExpectedReason = 'CmdbAssignedUserUnresolved'; Detail = 'MultiplePersonMappings' },
+        @{ Failure = 'blank mapped UPN'; ExpectedReason = 'CmdbAssignedUserUnresolved'; Detail = 'BlankMappedUserPrincipalName' },
+        @{ Failure = 'missing Entra user'; ExpectedReason = 'CmdbAssignedUserUnresolved'; Detail = 'NoMatchingEntraUser' },
+        @{ Failure = 'duplicate Entra user'; ExpectedReason = 'CmdbAssignedUserUnresolved'; Detail = 'MultipleMatchingEntraUsers' },
+        @{ Failure = 'blank Entra ID'; ExpectedReason = 'CmdbAssignedUserUnresolved'; Detail = 'BlankEntraObjectId' }
+    ) {
+        $parameters = New-TestAssignmentContext
+        $parameters.InputObject.UserId = $null
+        switch ($Failure) {
+            'blank serial' { $parameters.InputObject.SerialNumber = '  ' }
+            'missing asset' { $parameters.CmdbAsset = @() }
+            'duplicate asset' { $parameters.CmdbAsset = @($parameters.CmdbAsset, $parameters.CmdbAsset) }
+            'missing mapping' { $parameters.PersonMapping = @() }
+            'duplicate mapping' { $parameters.PersonMapping = @($parameters.PersonMapping, $parameters.PersonMapping) }
+            'blank mapped UPN' { $parameters.PersonMapping.userPrincipalName = '  ' }
+            'missing Entra user' { $parameters.EntraUser = @() }
+            'duplicate Entra user' { $parameters.EntraUser = @($parameters.EntraUser, $parameters.EntraUser) }
+            'blank Entra ID' { $parameters.EntraUser.Id = '  ' }
+        }
+
+        $row = Compare-ParDeviceAssignedUser @parameters
+
+        $row.Outcome | Should -BeExactly 'Unresolved'
+        $row.Reason | Should -BeExactly $ExpectedReason
+        ($null -eq $row.CmdbEntraObjectId) | Should -BeTrue
+        ($null -eq $row.ComparisonCmdbEntraObjectId) | Should -BeTrue
+        if ($row.Correlation.Outcome -eq 'Unique') {
+            $row.AssignedUserResolution.Reason | Should -BeExactly $Detail
+        }
+        else {
+            $row.Correlation.Reason | Should -BeExactly $Detail
+            ($null -eq $row.AssignedUserResolution) | Should -BeTrue
+        }
+    }
+
+    It 'retains the complete resolver evidence and source references without source mutation' {
+        $parameters = New-TestAssignmentContext
+        $before = ConvertTo-Json -InputObject $parameters -Depth 8
+
+        $row = Compare-ParDeviceAssignedUser @parameters
+
+        @($row.PSObject.Properties.Name) | Should -Be @(
+            'IntuneDeviceId', 'IntuneDevice', 'IntuneUserId', 'CmdbEntraObjectId',
+            'ComparisonIntuneUserId', 'ComparisonCmdbEntraObjectId', 'Outcome',
+            'Reason', 'Correlation', 'AssignedUserResolution'
+        )
+        $row.IntuneDeviceId | Should -BeExactly $parameters.InputObject.Id
+        $row.IntuneDevice | Should -Be $parameters.InputObject
+        $row.Correlation.IntuneDevice | Should -Be $parameters.InputObject
+        ($row.Correlation.CmdbCandidates -is [array]) | Should -BeTrue
+        $row.Correlation.CmdbCandidates[0] | Should -Be $parameters.CmdbAsset
+        $row.AssignedUserResolution.CmdbAsset | Should -Be $parameters.CmdbAsset
+        $row.AssignedUserResolution.MappingCandidates[0] | Should -Be $parameters.PersonMapping
+        $row.AssignedUserResolution.EntraCandidates[0] | Should -Be $parameters.EntraUser
+        $row.Outcome | Should -BeExactly 'Match'
+        $row.CmdbEntraObjectId = 'result-only'
+        (ConvertTo-Json -InputObject $parameters -Depth 8) | Should -BeExactly $before
+    }
+
+    It 'retains every duplicate candidate rather than comparing an agreed or matching assignment' {
+        $parameters = New-TestAssignmentContext
+        $first = $parameters.CmdbAsset
+        $second = New-TestCorrelationAsset -AssetId 'CMDB-SECOND'
+        $parameters.CmdbAsset = @($second, $first, $first)
+
+        $row = Compare-ParDeviceAssignedUser @parameters
+
+        $row.Outcome | Should -BeExactly 'Unresolved'
+        $row.Reason | Should -BeExactly 'CmdbAssetAmbiguous'
+        $row.Correlation.CandidateCount | Should -Be 3
+        $row.Correlation.CmdbCandidates.assetId | Should -Be @('CMDB-SECOND', 'CMDB-001', 'CMDB-001')
+        ($null -eq $row.AssignedUserResolution) | Should -BeTrue
+
+        $parameters.CmdbAsset = $first
+        $user = $parameters.EntraUser
+        $otherUser = [pscustomobject]@{ Id = 'OTHER-USER'; UserPrincipalName = $user.UserPrincipalName }
+        $parameters.EntraUser = @($otherUser, $user)
+
+        $row = Compare-ParDeviceAssignedUser @parameters
+        $row.Outcome | Should -BeExactly 'Unresolved'
+        $row.AssignedUserResolution.EntraCandidates.Id | Should -Be @('OTHER-USER', 'SYNTH-USER')
+        ($null -eq $row.CmdbEntraObjectId) | Should -BeTrue
+    }
+
+    It 'uses IDs despite conflicting descriptive names, UPNs, and mail or disabled account state' {
+        $parameters = New-TestAssignmentContext
+        $device = $parameters.InputObject
+        $device | Add-Member -NotePropertyMembers @{
+            UserPrincipalName = 'other@example.invalid'
+            EmailAddress = 'other@example.invalid'
+            UserDisplayName = 'Different Person'
+        }
+        $row = Compare-ParDeviceAssignedUser @parameters
+        $row.Outcome | Should -BeExactly 'Match'
+        $row.AssignedUserResolution.EntraCandidates[0].AccountEnabled | Should -BeFalse
+
+        $device.UserId = 'OTHER-USER'
+        $device.UserPrincipalName = 'alex@example.invalid'
+        $device.EmailAddress = 'alex@example.invalid'
+        (Compare-ParDeviceAssignedUser @parameters).Outcome | Should -BeExactly 'Mismatch'
+    }
+
+    It 'preserves input order and repeated devices through array and pipeline input without consuming candidates' {
+        $parameters = New-TestAssignmentContext
+        $first = $parameters.InputObject
+        $second = New-TestCorrelationDevice -Id 'INTUNE-SECOND'
+        $parameters.InputObject = @($second, $null, $first, $second)
+
+        $arrayRows = @(Compare-ParDeviceAssignedUser @parameters)
+        $parameters.Remove('InputObject')
+        $pipelineRows = @(@($second, $null, $first, $second) | Compare-ParDeviceAssignedUser @parameters)
+
+        $arrayRows | Should -HaveCount 3
+        $arrayRows.IntuneDeviceId | Should -Be @('INTUNE-SECOND', 'INTUNE-001', 'INTUNE-SECOND')
+        $arrayRows.Outcome | Should -Be @('Match', 'Match', 'Match')
+        (ConvertTo-Json -InputObject $pipelineRows -Depth 8) | Should -BeExactly (ConvertTo-Json -InputObject $arrayRows -Depth 8)
+    }
+
+    It 'returns no results for null input, empty arrays, null-only arrays, or empty pipelines' {
+        $parameters = New-TestAssignmentContext
+        $parameters.Remove('InputObject')
+
+        @(Compare-ParDeviceAssignedUser -InputObject $null @parameters) | Should -HaveCount 0
+        @(Compare-ParDeviceAssignedUser -InputObject @() @parameters) | Should -HaveCount 0
+        @(Compare-ParDeviceAssignedUser -InputObject @($null, $null) @parameters) | Should -HaveCount 0
+        @(@() | Compare-ParDeviceAssignedUser @parameters) | Should -HaveCount 0
+    }
+
+    It 'handles null or null-only source datasets without treating unknown assignments as absent' {
+        foreach ($dataset in @($null, @($null))) {
+            $parameters = New-TestAssignmentContext
+            $parameters.CmdbAsset = $dataset
+            (Compare-ParDeviceAssignedUser @parameters).Reason | Should -BeExactly 'CmdbAssetMissing'
+
+            $parameters = New-TestAssignmentContext
+            $parameters.PersonMapping = $dataset
+            $row = Compare-ParDeviceAssignedUser @parameters
+            $row.Outcome | Should -BeExactly 'Unresolved'
+            $row.AssignedUserResolution.Reason | Should -BeExactly 'NoPersonMapping'
+
+            $parameters = New-TestAssignmentContext
+            $parameters.EntraUser = $dataset
+            $row = Compare-ParDeviceAssignedUser @parameters
+            $row.Outcome | Should -BeExactly 'Unresolved'
+            $row.AssignedUserResolution.Reason | Should -BeExactly 'NoMatchingEntraUser'
+        }
+    }
+
+    It 'requires the documented source properties rather than repairing malformed models' {
+        $parameters = New-TestAssignmentContext
+        $parameters.InputObject = [pscustomobject]@{ Id = 'BROKEN'; SerialNumber = 'SYNTH-001' }
+        { Compare-ParDeviceAssignedUser @parameters } | Should -Throw '*UserId*'
+    }
+}
+
+Describe 'Assignment comparison with offline fixture retrieval' {
+    It 'covers representative comparisons through ParData with actual SDK models and deterministic fixtures' {
+        $fixtureDirectory = Join-Path $PSScriptRoot '../../data/assignment-comparison'
+        $fixturePaths = @{
+            IntuneDevice = Join-Path $fixtureDirectory 'intune-devices.csv'
+            CmdbAsset = Join-Path $fixtureDirectory 'cmdb-assets.csv'
+            EntraUser = Join-Path $fixtureDirectory 'entra-users.csv'
+        }
+        Import-Module $dataModulePath -ArgumentList $fixturePaths -Force
+        try {
+            $devices = @(Get-ParIntuneDevice)
+            $assets = @(Get-ParCmdbAsset)
+            $users = @(Get-ParEntraUser)
+            $mappings = @(Import-Csv -LiteralPath (Join-Path $fixtureDirectory 'cmdb-person-mappings.csv'))
+            $deviceProperties = @(
+                'Id', 'UserId', 'DeviceName', 'EnrolledDateTime', 'LastSyncDateTime',
+                'OperatingSystem', 'OSVersion', 'EmailAddress', 'AzureAdDeviceId',
+                'UserPrincipalName', 'Model', 'Manufacturer', 'SerialNumber',
+                'UserDisplayName', 'DeviceEnrollmentType'
+            )
+            $userProperties = @('Id', 'DisplayName', 'UserPrincipalName', 'Mail', 'AccountEnabled')
+            $before = ConvertTo-Json -InputObject @(
+                @($devices | Select-Object -Property $deviceProperties), $assets,
+                @($users | Select-Object -Property $userProperties), $mappings
+            ) -Depth 5
+
+            $rows = @($devices | Compare-ParDeviceAssignedUser -CmdbAsset $assets -PersonMapping $mappings -EntraUser $users)
+
+            $rows | Should -HaveCount 11
+            $rows.IntuneDeviceId | Should -Be @($devices.Id)
+            $rows.Outcome | Should -Be @(
+                'Match', 'Mismatch', 'MissingAssignment', 'MissingAssignment', 'MissingAssignment',
+                'Unresolved', 'Unresolved', 'Unresolved', 'Unresolved', 'Unresolved', 'Unresolved'
+            )
+            $rows.Reason | Should -Be @(
+                'SameUserId', 'DifferentUserIds', 'IntuneAssignmentMissing', 'CmdbAssignmentMissing',
+                'BothAssignmentsMissing', 'CmdbAssetMissing', 'CmdbAssetAmbiguous',
+                'CmdbAssignedUserUnresolved', 'CmdbAssignedUserUnresolved',
+                'CmdbAssignedUserUnresolved', 'CmdbAssignedUserUnresolved'
+            )
+            $rows[0].IntuneDevice | Should -BeOfType 'Microsoft.Graph.PowerShell.Models.MicrosoftGraphManagedDevice'
+            $rows[0].AssignedUserResolution.EntraCandidates[0] | Should -BeOfType 'Microsoft.Graph.PowerShell.Models.MicrosoftGraphUser'
+            $rows[1].IntuneUserId | Should -BeExactly '10000000-0000-4000-8000-000000000002'
+            $rows[1].CmdbEntraObjectId | Should -BeExactly '10000000-0000-4000-8000-000000000001'
+            $rows[6].Correlation.CmdbCandidates.assetId | Should -Be @('COMPARE-ASSET-007A', 'COMPARE-ASSET-007B')
+            $rows[7].AssignedUserResolution.Reason | Should -BeExactly 'NoPersonMapping'
+            $rows[8].AssignedUserResolution.MappingCount | Should -Be 2
+            $rows[8].AssignedUserResolution.Reason | Should -BeExactly 'MultiplePersonMappings'
+            $rows[9].AssignedUserResolution.Reason | Should -BeExactly 'NoMatchingEntraUser'
+            $rows[10].AssignedUserResolution.EntraCandidateCount | Should -Be 2
+            $rows[10].AssignedUserResolution.Reason | Should -BeExactly 'MultipleMatchingEntraUsers'
+            $after = ConvertTo-Json -InputObject @(
+                @($devices | Select-Object -Property $deviceProperties), $assets,
+                @($users | Select-Object -Property $userProperties), $mappings
+            ) -Depth 5
+            $after | Should -BeExactly $before
+        }
+        finally {
+            Remove-Module ParData -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 Describe 'ConvertTo-ParIntuneDeviceWithoutPrimaryUserReport' {
     It 'selects a <Name> user ID despite populated display name, email, and UPN' -ForEach @(
         @{ Name = 'null'; UserId = $null },
