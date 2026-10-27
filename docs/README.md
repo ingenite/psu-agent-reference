@@ -17,7 +17,7 @@ stages of the same workflow.
 | Ask an agent to explain or adapt an example | [Example prompts](prompts.md) |
 | Understand known limitations and verification gaps | [Errata](errata.md) |
 | Prepare synthetic device, user, and asset data | [Generation](setup/fixture-generation.md), [retrieval](setup/fixture-retrieval.md), SDK probes: [Intune](../tools/factories/Test-IntuneDeviceModel.ps1) and [Entra](../tools/factories/Test-EntraUserModel.ps1) |
-| Investigate device assignments | [Missing-user report](reports/intune-devices-without-primary-user.md), [device correlation](reports/intune-cmdb-correlation.md), [assigned-user resolution](reports/cmdb-assigned-user-resolution.md) |
+| Investigate device assignments | [Missing-user report](reports/intune-devices-without-primary-user.md), [device correlation](reports/intune-cmdb-correlation.md), [assigned-user resolution](reports/cmdb-assigned-user-resolution.md), [assignment comparison](reports/device-assignment-comparison.md) |
 | Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |
 | Manage PSU Git configuration and access | [Git settings API](setup/git-settings-api.md), [SSH key API](setup/ssh-key-api.md) |
 | Generate a JWT signing key locally | [Signing-key tool and help](../tools/New-JwtSigningKey.ps1) |
