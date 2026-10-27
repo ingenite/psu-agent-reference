@@ -35,6 +35,11 @@ when a collection is needed, including zero or one row.
 
 ## Interpretation
 
+Primary User is the intended terminology for the single-user Windows device
+scenario. Intune's UserDisplayName and UserPrincipalName provide recorded display
+context; UserId is the identity key corresponding to Entra user Id. The report
+selects missing UserId values and does not infer identity from display fields.
+
 The checked-in fixture produces `SYNTH-UNASSIGNED-001` and `SYNTH-SHARED-001`;
 `SYNTH-ASSIGNED-001` is excluded. An intentionally userless device can match.
 Missing association is descriptive and does not establish a defect or a required
