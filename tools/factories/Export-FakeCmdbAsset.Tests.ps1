@@ -178,8 +178,8 @@ Describe 'CMDB asset fixture' {
     BeforeAll {
         $factoryPath = Join-Path $PSScriptRoot 'New-FakeCmdbAsset.ps1'
         $exportPath = Join-Path $PSScriptRoot 'Export-FakeCmdbAsset.ps1'
-        $fixturePath = Join-Path $PSScriptRoot '../../data/cmdb-assets.csv'
-        $intunePath = Join-Path $PSScriptRoot '../../data/intune-devices.csv'
+        $fixturePath = Join-Path $PSScriptRoot '../../data/test-cmdb-assets.csv'
+        $intunePath = Join-Path $PSScriptRoot '../../data/test-intune-devices.csv'
         $assets = @(Import-Csv -LiteralPath $fixturePath)
         $devices = @(Import-Csv -LiteralPath $intunePath)
     }

@@ -2,13 +2,17 @@
 
 `ParData` retrieves offline source objects for scripts, endpoints, and dashboards.
 It restores SDK models for Intune devices and Entra users, and plain PowerShell
-objects for CMDB assets.
+objects for CMDB assets and explicit person-to-UPN mappings.
 
 | Configuration key | Command | Default fixture |
 | --- | --- | --- |
 | `IntuneDevice` | `Get-ParIntuneDevice` | `data/intune-devices.csv` |
 | `EntraUser` | `Get-ParEntraUser` | `data/entra-users.csv` |
 | `CmdbAsset` | `Get-ParCmdbAsset` | `data/cmdb-assets.csv` |
+| `PersonMapping` | `Get-ParCmdbPersonMapping` | `data/cmdb-person-mappings.csv` |
+
+These four defaults form the shared demonstration dataset used across reports.
+Files prefixed `test-` are focused test fixtures selected explicitly by tests.
 
 ## Configuration
 
@@ -43,7 +47,7 @@ $assets = @(Get-ParCmdbAsset)
 ```
 
 Importing ParData loads no Graph modules. Each SDK dependency loads only when its
-retrieval command runs; CMDB retrieval requires none.
+retrieval command runs; CMDB asset and person-mapping retrieval require none.
 
 ## Fixtures
 

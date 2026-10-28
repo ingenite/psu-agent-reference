@@ -73,14 +73,14 @@ function Compare-ParDeviceAssignedUser {
     $devices = @(Get-ParIntuneDevice)
     $parameters = @{
         CmdbAsset = @(Get-ParCmdbAsset)
-        PersonMapping = @(Import-Csv -LiteralPath ./data/cmdb-person-mappings.csv)
+        PersonMapping = @(Get-ParCmdbPersonMapping)
         EntraUser = @(Get-ParEntraUser)
     }
     $results = @($devices | Compare-ParDeviceAssignedUser @parameters)
     $results | Select-Object IntuneDeviceId, IntuneUserId, CmdbEntraObjectId, Outcome, Reason
 
-    From the repository root, the default fixtures produce Match, Unresolved/
-    CmdbAssetMissing, and Unresolved/CmdbAssetAmbiguous, in device order.
+    From the repository root, the shared default dataset produces one Match,
+    one Mismatch, three MissingAssignment, and six Unresolved results.
     #>
     [CmdletBinding()]
     [OutputType([pscustomobject])]

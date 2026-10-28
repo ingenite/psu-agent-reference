@@ -313,7 +313,7 @@ Describe 'Compare-ParDeviceAssignedUser' {
 
 Describe 'Assignment comparison with offline fixture retrieval' {
     It 'covers representative comparisons through ParData with actual SDK models and deterministic fixtures' {
-        $fixtureDirectory = Join-Path $PSScriptRoot '../../data/assignment-comparison'
+        $fixtureDirectory = Join-Path $PSScriptRoot '../../data'
         $fixturePaths = @{
             IntuneDevice = Join-Path $fixtureDirectory 'intune-devices.csv'
             CmdbAsset = Join-Path $fixtureDirectory 'cmdb-assets.csv'
@@ -589,15 +589,19 @@ Describe 'ParReports offline provider integration' {
     It 'loads the default provider and reports missing and intentionally userless fixture cases' {
         $rows = @(Get-ParIntuneDeviceWithoutPrimaryUserReport)
 
-        $rows | Should -HaveCount 2
-        $rows.DeviceName | Should -Be @('SYNTH-UNASSIGNED-001', 'SYNTH-SHARED-001')
+        $rows | Should -HaveCount 4
+        $rows.DeviceName | Should -Be @('SYNTH-COMPARE-NO-INTUNE-USER', 'SYNTH-COMPARE-SHARED', 'SYNTH-COMPARE-NO-ASSET', 'SYNTH-COMPARE-NO-MAPPING')
         $rows.IntuneDeviceId | Should -Be @(
-            '20000000-0000-4000-8000-000000000002',
-            '20000000-0000-4000-8000-000000000003'
+            '21000000-0000-4000-8000-000000000003',
+            '21000000-0000-4000-8000-000000000005',
+            '21000000-0000-4000-8000-000000000006',
+            '21000000-0000-4000-8000-000000000008'
         )
         $rows.AzureAdDeviceId | Should -Be @(
-            '30000000-0000-4000-8000-000000000002',
-            '30000000-0000-4000-8000-000000000003'
+            '31000000-0000-4000-8000-000000000003',
+            '31000000-0000-4000-8000-000000000005',
+            '31000000-0000-4000-8000-000000000006',
+            '31000000-0000-4000-8000-000000000008'
         )
         foreach ($row in $rows) {
             $row.DeviceEnrollmentType | Should -BeExactly 'unknown'
@@ -858,8 +862,8 @@ Describe 'Resolve-ParIntuneDeviceCmdbAsset' {
 Describe 'Device correlation with offline fixture retrieval' {
     It 'accepts restored Intune SDK models and retains unique, missing, and ambiguous fixture evidence' {
         $fixturePaths = @{
-            IntuneDevice = Join-Path $PSScriptRoot '../../data/intune-devices.csv'
-            CmdbAsset = Join-Path $PSScriptRoot '../../data/cmdb-assets.csv'
+            IntuneDevice = Join-Path $PSScriptRoot '../../data/test-intune-devices.csv'
+            CmdbAsset = Join-Path $PSScriptRoot '../../data/test-cmdb-assets.csv'
         }
         Import-Module $dataModulePath -ArgumentList $fixturePaths -Force
         try {
@@ -1198,14 +1202,15 @@ Describe 'Resolve-ParCmdbAssignedUser' {
 Describe 'CMDB assigned-user resolution with offline fixture retrieval' {
     It 'resolves explicit synthetic mappings against restored Entra SDK models and retains blank references' {
         $fixturePaths = @{
-            EntraUser = Join-Path $PSScriptRoot '../../data/entra-users.csv'
-            CmdbAsset = Join-Path $PSScriptRoot '../../data/cmdb-assets.csv'
+            EntraUser = Join-Path $PSScriptRoot '../../data/test-entra-users.csv'
+            CmdbAsset = Join-Path $PSScriptRoot '../../data/test-cmdb-assets.csv'
+            PersonMapping = Join-Path $PSScriptRoot '../../data/test-cmdb-person-mappings.csv'
         }
         Import-Module $dataModulePath -ArgumentList $fixturePaths -Force
         try {
             $assets = @(Get-ParCmdbAsset)
             $users = @(Get-ParEntraUser)
-            $mappings = @(Import-Csv -LiteralPath (Join-Path $PSScriptRoot '../../data/cmdb-person-mappings.csv'))
+            $mappings = @(Get-ParCmdbPersonMapping)
 
             $rows = @($assets | Resolve-ParCmdbAssignedUser -PersonMapping $mappings -EntraUser $users)
 
