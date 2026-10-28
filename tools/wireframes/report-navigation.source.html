@@ -1,0 +1,123 @@
+<div id="par-report-wireframes">
+  <style>
+    #par-report-wireframes { color-scheme: light dark; --par-bg: light-dark(#fafafa,#202020); --par-paper: light-dark(#fff,#282828); --par-ink: light-dark(#252525,#ededed); --par-soft: light-dark(#eee,#373737); --par-line: light-dark(#b9b9b9,#666); --par-secondary: light-dark(#5c5c5c,#c1c1c1); font: 14px/1.5 system-ui,sans-serif; color: var(--par-ink); }
+    #par-report-wireframes * { box-sizing: border-box; }
+    #par-report-wireframes [hidden] { display:none !important; }
+    #par-report-wireframes .par-window { background:var(--par-bg); border:1px solid var(--par-line); min-height:620px; }
+    #par-report-wireframes .par-header { background:var(--par-paper); border-bottom:1px solid var(--par-line); padding:17px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:10px 28px; padding-right:110px; }
+    #par-report-wireframes .par-brand { font-weight:500; }
+    #par-report-wireframes .par-demo { border:1px dashed var(--par-line); padding:3px 9px; }
+    #par-report-wireframes .par-layout { display:grid; grid-template-columns:190px minmax(0,1fr); min-height:550px; }
+    #par-report-wireframes .par-nav { background:var(--par-paper); border-right:1px solid var(--par-line); padding:20px 12px; }
+    #par-report-wireframes button, #par-report-wireframes select { font:inherit; color:inherit; }
+    #par-report-wireframes button { background:var(--par-paper); border:1px solid var(--par-line); padding:7px 12px; border-radius:3px; cursor:var(--cursor-interaction,pointer); }
+    #par-report-wireframes button:hover { background:var(--par-soft); }
+    #par-report-wireframes .par-nav button { width:100%; text-align:left; border-color:transparent; margin-bottom:5px; }
+    #par-report-wireframes .par-nav button[aria-current="page"] { background:var(--par-soft); border-color:var(--par-line); font-weight:500; }
+    #par-report-wireframes .par-nav details { margin-top:12px; }
+    #par-report-wireframes .par-nav summary { padding:7px 8px; cursor:var(--cursor-interaction,pointer); }
+    #par-report-wireframes .par-nav details button { padding-left:21px; }
+    #par-report-wireframes main { padding:24px 28px; min-width:0; }
+    #par-report-wireframes .par-crumb { display:flex; gap:6px; flex-wrap:wrap; align-items:center; color:var(--par-secondary); margin-bottom:18px; }
+    #par-report-wireframes .par-crumb button { border:0; padding:0; background:transparent; color:inherit; text-decoration:underline; }
+    #par-report-wireframes h2 { font-size:22px; line-height:1.3; font-weight:500; margin:0 0 8px; }
+    #par-report-wireframes h3 { font-size:16px; line-height:1.4; font-weight:500; margin:0 0 8px; }
+    #par-report-wireframes p { margin:0 0 20px; color:var(--par-secondary); }
+    #par-report-wireframes .par-section-title { margin:26px 0 12px; font-weight:500; }
+    #par-report-wireframes .par-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    #par-report-wireframes .par-report-card { background:var(--par-paper); border:1px solid var(--par-line); padding:20px; display:flex; flex-direction:column; align-items:flex-start; }
+    #par-report-wireframes .par-report-card p { flex:1; }
+    #par-report-wireframes .par-directory { background:var(--par-paper); border-top:1px solid var(--par-line); }
+    #par-report-wireframes .par-directory article { display:flex; align-items:center; justify-content:space-between; gap:20px; border-bottom:1px solid var(--par-line); padding:18px 12px; }
+    #par-report-wireframes .par-directory h3 { margin-bottom:3px; }
+    #par-report-wireframes .par-directory p { margin:0; }
+    #par-report-wireframes .par-directory button { flex-shrink:0; }
+    #par-report-wireframes .par-toolbar { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin:24px 0 14px; }
+    #par-report-wireframes select { padding:7px; background:var(--par-paper); border:1px solid var(--par-line); max-width:100%; }
+    #par-report-wireframes .par-table-wrap { overflow-x:auto; background:var(--par-paper); border:1px solid var(--par-line); }
+    #par-report-wireframes table { width:100%; border-collapse:collapse; text-align:left; }
+    #par-report-wireframes th { background:var(--par-soft); font-weight:500; }
+    #par-report-wireframes td, #par-report-wireframes th { padding:12px; border-bottom:1px solid var(--par-line); vertical-align:top; }
+    #par-report-wireframes tbody tr:last-child td { border-bottom:0; }
+    #par-report-wireframes .par-device { padding:0; border:0; background:transparent; text-decoration:underline; text-align:left; }
+    #par-report-wireframes .par-small { color:var(--par-secondary); font-size:12px; }
+    #par-report-wireframes .par-result { border:1px solid var(--par-line); background:var(--par-paper); padding:15px; margin:20px 0; }
+    #par-report-wireframes .par-evidence { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    #par-report-wireframes .par-evidence section { padding:18px; border:1px solid var(--par-line); background:var(--par-paper); }
+    #par-report-wireframes dl { margin:0; }
+    #par-report-wireframes dt { margin-top:12px; color:var(--par-secondary); }
+    #par-report-wireframes dd { margin:2px 0 0; overflow-wrap:anywhere; }
+    #par-report-wireframes .par-footer { margin-top:24px; border-top:1px dashed var(--par-line); padding-top:12px; color:var(--par-secondary); font-size:12px; }
+    @media(max-width:680px) { #par-report-wireframes .par-layout { grid-template-columns:1fr; } #par-report-wireframes .par-nav { border-right:0; border-bottom:1px solid var(--par-line); padding:10px 16px; } #par-report-wireframes .par-nav>button { width:auto; } #par-report-wireframes .par-nav details { margin:0; } #par-report-wireframes main { padding:20px 16px; } #par-report-wireframes .par-cards, #par-report-wireframes .par-evidence { grid-template-columns:1fr; } #par-report-wireframes .par-directory article { align-items:flex-start; flex-direction:column; gap:10px; } #par-report-wireframes .par-header { padding:14px 16px; } }
+  </style>
+  <div class="viz-carousel" aria-label="Report navigation wireframe ideas">
+    <section data-variant="Report cards" aria-label="Reports hub with cards"><div class="par-window" data-design="cards"></div></section>
+    <section data-variant="Grouped directory" aria-label="Reports hub with a compact directory" hidden><div class="par-window" data-design="directory"></div></section>
+    <section data-variant="Direct report menu" aria-label="Reports linked directly in navigation" hidden><div class="par-window" data-design="direct"></div></section>
+  </div>
+  <script>
+  (() => {
+    const root = document.getElementById('par-report-wireframes');
+    const reports = {
+      assignments: { title: 'Device assignments', description: 'Compare Intune primary users with CMDB assigned users.' },
+      missing: { title: 'Windows devices without a primary user', description: 'Review missing associations, including intentionally userless devices.' }
+    };
+    const devices = [
+      { id:'demo-record-a', name:'SYNTH-DEVICE-A', outcome:'Mismatch', primary:'Blair Sample', cmdb:'Alex Example' },
+      { id:'demo-record-b', name:'SYNTH-DEVICE-B', outcome:'MissingAssignment', primary:'No recorded primary user', cmdb:'Alex Example' },
+      { id:'demo-record-c', name:'SYNTH-SHARED', outcome:'MissingAssignment', primary:'No recorded primary user', cmdb:'No assigned person' }
+    ];
+    const saved = window.openai?.widgetState?.privateContent || {};
+    const states = {};
+    function persist() {
+      window.openai?.setWidgetState({modelContent:{navigationConcepts:['Report cards','Grouped directory','Direct report menu']},privateContent:states})?.catch(() => {});
+    }
+    function card(key) {
+      const report=reports[key];
+      return `<article class="par-report-card"><h3>${report.title}</h3><p>${report.description}</p><button type="button" data-report="${key}">Open report →</button></article>`;
+    }
+    function render(frame, state) {
+      const design=frame.dataset.design;
+      const title=state.page==='hub'?'Reports':state.page==='investigation'?'Device investigation':reports[state.report].title;
+      const selected=devices.find(d=>d.id===state.device)||devices[0];
+      const nav = `<nav class="par-nav" aria-label="Site navigation"><button type="button" data-action="hub" ${state.page==='hub'?'aria-current="page"':''}>Reports</button>${design==='direct'?`<details open><summary>Devices</summary>${Object.entries(reports).map(([key,r])=>`<button type="button" data-report="${key}" ${state.page!=='hub'&&state.report===key?'aria-current="page"':''}>${r.title}</button>`).join('')}</details>`:''}</nav>`;
+      let content='';
+      if(state.page==='hub') {
+        content=`<h2>Reports</h2><p>Choose a report to begin an investigation.</p><div class="par-section-title">Devices</div>`;
+        content+=design==='cards'?`<div class="par-cards">${card('assignments')}${card('missing')}</div>`:`<div class="par-directory">${Object.entries(reports).map(([key,r])=>`<article><div><h3>${r.title}</h3><p>${r.description}</p></div><button type="button" data-report="${key}">Open →</button></article>`).join('')}</div>`;
+      } else if(state.page==='report') {
+        let rows=state.report==='missing'?devices.slice(1):devices;
+        if(state.filter!=='All outcomes'&&state.report==='assignments')rows=rows.filter(d=>d.outcome===state.filter);
+        content=`<div class="par-crumb"><button type="button" data-action="hub">Reports</button><span>/</span><span>${title}</span></div><h2>${title}</h2><p>${reports[state.report].description}</p><div class="par-toolbar">${state.report==='assignments'?`<label>Outcome <select aria-label="Comparison outcome">${['All outcomes','Mismatch','MissingAssignment'].map(v=>`<option ${state.filter===v?'selected':''}>${v}</option>`).join('')}</select></label>`:`<span>Windows · Primary User missing</span>`}<span class="par-small">Snapshot: example time</span></div><div class="par-table-wrap"><table><thead><tr><th>Device</th><th>Primary User</th><th>CMDB assignment</th><th>Outcome</th></tr></thead><tbody>${rows.map(d=>`<tr><td><button type="button" class="par-device" data-device="${d.id}">${d.name}</button><div class="par-small">Intune record ${d.id.slice(-1).toUpperCase()}</div></td><td>${d.primary}</td><td>${d.cmdb}</td><td>${d.outcome}</td></tr>`).join('')}</tbody></table></div><div class="par-footer">Illustrative rows · Select a device to open its investigation</div>`;
+      } else {
+        const mismatch=selected.outcome==='Mismatch';
+        content=`<div class="par-crumb"><button type="button" data-action="hub">Reports</button><span>/</span><button type="button" data-action="back">${reports[state.report].title}</button><span>/</span><span>${selected.name}</span></div><h2>Device investigation</h2><p>${selected.name} · Intune record ${selected.id.slice(-1).toUpperCase()}</p><div class="par-result"><strong>${selected.outcome}</strong><div>${mismatch?'The recorded Intune and resolved CMDB user IDs differ.':selected.id==='demo-record-c'?'Both assignment values are missing. Investigate the intended use of this shared device.':'No Intune Primary User is recorded; CMDB has an assigned user.'}</div></div><div class="par-evidence"><section><h3>Intune record</h3><dl><dt>Primary User · recorded context</dt><dd>${selected.primary}</dd><dt>Intune-side Entra evidence</dt><dd>${mismatch?'Blair Sample · blair@example.invalid':'No UserId available for lookup'}</dd><dt>Device context</dt><dd>Windows · Synthetic device</dd></dl></section><section><h3>CMDB candidate</h3><dl><dt>Correlation</dt><dd>One candidate · serial matched</dd><dt>Assigned-person context</dt><dd>${selected.cmdb}</dd><dt>Mapping and Entra evidence</dt><dd>${selected.id==='demo-record-c'?'No person reference supplied':'Person reference → Alex Example · alex@example.invalid'}</dd></dl></section></div><div class="par-footer">Same retained snapshot as the originating report</div><div style="margin-top:16px"><button type="button" data-action="back">← Back to report</button></div>`;
+      }
+      frame.innerHTML=`<header class="par-header"><span class="par-brand">PAR IT Internal</span><span class="par-demo">Demo · Synthetic data</span></header><div class="par-layout">${nav}<main aria-label="${title}" aria-live="polite">${content}</main></div>`;
+    }
+    root.querySelectorAll('[data-design]').forEach(frame=>{
+      const design=frame.dataset.design;
+      const prior=saved[design]||{};
+      const state=states[design]={page:['hub','report','investigation'].includes(prior.page)?prior.page:(design==='direct'?'report':'hub'),report:reports[prior.report]?prior.report:'assignments',device:prior.device||'demo-record-a',filter:['All outcomes','Mismatch','MissingAssignment'].includes(prior.filter)?prior.filter:'All outcomes'};
+      render(frame,state);
+      frame.addEventListener('click',event=>{
+        const button=event.target.closest('button');
+        if(!button)return;
+        if(button.dataset.report){state.report=button.dataset.report;state.page='report';}
+        else if(button.dataset.device){state.device=button.dataset.device;state.page='investigation';}
+        else if(button.dataset.action==='hub')state.page='hub';
+        else if(button.dataset.action==='back')state.page='report';
+        else return;
+        render(frame,state);persist();
+      });
+      frame.addEventListener('change',event=>{if(event.target.tagName==='SELECT'){state.filter=event.target.value;render(frame,state);persist();}});
+    });
+    if(globalThis.Tweak){
+      const settings={navigation:'Expanded'};
+      const apply=()=>root.querySelectorAll('.par-nav details').forEach(item=>item.open=settings.navigation==='Expanded');
+      const tweak=new Tweak({container:root.querySelector('[data-design="direct"]'),onChange:apply});
+      tweak.addSelect(settings,'navigation',{label:'Report menu group',options:['Expanded','Collapsed']});
+    }
+  })();
+  </script>
+</div>
