@@ -92,12 +92,12 @@ Describe 'Get-ParIntuneDevice' {
             Pop-Location
         }
 
-        $devices | Should -HaveCount 3
-        $devices[0].DeviceName | Should -BeExactly 'SYNTH-ASSIGNED-001'
+        $devices | Should -HaveCount 11
+        $devices[0].DeviceName | Should -BeExactly 'SYNTH-COMPARE-MATCH'
         foreach ($device in $devices) {
             ($device -is [Microsoft.Graph.PowerShell.Models.IMicrosoftGraphManagedDevice]) | Should -BeTrue
         }
-        ($null -eq $devices[1].UserId) | Should -BeTrue
+        $devices[1].UserId | Should -BeExactly '10000000-0000-4000-8000-000000000002'
         ($null -eq $devices[2].UserId) | Should -BeTrue
     }
 
@@ -130,7 +130,7 @@ Describe 'Get-ParIntuneDevice' {
         Remove-Module ParData
         Import-Module $modulePath -Force
 
-        @(Get-ParIntuneDevice) | Should -HaveCount 3
+        @(Get-ParIntuneDevice) | Should -HaveCount 11
     }
 
     It 'gives explicit import configuration precedence over the shared setting' {
@@ -481,8 +481,9 @@ Describe '<Command> fixture retrieval' -ForEach @(
         }
         finally { Pop-Location }
 
-        $records | Should -HaveCount 3
-        $expectedId = if ($SourceName -eq 'EntraUser') { '10000000-0000-4000-8000-000000000001' } else { 'CMDB-ASSET-001' }
+        $expectedCount = if ($SourceName -eq 'EntraUser') { 4 } else { 11 }
+        $records | Should -HaveCount $expectedCount
+        $expectedId = if ($SourceName -eq 'EntraUser') { '10000000-0000-4000-8000-000000000001' } else { 'COMPARE-ASSET-001' }
         $records[0].$IdProperty | Should -BeExactly $expectedId
     }
 
@@ -499,9 +500,10 @@ Describe '<Command> fixture retrieval' -ForEach @(
         Remove-Module ParData
         Import-Module $modulePath -ArgumentList @{ $SourceName = $fixturePath } -Force
         (& $Command).$IdProperty | Should -BeExactly $record.$IdProperty
-        @(Get-ParIntuneDevice) | Should -HaveCount 3
+        @(Get-ParIntuneDevice) | Should -HaveCount 11
         $otherCommand = if ($SourceName -eq 'EntraUser') { 'Get-ParCmdbAsset' } else { 'Get-ParEntraUser' }
-        @(& $otherCommand) | Should -HaveCount 3
+        $expectedCount = if ($SourceName -eq 'EntraUser') { 11 } else { 4 }
+        @(& $otherCommand) | Should -HaveCount $expectedCount
     }
 
     It 'anchors relative paths at import, captures configuration, and rereads current file contents' {
@@ -631,7 +633,7 @@ Describe 'ParData source dependencies and exports' {
 
         (Get-ParEntraUser).Id | Should -BeExactly 'shared-user'
         (Get-ParCmdbAsset).assetId | Should -BeExactly 'explicit-asset'
-        @(Get-ParIntuneDevice) | Should -HaveCount 3
+        @(Get-ParIntuneDevice) | Should -HaveCount 11
     }
 
     It 'imports and retrieves CMDB without Graph, then loads only the Users source SDK for Entra' {
@@ -642,12 +644,14 @@ $ErrorActionPreference = 'Stop'
 Import-Module $ModulePath
 $afterImport = @(Get-Module -All Microsoft.Graph.*).Count
 $assets = @(Get-ParCmdbAsset)
+$mappings = @(Get-ParCmdbPersonMapping)
 $afterCmdb = @(Get-Module -All Microsoft.Graph.*).Count
 $users = @(Get-ParEntraUser)
 [pscustomobject]@{
     AfterImport = $afterImport
     AfterCmdb = $afterCmdb
     AssetCount = $assets.Count
+    MappingCount = $mappings.Count
     UserCount = $users.Count
     UsersVersion = (Get-Module -All Microsoft.Graph.Users | Select-Object -First 1).Version.ToString()
     DeviceSdkCount = @(Get-Module -All Microsoft.Graph.DeviceManagement).Count
@@ -659,11 +663,12 @@ $users = @(Get-ParEntraUser)
         $LASTEXITCODE | Should -Be 0
         $result.AfterImport | Should -Be 0
         $result.AfterCmdb | Should -Be 0
-        $result.AssetCount | Should -Be 3
-        $result.UserCount | Should -Be 3
+        $result.AssetCount | Should -Be 11
+        $result.MappingCount | Should -Be 5
+        $result.UserCount | Should -Be 4
         $result.UsersVersion | Should -BeExactly '2.41.2'
         $result.DeviceSdkCount | Should -Be 0
-        ($result.Exports -join ',') | Should -BeExactly 'Get-ParCmdbAsset,Get-ParEntraUser,Get-ParIntuneDevice'
+        ($result.Exports -join ',') | Should -BeExactly 'Get-ParCmdbAsset,Get-ParCmdbPersonMapping,Get-ParEntraUser,Get-ParIntuneDevice'
     }
 }
 

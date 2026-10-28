@@ -190,9 +190,9 @@ Describe 'Entra user fixture' {
     BeforeAll {
         $factoryPath = Join-Path $PSScriptRoot 'New-FakeEntraUser.ps1'
         $exportPath = Join-Path $PSScriptRoot 'Export-FakeEntraUser.ps1'
-        $fixturePath = Join-Path $PSScriptRoot '../../data/entra-users.csv'
-        $intunePath = Join-Path $PSScriptRoot '../../data/intune-devices.csv'
-        $cmdbPath = Join-Path $PSScriptRoot '../../data/cmdb-assets.csv'
+        $fixturePath = Join-Path $PSScriptRoot '../../data/test-entra-users.csv'
+        $intunePath = Join-Path $PSScriptRoot '../../data/test-intune-devices.csv'
+        $cmdbPath = Join-Path $PSScriptRoot '../../data/test-cmdb-assets.csv'
         $users = @(Import-Csv -LiteralPath $fixturePath)
     }
 

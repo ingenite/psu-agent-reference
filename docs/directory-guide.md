@@ -22,6 +22,12 @@ and module names follow ADR-0002 and ADR-0003.
 Pester tests live beside the code they test as `<Name>.Tests.ps1`. Empty scaffold
 directories may contain `.gitkeep` placeholders.
 
+Keep `data/` flat. Unprefixed source files form one coherent demonstration dataset
+shared by applications and reports. New reports reuse that data and apply their
+own filters; extend the shared records when a new scenario needs them. Prefix
+files retained for focused tests with `test-` and select them explicitly in tests.
+Do not create a separate dataset for each report.
+
 `ParData` retrieves source objects. `ParReports` queries and transforms those
 objects. Resource scripts and dashboards compose those commands for their own
 presentation or orchestration needs. Add abstractions when an actual shared

@@ -40,8 +40,10 @@ scenario. Intune's UserDisplayName and UserPrincipalName provide recorded displa
 context; UserId is the identity key corresponding to Entra user Id. The report
 selects missing UserId values and does not infer identity from display fields.
 
-The checked-in fixture produces `SYNTH-UNASSIGNED-001` and `SYNTH-SHARED-001`;
-`SYNTH-ASSIGNED-001` is excluded. An intentionally userless device can match.
+The shared demonstration data produces `SYNTH-COMPARE-NO-INTUNE-USER`,
+`SYNTH-COMPARE-SHARED`, `SYNTH-COMPARE-NO-ASSET`, and `SYNTH-COMPARE-NO-MAPPING`.
+Devices with a nonblank user ID are excluded. An intentionally userless device
+can match.
 Missing association is descriptive and does not establish a defect or a required
 remediation. Preserve device identifiers when adapting the report so an
 administrator can investigate the original records.

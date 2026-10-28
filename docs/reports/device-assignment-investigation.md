@@ -2,7 +2,9 @@
 
 ## Status and purpose
 
-Agreed direction for Issue #20; the assembled experience is not implemented yet.
+Agreed direction for Issue #20; offline composition is implemented, while the
+dashboard is registered with a Device assignments placeholder page. The assembled
+investigation experience remains to be built and verified in PSU.
 PAR IT Internal is a collection of pages and reports that brings related platform
 information together so administrators can investigate without manually joining
 exports or navigating separate systems. The first workflow concerns device
@@ -67,21 +69,27 @@ when opening details for an existing result. A complete retrieval set is not a
 claim that separate live platforms were read atomically.
 
 Person mappings are an explicit required input alongside Intune, CMDB, and Entra.
-Give their retrieval and configuration an explicit owner during the next slice;
-report transformations must continue receiving objects without CSV paths.
+ParData owns their retrieval through `Get-ParCmdbPersonMapping` and the
+`PersonMapping` fixture configuration key. Report transformations continue
+receiving objects without CSV paths.
 
 Place initial app-specific orchestration in the dashboard companion module.
 Keep reusable source operations in ParData and transformations in ParReports;
 extract additional shared orchestration when another consumer needs it.
+
+`Get-ParDeviceAssignmentSnapshot` in `dashboards/ParITInternal/ParITInternal.psm1` implements
+the offline composition for both report entry points and their shared investigation
+details. Its usage and result contract are available through
+`Get-Help Get-ParDeviceAssignmentSnapshot -Full` after importing the module.
 
 Show loading, successful empty results, and retrieval failure distinctly. If a
 required source fails, do not publish a newly computed, apparently complete
 comparison. A successfully retrieved empty source is different from a failure.
 Keep **Demo · Synthetic data** visible throughout the application.
 
-Use one coherent application demonstration dataset. Retain focused unit-test
-fixtures and the existing comparison scenarios; extend synthetic data or its
-machinery only to meet an identified report or investigation requirement.
+Use the shared demonstration files directly in `data/` across reports and the
+application. Extend shared synthetic data only to meet an identified report or
+investigation need.
 
 ## Acceptance scenarios
 
@@ -99,17 +107,3 @@ machinery only to meet an identified report or investigation requirement.
 - Offline composition tests exercise the existing SDK fixtures through ParData
   and ParReports. PSU verification separately covers module discovery, shared
   variables, navigation, loading, empty, and failure behavior.
-
-## Next slice and open choices
-
-Next, implement and test the bounded data composition needed by the shared
-investigation view: complete input retrieval, unchanged comparison results,
-Intune-side Entra enrichment, and per-candidate CMDB identity evidence. Then
-connect the two report entry points to that view and verify the assembled app.
-
-Before implementing that slice, settle the person-mapping retrieval/configuration
-owner and the app-facing result contract. Choose the application dataset from
-the existing fixtures or a proportionate adaptation. Exact page layout, refresh
-controls, and whether a failed refresh retains clearly labeled previous results
-remain implementation choices to review. No live integration, remediation, or
-additional scenario is authorized by this plan.

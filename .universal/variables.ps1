@@ -2,4 +2,5 @@ New-PSUVariable -Name 'PAR_FixturePaths' -Scope Global -Description 'Synthetic s
     IntuneDevice = (Join-Path $PSScriptRoot '../data/intune-devices.csv')
     EntraUser = (Join-Path $PSScriptRoot '../data/entra-users.csv')
     CmdbAsset = (Join-Path $PSScriptRoot '../data/cmdb-assets.csv')
+    PersonMapping = (Join-Path $PSScriptRoot '../data/cmdb-person-mappings.csv')
 }

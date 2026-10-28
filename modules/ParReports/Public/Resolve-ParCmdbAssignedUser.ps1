@@ -80,13 +80,13 @@ function Resolve-ParCmdbAssignedUser {
     Import-Module ./modules/ParReports/ParReports.psd1
     $assets = @(Get-ParCmdbAsset)
     $users = @(Get-ParEntraUser)
-    $mappings = @(Import-Csv -LiteralPath ./data/cmdb-person-mappings.csv)
+    $mappings = @(Get-ParCmdbPersonMapping)
     $results = @($assets | Resolve-ParCmdbAssignedUser -PersonMapping $mappings -EntraUser $users)
     $results | Select-Object CmdbAssetId, AssignedUserReference, Outcome, Reason, EntraObjectId
 
-    From the repository root, the fixtures resolve CMDB-PERSON-001 to Alex's ID
-    and CMDB-PERSON-002 to Blair's ID. CMDB-ASSET-003 has a blank reference and
-    remains Missing. Blair's disabled account state does not change resolution.
+    From the repository root, the shared fixtures resolve COMPARE-PERSON-ALEX
+    to Alex's ID. COMPARE-ASSET-004 and COMPARE-ASSET-005 have blank references;
+    other assets demonstrate missing or ambiguous mappings and Entra candidates.
     .EXAMPLE
     Import-Module ./modules/ParReports/ParReports.psd1
     $assets = @(

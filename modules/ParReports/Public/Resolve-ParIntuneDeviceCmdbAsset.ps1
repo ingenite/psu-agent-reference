@@ -67,8 +67,9 @@ function Resolve-ParIntuneDeviceCmdbAsset {
     $results | Where-Object Outcome -eq 'Ambiguous' | ForEach-Object { $_.CmdbCandidates }
 
     From the repository root, the default offline fixtures produce Unique for
-    SYNTH-ASSIGNED-001 (CMDB-ASSET-001), Missing for SYNTH-UNASSIGNED-001, and
-    Ambiguous for SYNTH-SHARED-001 (CMDB-ASSET-002 and CMDB-ASSET-003).
+    SYNTH-COMPARE-MATCH (COMPARE-ASSET-001), Missing for SYNTH-COMPARE-NO-ASSET,
+    and Ambiguous for SYNTH-COMPARE-DUPLICATE-ASSET (COMPARE-ASSET-007A and
+    COMPARE-ASSET-007B), among the eleven device records.
     #>
     [CmdletBinding()]
     [OutputType([pscustomobject])]

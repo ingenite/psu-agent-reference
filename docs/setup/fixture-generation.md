@@ -5,11 +5,15 @@ CMDB asset records for the retrieval and reporting examples. Use explicit
 identifiers and timestamps where applicable for repeatable records. Factories
 create objects in memory; exporters write the selected source fields to CSV.
 
-The examples below regenerate the checked-in fixtures from the repository root.
-They replace the destination CSVs. To create a separate dataset, supply `-Path`
-to the exporter, for example `-Path ./tools/output/example-assets.csv`.
+The unprefixed files directly in `data/` form the shared demonstration dataset.
+Focused test fixtures use the `test-` prefix.
 
-## Create an Intune dataset
+The factory examples below regenerate the preserved `test-` fixtures from the
+repository root, replacing those files through explicit `-Path` arguments.
+Exporters otherwise default to the shared demonstration files. For experiments,
+write to `tools/output/`, for example `-Path ./tools/output/example-assets.csv`.
+
+## Regenerate the Intune test fixture
 
 ```powershell
 $common = @{
@@ -49,10 +53,10 @@ $devices = @(
     }
 )
 
-$devices | & ./tools/factories/Export-FakeIntuneDevice.ps1
+$devices | & ./tools/factories/Export-FakeIntuneDevice.ps1 -Path ./data/test-intune-devices.csv
 ```
 
-## Create a CMDB dataset
+## Regenerate the CMDB test fixture
 
 ```powershell
 $assetParameters = @(
@@ -84,10 +88,10 @@ $assets = @(
     }
 )
 
-$assets | & ./tools/factories/Export-FakeCmdbAsset.ps1
+$assets | & ./tools/factories/Export-FakeCmdbAsset.ps1 -Path ./data/test-cmdb-assets.csv
 ```
 
-## Create an Entra user dataset
+## Regenerate the Entra user test fixture
 
 ```powershell
 $userParameters = @(
@@ -116,10 +120,10 @@ $users = @(
     }
 )
 
-$users | & ./tools/factories/Export-FakeEntraUser.ps1
+$users | & ./tools/factories/Export-FakeEntraUser.ps1 -Path ./data/test-entra-users.csv
 ```
 
-## Fixture scenarios
+## Focused test scenarios
 
 The Intune fixture covers an assigned device, a device with no user association,
 and an intentionally userless shared device. All enrollment types are `unknown`.
@@ -135,7 +139,7 @@ The CMDB fixture intentionally has these relationships to the Intune data:
 The Entra fixture covers Alex Example with the existing Intune `UserId`
 `10000000-0000-4000-8000-000000000001` and `alex@example.invalid`, Blair Sample
 with a false account state and missing mail, and Casey Demo with unspecified UPN,
-mail, and account state. The separate `data/cmdb-person-mappings.csv` explicitly
+mail, and account state. The `data/test-cmdb-person-mappings.csv` fixture explicitly
 maps `CMDB-PERSON-001` to `alex@example.invalid` and `CMDB-PERSON-002` to
 `blair@example.invalid` for the assigned-user resolver. It can be recreated with:
 
@@ -143,7 +147,7 @@ maps `CMDB-PERSON-001` to `alex@example.invalid` and `CMDB-PERSON-002` to
 @(
     [pscustomobject]@{ personReference = 'CMDB-PERSON-001'; userPrincipalName = 'alex@example.invalid' }
     [pscustomobject]@{ personReference = 'CMDB-PERSON-002'; userPrincipalName = 'blair@example.invalid' }
-) | Export-Csv -LiteralPath ./data/cmdb-person-mappings.csv -NoTypeInformation
+) | Export-Csv -LiteralPath ./data/test-cmdb-person-mappings.csv -NoTypeInformation
 ```
 
 These explicit demonstration mappings do not independently verify identity,
@@ -155,3 +159,31 @@ The CMDB projection draws on Atlassian's [hardware asset schema](https://support
 and [object attributes](https://support.atlassian.com/assets/docs/what-are-attributes/).
 Its five-field flat schema is a demonstration choice, not an Atlassian API response.
 The Entra fields follow Microsoft's [Graph user resource](https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0).
+
+## Maintain the shared demonstration dataset
+
+The default files in `data/` supply the application and report examples. Their
+eleven explicit scenarios are also checked by integration tests; preserve
+their comparison outcomes when adding display context or new scenarios. The
+`COMPARE-005` device is intentionally userless and named `SYNTH-COMPARE-SHARED`.
+Person mappings remain explicit two-column records, including intentional duplicates.
+There is no separate generator per report. Use the existing factories
+and exporters with explicit values when adding records.
+
+In a fresh PowerShell session, use ParData's defaults and re-export a working set
+without replacing the checked-in files:
+
+```powershell
+Import-Module ./dashboards/ParITInternal/ParITInternal.psm1
+$snapshot = Get-ParDeviceAssignmentSnapshot
+$outputDirectory = './tools/output/demo-data'
+New-Item -Path $outputDirectory -ItemType Directory -Force | Out-Null
+$snapshot.Inputs.IntuneDevice | & ./tools/factories/Export-FakeIntuneDevice.ps1 -Path "$outputDirectory/intune-devices.csv"
+$snapshot.Inputs.CmdbAsset | & ./tools/factories/Export-FakeCmdbAsset.ps1 -Path "$outputDirectory/cmdb-assets.csv"
+$snapshot.Inputs.EntraUser | & ./tools/factories/Export-FakeEntraUser.ps1 -Path "$outputDirectory/entra-users.csv"
+$snapshot.Inputs.PersonMapping | Export-Csv -LiteralPath "$outputDirectory/cmdb-person-mappings.csv" -NoTypeInformation
+```
+
+Point all four ParData paths at that directory and reimport with `-Force` to
+verify the exported set. The `test-` files are only for tests that need their
+specific records and do not participate in the default demonstration.
