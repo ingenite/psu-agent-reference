@@ -8,7 +8,8 @@ New-UDPage -Name 'Reports' -Url '/reports' -DefaultHomePage -AutoInclude -Conten
                 New-UDTypography -Text 'Compare Intune primary users with CMDB assigned users.'
             }
             $assignmentFooter = New-UDCardFooter -Content {
-                New-UDButton -Text 'Open report' -Variant text -Href '/device-assignments'
+                # New-UDButton -Href needs the app base URL, unlike $Navigation's New-UDListItem -Href and New-UDPage -Url.
+                New-UDButton -Text 'Open report' -Variant outlined -Href '/par-it-internal/device-assignments'
             }
             New-UDCard -Header $assignmentHeader -Body $assignmentBody -Footer $assignmentFooter
         }
