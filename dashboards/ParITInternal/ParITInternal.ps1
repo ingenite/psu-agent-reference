@@ -1,5 +1,5 @@
 $Navigation = @(
-    New-UDListItem -Label 'Reports' -Href '/par-it-internal/reports'
+    New-UDListItem -Label 'Reports' -Href '/reports'
 )
 
 $HeaderContent = {
