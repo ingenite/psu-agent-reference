@@ -3,17 +3,21 @@ New-UDPage -Name 'Reports' -Url '/reports' -DefaultHomePage -AutoInclude -Conten
 
     New-UDGrid -Container -Spacing 2 -Children {
         New-UDGrid -Item -ExtraSmallSize 12 -LargeSize 6 -Children {
-            New-UDCard -Title 'Device assignments' -Text 'Compare Intune primary users with CMDB assigned users.'
+            $assignmentHeader = New-UDCardHeader -Title 'Device assignments' -TitleAlignment left -Action (New-UDChip -Label 'Planned')
+            $assignmentBody = New-UDCardBody -Content {
+                New-UDTypography -Text 'Compare Intune primary users with CMDB assigned users.'
+            }
+            $assignmentFooter = New-UDCardFooter -Content {
+                New-UDButton -Text 'Open report' -Variant text -Href '/device-assignments'
+            }
+            New-UDCard -Header $assignmentHeader -Body $assignmentBody -Footer $assignmentFooter
         }
         New-UDGrid -Item -ExtraSmallSize 12 -LargeSize 6 -Children {
-            $header = New-UDCardHeader -Title 'Windows devices without a primary user'
-            $body = New-UDCardBody -Content {
+            $missingUserHeader = New-UDCardHeader -Title 'Windows devices without a primary user' -TitleAlignment left -Action (New-UDChip -Label 'Planned')
+            $missingUserBody = New-UDCardBody -Content {
                 New-UDTypography -Text 'Review missing associations, including intentionally userless devices.'
             }
-            $footer = New-UDCardFooter -Content {
-                New-UDChip -Label 'Planned'
-            }
-            New-UDCard -Header $header -Body $body -Footer $footer
+            New-UDCard -Header $missingUserHeader -Body $missingUserBody
         }
     }
 }
