@@ -2,9 +2,9 @@
 
 ## Status and purpose
 
-Agreed direction for Issue #20; offline composition is implemented, while the
-dashboard is registered with a Device assignments placeholder page. The assembled
-investigation experience remains to be built and verified in PSU.
+Both reports are available from Reports in PAR IT Internal. Investigate opens a
+shared modal with the result and assignments first, followed by expandable source
+evidence. Closing it preserves the report controls.
 PAR IT Internal is a collection of pages and reports that brings related platform
 information together so administrators can investigate without manually joining
 exports or navigating separate systems. The first workflow concerns device
@@ -34,10 +34,10 @@ asset reconciliation is deferred. Do not merge Intune records by serial number.
 
 ## Report and investigation content
 
-The assignment list should identify the device by name and Intune ID, show its
-serial number, primary-user context, CMDB assignment context where available,
-and comparison outcome and reason. Keep detailed candidate evidence in the
-investigation view rather than flattening ambiguity into a chosen account.
+The assignment list identifies the device by name and serial, shows primary-user
+and CMDB assignment context, and displays the outcome. The investigation explains
+the reason and retains identifiers and candidate evidence rather than flattening
+ambiguity into a chosen account.
 
 The shared investigation view should expose:
 
@@ -73,14 +73,22 @@ ParData owns their retrieval through `Get-ParCmdbPersonMapping` and the
 `PersonMapping` fixture configuration key. Report transformations continue
 receiving objects without CSV paths.
 
-Place initial app-specific orchestration in the dashboard companion module.
+Place initial app-specific snapshot composition in the dashboard companion module.
 Keep reusable source operations in ParData and transformations in ParReports;
 extract additional shared orchestration when another consumer needs it.
 
-`Get-ParDeviceAssignmentSnapshot` in `dashboards/ParITInternal/ParITInternal.psm1` implements
-the offline composition for both report entry points and their shared investigation
-details. Its usage and result contract are available through
-`Get-Help Get-ParDeviceAssignmentSnapshot -Full` after importing the module.
+Each report page declares its layout, session loading and refresh, investigation
+selection, table columns, and investigation action. The companion module prepares
+shared display rows and renders the shared investigation modal from explicitly
+supplied state.
+
+Import `dashboards/ParITInternal/ParITInternal.psm1` to use
+`Get-PITIDeviceAssignmentSnapshot` for the offline composition shared by both
+reports and their investigation details. The companion imports the adjacent
+`ParITInternalCommands.psm1` with `-Prefix PITI` and explicitly re-exports its ten
+commands. Do not add another prefix when importing the companion. The command's
+usage and result contract are available through
+`Get-Help Get-PITIDeviceAssignmentSnapshot -Full` after importing the companion.
 
 Show loading, successful empty results, and retrieval failure distinctly. If a
 required source fails, do not publish a newly computed, apparently complete
@@ -90,6 +98,17 @@ Keep **Demo · Synthetic data** visible throughout the application.
 Use the shared demonstration files directly in `data/` across reports and the
 application. Extend shared synthetic data only to meet an identified report or
 investigation need.
+
+## Setup and refresh
+
+Use the registered PowerShell 7 app with its companion and implementation modules,
+page files, ParData, ParReports, and the four shared CSVs in `data/`. The environment must
+inject `PAR_FixturePaths` (or `*`); fixture retrieval and generation guides own
+configuration and regeneration. Restart the app after module or path changes.
+
+Open `/par-it-internal/reports`. Both reports and their investigation modals reuse
+one session snapshot. **Refresh data** replaces it for both reports; failure hides
+previous results until a successful retry. Empty retrieval shows **No results**.
 
 ## Acceptance scenarios
 

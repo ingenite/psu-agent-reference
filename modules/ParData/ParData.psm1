@@ -16,10 +16,18 @@ $script:SourceFixturePaths = @{
 $sharedFixtureVariable = Get-Variable -Name 'PAR_FixturePaths' -Scope Global -ErrorAction SilentlyContinue
 $sharedFixturePaths = @{}
 if ($null -ne $sharedFixtureVariable) {
-    if ($sharedFixtureVariable.Value -isnot [hashtable]) {
-        throw 'PAR_FixturePaths must be a hashtable of source names and fixture paths.'
-    }
     $sharedFixturePaths = $sharedFixtureVariable.Value
+    if ($sharedFixturePaths -is [string]) {
+        try {
+            $sharedFixturePaths = ConvertFrom-Json -InputObject $sharedFixturePaths -AsHashtable -NoEnumerate -ErrorAction Stop
+        }
+        catch {
+            throw 'PAR_FixturePaths must be a hashtable or JSON object of source names and fixture paths.'
+        }
+    }
+    if ($sharedFixturePaths -isnot [hashtable]) {
+        throw 'PAR_FixturePaths must be a hashtable or JSON object of source names and fixture paths.'
+    }
 }
 
 foreach ($configuredFixturePaths in @($sharedFixturePaths, $FixturePaths)) {

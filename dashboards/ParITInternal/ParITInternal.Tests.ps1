@@ -44,10 +44,40 @@ Describe 'PAR IT Internal' {
     }
 
     AfterAll {
-        Remove-Module ParITInternal, ParReports, ParData -ErrorAction SilentlyContinue
+        Remove-Module ParITInternal, ParITInternalCommands, ParReports, ParData -ErrorAction SilentlyContinue
         Remove-Variable -Name PAR_FixturePaths -Scope Global -ErrorAction SilentlyContinue
         if ($null -ne $existingFixtureVariable) {
             Set-Variable -Name PAR_FixturePaths -Scope Global -Value $existingFixtureVariable.Value
+        }
+    }
+
+    Context 'Companion command identity' {
+        It 'exposes exactly the ten PITI commands through the companion' {
+            $expectedNames = @(
+                'Get-PITIDeviceAssignmentSnapshot'
+                'New-PITIDeviceAssignmentState'
+                'Get-PITIDeviceInvestigation'
+                'ConvertTo-PITIDeviceAssignmentRow'
+                'Show-PITIDeviceInvestigationDialog'
+                'Get-PITIAssignmentReasonText'
+                'Get-PITIAssignmentOutcomeText'
+                'New-PITIEvidenceTable'
+                'New-PITIEntraEvidence'
+                'New-PITIAssignmentSummary'
+            )
+            $commands = @(Get-Command -Module ParITInternal)
+            $commands | Should -HaveCount 10
+            ($commands.Name | Sort-Object) | Should -Be ($expectedNames | Sort-Object)
+            foreach ($name in $expectedNames) {
+                Get-Command -Name ($name -replace '-PITI', '-') -ListImported -ErrorAction SilentlyContinue | Should -BeNullOrEmpty
+                Get-Command -Name ($name -replace '-PITI', '-Par') -ListImported -ErrorAction SilentlyContinue | Should -BeNullOrEmpty
+            }
+        }
+
+        It 'resolves help and callback-facing helpers by their public names' {
+            (Get-Help Get-PITIDeviceAssignmentSnapshot).Synopsis | Should -BeLike '*complete synthetic device-assignment*'
+            & { Get-PITIAssignmentOutcomeText -Outcome MissingAssignment } | Should -BeExactly 'Missing assignment'
+            & { Get-PITIAssignmentReasonText -Reason MultipleMatchingCmdbRecords } | Should -BeLike '*Multiple CMDB assets*'
         }
     }
 
@@ -55,7 +85,7 @@ Describe 'PAR IT Internal' {
         It 'uses the shared default data for both report entry points without report-specific configuration' {
             Remove-Module ParData
             Import-Module $dataModulePath -Force
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $report = @(Get-ParIntuneDeviceWithoutPrimaryUserReport)
 
             $snapshot.DeviceAssignments | Should -HaveCount 11
@@ -65,7 +95,7 @@ Describe 'PAR IT Internal' {
         }
 
         It 'composes actual SDK records and preserves every existing comparison outcome and reason' {
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $expected = @(Compare-ParDeviceAssignedUser -InputObject $snapshot.Inputs.IntuneDevice -CmdbAsset $snapshot.Inputs.CmdbAsset -EntraUser $snapshot.Inputs.EntraUser -PersonMapping $snapshot.Inputs.PersonMapping)
 
             $snapshot.DeviceAssignments | Should -HaveCount 11
@@ -78,7 +108,7 @@ Describe 'PAR IT Internal' {
         }
 
         It 'shows both accounts in a mismatch while retaining the recorded primary-user context' {
-            $row = (Get-ParDeviceAssignmentSnapshot).DeviceAssignments[1]
+            $row = (Get-PITIDeviceAssignmentSnapshot).DeviceAssignments[1]
             $row.Outcome | Should -BeExactly 'Mismatch'
             $row.IntuneDevice.UserDisplayName | Should -BeExactly 'Blair Sample'
             $row.IntuneDevice.UserPrincipalName | Should -BeExactly 'blair@example.invalid'
@@ -89,7 +119,7 @@ Describe 'PAR IT Internal' {
         }
 
         It 'connects missing-primary-user rows to the same investigations, including the intentional shared device' {
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $snapshot.WithoutPrimaryUser | Should -HaveCount 4
             foreach ($entry in $snapshot.WithoutPrimaryUser) {
                 $entry.Investigation | Should -Be $snapshot.DeviceAssignments[$entry.RecordNumber - 1]
@@ -102,7 +132,7 @@ Describe 'PAR IT Internal' {
         }
 
         It 'resolves every ambiguous asset independently without changing the unresolved comparison' {
-            $row = (Get-ParDeviceAssignmentSnapshot).DeviceAssignments[6]
+            $row = (Get-PITIDeviceAssignmentSnapshot).DeviceAssignments[6]
             $row.Outcome | Should -BeExactly 'Unresolved'
             $row.Comparison.AssignedUserResolution | Should -BeNullOrEmpty
             $row.CmdbAssignedUsers | Should -HaveCount 2
@@ -115,7 +145,7 @@ Describe 'PAR IT Internal' {
         }
 
         It 'retains specific missing and ambiguous person or Entra evidence' {
-            $rows = (Get-ParDeviceAssignmentSnapshot).DeviceAssignments
+            $rows = (Get-PITIDeviceAssignmentSnapshot).DeviceAssignments
             $rows[7].CmdbAssignedUsers[0].Reason | Should -BeExactly 'NoPersonMapping'
             $rows[8].CmdbAssignedUsers[0].Reason | Should -BeExactly 'MultiplePersonMappings'
             $rows[8].CmdbAssignedUsers[0].MappingCandidates | Should -HaveCount 2
@@ -128,7 +158,7 @@ Describe 'PAR IT Internal' {
         It 'distinguishes missing Intune enrichment without redefining the ID comparison' {
             $users = @(Import-Csv -LiteralPath $fixturePaths.EntraUser | Where-Object id -ne '10000000-0000-4000-8000-000000000002')
             $users | Export-Csv -LiteralPath $fixturePaths.EntraUser -NoTypeInformation
-            $row = (Get-ParDeviceAssignmentSnapshot).DeviceAssignments[1]
+            $row = (Get-PITIDeviceAssignmentSnapshot).DeviceAssignments[1]
             $row.Outcome | Should -BeExactly 'Mismatch'
             $row.IntunePrimaryUser.Outcome | Should -BeExactly 'Missing'
             $row.IntunePrimaryUser.Reason | Should -BeExactly 'NoMatchingEntraUser'
@@ -141,7 +171,7 @@ Describe 'PAR IT Internal' {
                 id = " $($users[1].id) "; displayName = 'Different context'; userPrincipalName = 'other@example.invalid'; mail = ''; accountEnabled = 'True'
             }
             @($users; $duplicate) | Export-Csv -LiteralPath $fixturePaths.EntraUser -NoTypeInformation
-            $row = (Get-ParDeviceAssignmentSnapshot).DeviceAssignments[1]
+            $row = (Get-PITIDeviceAssignmentSnapshot).DeviceAssignments[1]
             $row.Outcome | Should -BeExactly 'Mismatch'
             $row.IntunePrimaryUser.Outcome | Should -BeExactly 'Ambiguous'
             $row.IntunePrimaryUser.EntraCandidateCount | Should -Be 2
@@ -161,17 +191,17 @@ Describe 'PAR IT Internal' {
             $users[0].id = $CandidateId
             if ($CandidateId.Trim() -eq '') {
                 # Blank Entra IDs are not valid ParData records; use supplied evidence for this isolated edge case.
-                Mock Get-ParEntraUser -ModuleName ParITInternal { [pscustomobject]@{ Id = ' '; UserPrincipalName = 'alex@example.invalid' } }
+                Mock Get-ParEntraUser -ModuleName ParITInternalCommands { [pscustomobject]@{ Id = ' '; UserPrincipalName = 'alex@example.invalid' } }
             }
             else { $users | Export-Csv -LiteralPath $fixturePaths.EntraUser -NoTypeInformation }
-            $row = (Get-ParDeviceAssignmentSnapshot).DeviceAssignments[0]
+            $row = (Get-PITIDeviceAssignmentSnapshot).DeviceAssignments[0]
             $row.IntunePrimaryUser.Outcome | Should -BeExactly $Expected
         }
 
         It 'preserves repeated Intune IDs and serials as separate report entries with distinct record numbers' {
             $devices = @(Import-Csv -LiteralPath $fixturePaths.IntuneDevice)
             @($devices[2], $devices[2]) | Export-Csv -LiteralPath $fixturePaths.IntuneDevice -NoTypeInformation
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $snapshot.DeviceAssignments | Should -HaveCount 2
             $snapshot.WithoutPrimaryUser.RecordNumber | Should -Be @(1, 2)
             $snapshot.WithoutPrimaryUser[0].Investigation | Should -Be $snapshot.DeviceAssignments[0]
@@ -180,12 +210,12 @@ Describe 'PAR IT Internal' {
         }
 
         It 'holds existing evidence until another refresh and leaves source records unchanged' {
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $before = ConvertTo-TestSnapshotJson $snapshot
             $users = @(Import-Csv -LiteralPath $fixturePaths.EntraUser)
             $users[1].displayName = 'Updated Blair'
             $users | Export-Csv -LiteralPath $fixturePaths.EntraUser -NoTypeInformation
-            $next = Get-ParDeviceAssignmentSnapshot
+            $next = Get-PITIDeviceAssignmentSnapshot
             (ConvertTo-TestSnapshotJson $snapshot) | Should -BeExactly $before
             $next.DeviceAssignments[1].IntunePrimaryUser.EntraCandidates[0].DisplayName | Should -BeExactly 'Updated Blair'
             $snapshot.DeviceAssignments[1].IntuneDevice | Should -Be $snapshot.Inputs.IntuneDevice[1]
@@ -194,7 +224,7 @@ Describe 'PAR IT Internal' {
 
         It 'returns one successful snapshot with empty arrays when all inputs are empty' {
             foreach ($path in $fixturePaths.Values) { Set-Content -LiteralPath $path -Value '' -NoNewline }
-            $received = @(Get-ParDeviceAssignmentSnapshot)
+            $received = @(Get-PITIDeviceAssignmentSnapshot)
             $received | Should -HaveCount 1
             $received[0].DeviceAssignments | Should -HaveCount 0
             $received[0].WithoutPrimaryUser | Should -HaveCount 0
@@ -209,7 +239,7 @@ Describe 'PAR IT Internal' {
             @{ Source = 'PersonMapping'; Reason = 'CmdbAssignedUserUnresolved' }
         ) {
             Set-Content -LiteralPath $fixturePaths[$Source] -Value '' -NoNewline
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $snapshot.Inputs.$Source | Should -HaveCount 0
             $snapshot.DeviceAssignments | Should -HaveCount 11
             $snapshot.DeviceAssignments[0].Reason | Should -BeExactly $Reason
@@ -220,15 +250,122 @@ Describe 'PAR IT Internal' {
             $assets = @(Get-ParCmdbAsset)
             $users = @(Get-ParEntraUser)
             $mappings = @(Get-ParCmdbPersonMapping)
-            Mock Get-ParIntuneDevice -ModuleName ParITInternal { $devices }
-            Mock Get-ParCmdbAsset -ModuleName ParITInternal { $assets }
-            Mock Get-ParEntraUser -ModuleName ParITInternal { $users }
-            Mock Get-ParCmdbPersonMapping -ModuleName ParITInternal { $mappings }
-            $snapshot = Get-ParDeviceAssignmentSnapshot
+            Mock Get-ParIntuneDevice -ModuleName ParITInternalCommands { $devices }
+            Mock Get-ParCmdbAsset -ModuleName ParITInternalCommands { $assets }
+            Mock Get-ParEntraUser -ModuleName ParITInternalCommands { $users }
+            Mock Get-ParCmdbPersonMapping -ModuleName ParITInternalCommands { $mappings }
+            $snapshot = Get-PITIDeviceAssignmentSnapshot
             $null = $snapshot.WithoutPrimaryUser[0].Investigation.IntuneDevice
             foreach ($name in @('Get-ParIntuneDevice', 'Get-ParCmdbAsset', 'Get-ParEntraUser', 'Get-ParCmdbPersonMapping')) {
-                Should -Invoke $name -ModuleName ParITInternal -Times 1 -Exactly
+                Should -Invoke $name -ModuleName ParITInternalCommands -Times 1 -Exactly
             }
+        }
+    }
+
+    Context 'Shared report display rows' {
+        It 'formats recorded and resolved assignments without changing comparison results' {
+            $state = New-PITIDeviceAssignmentState
+            $rows = @(ConvertTo-PITIDeviceAssignmentRow -Investigation $state.Snapshot.DeviceAssignments -SnapshotId $state.SnapshotId)
+
+            $rows | Should -HaveCount 11
+            $rows.RecordNumber | Should -Be $state.Snapshot.DeviceAssignments.RecordNumber
+            $rows[1].PrimaryUserName | Should -BeExactly 'Blair Sample'
+            $rows[1].PrimaryUser | Should -BeExactly 'blair@example.invalid'
+            $rows[1].CmdbUserName | Should -BeExactly 'Alex Example'
+            $rows[1].CmdbUserUpn | Should -BeExactly 'alex@example.invalid'
+            $rows[1].Outcome | Should -BeExactly 'Mismatch'
+            $rows[1].Reason | Should -BeExactly 'The Intune and CMDB assignments identify different Entra users.'
+            $rows[2].Outcome | Should -BeExactly 'Missing assignment'
+            $rows[3].CmdbSummary | Should -BeExactly 'Not assigned'
+            $rows[5].CmdbSummary | Should -BeExactly 'No matching asset'
+            $rows[6].CmdbSummary | Should -BeExactly '2 asset candidates'
+            $rows[6].CmdbUserUpn | Should -BeNullOrEmpty
+            $rows[7].CmdbSummary | Should -BeExactly 'Unresolved person'
+            $state.Snapshot.DeviceAssignments[2].Outcome | Should -BeExactly 'MissingAssignment'
+        }
+
+        It 'uses only the supplied subset and retained evidence without reading sources again' {
+            $state = New-PITIDeviceAssignmentState
+            $investigations = @($state.Snapshot.WithoutPrimaryUser | ForEach-Object { $_.Investigation })
+            foreach ($path in $fixturePaths.Values) { Remove-Item -LiteralPath $path }
+            $rows = @(ConvertTo-PITIDeviceAssignmentRow -Investigation $investigations -SnapshotId $state.SnapshotId)
+
+            $rows | Should -HaveCount 4
+            $rows.RecordNumber | Should -Be $state.Snapshot.WithoutPrimaryUser.RecordNumber
+            foreach ($row in $rows) {
+                $row.SnapshotId | Should -BeExactly $state.SnapshotId
+                $selected = Get-PITIDeviceInvestigation -State $state -SnapshotId $row.SnapshotId -RecordNumber $row.RecordNumber
+                $selected.IntuneDeviceId | Should -BeExactly $row.IntuneDeviceId
+            }
+        }
+
+        It 'preserves duplicate records and their investigation selection keys' {
+            $devices = @(Import-Csv -LiteralPath $fixturePaths.IntuneDevice)
+            @($devices[2], $devices[2]) | Export-Csv -LiteralPath $fixturePaths.IntuneDevice -NoTypeInformation
+            $state = New-PITIDeviceAssignmentState
+            $rows = @(ConvertTo-PITIDeviceAssignmentRow -Investigation $state.Snapshot.DeviceAssignments -SnapshotId $state.SnapshotId)
+
+            $rows | Should -HaveCount 2
+            $rows.RecordNumber | Should -Be @(1, 2)
+            $rows.IntuneDeviceId | Should -Be @($devices[2].id, $devices[2].id)
+            foreach ($row in $rows) {
+                $selected = Get-PITIDeviceInvestigation -State $state -SnapshotId $row.SnapshotId -RecordNumber $row.RecordNumber
+                $selected | Should -Be $state.Snapshot.DeviceAssignments[$row.RecordNumber - 1]
+            }
+        }
+
+        It 'returns no display rows for a successfully empty selection' {
+            @(ConvertTo-PITIDeviceAssignmentRow -Investigation @() -SnapshotId 'empty') | Should -HaveCount 0
+        }
+    }
+
+    Context 'Report state and investigation selection' {
+        It 'loads a complete state and gives each refresh a new identity' {
+            $first = New-PITIDeviceAssignmentState
+            $second = New-PITIDeviceAssignmentState
+            $first.Status | Should -BeExactly 'Ready'
+            $first.Snapshot.DeviceAssignments | Should -HaveCount 11
+            $first.LoadedAt | Should -Not -BeNullOrEmpty
+            $second.SnapshotId | Should -Not -BeExactly $first.SnapshotId
+            Get-PITIDeviceInvestigation -State $second -SnapshotId $first.SnapshotId -RecordNumber '2' | Should -BeNullOrEmpty
+        }
+
+        It 'selects duplicate IDs by record position without rereading sources' {
+            $devices = @(Import-Csv -LiteralPath $fixturePaths.IntuneDevice)
+            $devices[1].id = $devices[0].id
+            $devices | Export-Csv -LiteralPath $fixturePaths.IntuneDevice -NoTypeInformation
+            $state = New-PITIDeviceAssignmentState
+            Remove-Item -LiteralPath $fixturePaths.IntuneDevice
+            $first = Get-PITIDeviceInvestigation -State $state -SnapshotId $state.SnapshotId -RecordNumber '1'
+            $second = Get-PITIDeviceInvestigation -State $state -SnapshotId $state.SnapshotId -RecordNumber '2'
+            $first.IntuneDeviceId | Should -BeExactly $second.IntuneDeviceId
+            $first.Outcome | Should -BeExactly 'Match'
+            $second.Outcome | Should -BeExactly 'Mismatch'
+            $second | Should -Be $state.Snapshot.DeviceAssignments[1]
+        }
+
+        It 'rejects invalid record position <Position>' -ForEach @(
+            @{ Position = '0' }, @{ Position = '-1' }, @{ Position = '12' },
+            @{ Position = 'abc' }, @{ Position = '1.0' }, @{ Position = '9999999999999' }
+        ) {
+            $state = New-PITIDeviceAssignmentState
+            Get-PITIDeviceInvestigation -State $state -SnapshotId $state.SnapshotId -RecordNumber $Position | Should -BeNullOrEmpty
+        }
+
+        It 'keeps successful empty retrieval distinct from failed refresh and clears previous results' {
+            $header = Get-Content -LiteralPath $fixturePaths.IntuneDevice -TotalCount 1
+            Set-Content -LiteralPath $fixturePaths.IntuneDevice -Value $header
+            $state = New-PITIDeviceAssignmentState
+            $state.Status | Should -BeExactly 'Ready'
+            $state.Snapshot.DeviceAssignments | Should -HaveCount 0
+            Remove-Item -LiteralPath $fixturePaths.PersonMapping
+            $state = New-PITIDeviceAssignmentState -WarningAction SilentlyContinue
+            $state.Status | Should -BeExactly 'Failed'
+            $state.Snapshot | Should -BeNullOrEmpty
+            $state.SnapshotId | Should -BeNullOrEmpty
+            $state.LoadedAt | Should -BeNullOrEmpty
+            Get-PITIDeviceInvestigation -State $state -SnapshotId 'expired' -RecordNumber '1' | Should -BeNullOrEmpty
+            Get-PITIDeviceInvestigation -State $null -SnapshotId 'expired' -RecordNumber '1' | Should -BeNullOrEmpty
         }
     }
 
@@ -239,12 +376,12 @@ Describe 'PAR IT Internal' {
             @{ Source = 'EntraUser' }
             @{ Source = 'PersonMapping' }
         ) {
-            $previous = Get-ParDeviceAssignmentSnapshot
+            $previous = Get-PITIDeviceAssignmentSnapshot
             $before = ConvertTo-TestSnapshotJson $previous
             Remove-Item -LiteralPath $fixturePaths[$Source]
             $received = @()
             $failure = $null
-            try { Get-ParDeviceAssignmentSnapshot | ForEach-Object { $received += $_ } }
+            try { Get-PITIDeviceAssignmentSnapshot | ForEach-Object { $received += $_ } }
             catch { $failure = $_ }
             $failure.Exception.Message | Should -BeLike '*Cannot read*fixture*'
             $received | Should -HaveCount 0
@@ -257,10 +394,10 @@ Describe 'PAR IT Internal' {
             @{ Command = 'Get-ParEntraUser' }
             @{ Command = 'Get-ParCmdbPersonMapping' }
         ) {
-            Mock $Command -ModuleName ParITInternal { [pscustomobject]@{ Id = 'partial' }; throw 'Later source failure' }
+            Mock $Command -ModuleName ParITInternalCommands { [pscustomobject]@{ Id = 'partial' }; throw 'Later source failure' }
             $received = @()
             $failure = $null
-            try { Get-ParDeviceAssignmentSnapshot | ForEach-Object { $received += $_ } }
+            try { Get-PITIDeviceAssignmentSnapshot | ForEach-Object { $received += $_ } }
             catch { $failure = $_ }
             $failure.Exception.Message | Should -BeLike '*Later source failure*'
             $received | Should -HaveCount 0
@@ -272,52 +409,28 @@ Describe 'PAR IT Internal' {
             @{ Command = 'Get-ParEntraUser' }
             @{ Command = 'Get-ParCmdbPersonMapping' }
         ) {
-            InModuleScope ParITInternal -Parameters @{ SourceCommand = $Command } {
+            # Use a real advanced function: Pester mock bodies do not inherit the caller's error preference.
+            InModuleScope ParData -Parameters @{ SourceCommand = $Command } {
                 param($SourceCommand)
 
-                switch ($SourceCommand) {
-                    'Get-ParIntuneDevice' {
-                        function Get-ParIntuneDevice {
-                            [CmdletBinding()]
-                            param()
-                            Write-Error 'Source error'
-                        }
-                    }
-                    'Get-ParCmdbAsset' {
-                        function Get-ParCmdbAsset {
-                            [CmdletBinding()]
-                            param()
-                            Write-Error 'Source error'
-                        }
-                    }
-                    'Get-ParEntraUser' {
-                        function Get-ParEntraUser {
-                            [CmdletBinding()]
-                            param()
-                            Write-Error 'Source error'
-                        }
-                    }
-                    'Get-ParCmdbPersonMapping' {
-                        function Get-ParCmdbPersonMapping {
-                            [CmdletBinding()]
-                            param()
-                            Write-Error 'Source error'
-                        }
-                    }
+                Set-Item -LiteralPath "Function:script:$SourceCommand" -Value {
+                    [CmdletBinding()]
+                    param()
+                    Write-Error 'Source error'
                 }
-                { Get-ParDeviceAssignmentSnapshot -ErrorAction SilentlyContinue } | Should -Throw '*Source error*'
+                { Get-PITIDeviceAssignmentSnapshot -ErrorAction SilentlyContinue } | Should -Throw '*Source error*'
             }
         }
 
         It 'buffers later investigation failures before returning a new snapshot' {
-            Mock Resolve-ParCmdbAssignedUser -ModuleName ParITInternal {
+            Mock Resolve-ParCmdbAssignedUser -ModuleName ParITInternalCommands {
                 param($InputObject, $PersonMapping, $EntraUser)
                 if ($InputObject.assetId -contains 'COMPARE-ASSET-002') { throw 'Later investigation failure' }
                 ParReports\Resolve-ParCmdbAssignedUser -InputObject $InputObject -PersonMapping $PersonMapping -EntraUser $EntraUser
             }
             $received = @()
             $failure = $null
-            try { Get-ParDeviceAssignmentSnapshot | ForEach-Object { $received += $_ } }
+            try { Get-PITIDeviceAssignmentSnapshot | ForEach-Object { $received += $_ } }
             catch { $failure = $_ }
             $failure.Exception.Message | Should -BeLike '*Later investigation failure*'
             $received | Should -HaveCount 0
