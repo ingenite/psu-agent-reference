@@ -27,9 +27,26 @@ Serial numbers can occur on multiple Intune device records, although uncommon; a
 
 ## PSU execution
 
-Offline shared-variable tests set a global PowerShell variable in the test
-process, bypassing PSU environment injection and module discovery. Execution of
-the report in a PSU resource remains unverified.
+PSU 2026.3.0 development-instance checks exercised synthetic module loading,
+JSON fixture-path injection, both reports, shared investigation modals, candidate
+evidence, refresh, loading, empty results, failure/retry, and light/dark layouts.
+Pages declare `-AutoInclude`; reloading `dashboards.ps1` through the management
+API activated the updated declarations. The simplified bootstrap and default
+theme were checked through the Reports home page, both report routes,
+Reports-only navigation, and light/dark report and investigation-modal rendering.
+In the owner's new-page test, an app restart did not make the copied page
+available; forcing the pending file-change Reload did. Automatic discovery timing
+remains unverified. Module changes were checked after an app restart.
+Page-owned report composition and argument-free refresh were rechecked in both
+reports, including stale-selection rejection, retained search/filter controls on
+modal close, candidate evidence, and empty/failure/retry states.
+The PITI command refactor was checked after a development-app restart: the
+companion imported and re-exported the adjacent implementation module, both
+reports rendered table summaries and refreshed their dynamic content, and
+investigation callbacks rendered assignments and expandable Intune/CMDB evidence.
+Object-valued variable injection was unreliable here, so fixture paths use JSON.
+The synchronized instance and live Graph, CMDB, tenant data, and permissions
+remain unverified.
 
 ## Management API tools and Git
 

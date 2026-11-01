@@ -22,6 +22,12 @@ vocabulary for contributors and consumers.
   [ADR-0003](0003-define-par-identity.md), for example `Get-ParConfiguration`.
   General-purpose tools can retain platform-neutral names such as
   `New-JwtSigningKey.ps1`.
+- PAR IT Internal uses `PITI` (PAR IT Internal) as its public command noun prefix,
+  for example `New-PITIDeviceAssignmentState`. Its app-local implementation
+  functions omit `Par`; the companion imports them with `-Prefix PITI` and
+  explicitly re-exports the resulting commands. This exception does not change
+  platform-module command names. Keep ordinary module-local calls unprefixed;
+  deferred PSU callbacks use the exported `PITI` names.
 - Use descriptive PascalCase module names. Match the root `.psm1` and manifest
   `.psd1` basenames to the module name; a module named `Par` would use `Par.psm1`
   and `Par.psd1`.

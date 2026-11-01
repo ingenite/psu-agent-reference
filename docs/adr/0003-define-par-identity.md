@@ -23,6 +23,13 @@ Use `PAR` / `Par` as the noun prefix for custom module commands, for example
 General-purpose tools do not need the project prefix; see
 [ADR-0002](0002-standardize-powershell-names.md).
 
+`PITI` abbreviates **PAR IT Internal** and identifies that dashboard's public
+commands. Preserve the uppercase acronym, for example
+`Get-PITIDeviceAssignmentSnapshot`. Its companion supplies this identity through
+`Import-Module -Prefix PITI` rather than stacking it on `Par`. `ParData` and
+`ParReports` retain their module names and `Par` command nouns; module-qualified
+calls distinguish their ownership where needed.
+
 Use `PAR Codex` only for this project's designated Codex contributor. The earlier
 attribution decision also identified the model and release to distinguish agent
 contributions. ADR-0009 replaces that requirement with fixed agent attribution.

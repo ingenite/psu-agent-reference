@@ -175,7 +175,7 @@ without replacing the checked-in files:
 
 ```powershell
 Import-Module ./dashboards/ParITInternal/ParITInternal.psm1
-$snapshot = Get-ParDeviceAssignmentSnapshot
+$snapshot = Get-PITIDeviceAssignmentSnapshot
 $outputDirectory = './tools/output/demo-data'
 New-Item -Path $outputDirectory -ItemType Directory -Force | Out-Null
 $snapshot.Inputs.IntuneDevice | & ./tools/factories/Export-FakeIntuneDevice.ps1 -Path "$outputDirectory/intune-devices.csv"

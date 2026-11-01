@@ -18,6 +18,12 @@ guides makes those rules drift as examples are added.
   dashboard `.ps1` with the same basename. PSU supports an
   [app-specific companion module](https://docs.devolutions.net/powershell-universal/apps/building-dashboards);
   verify the deployed app uses the intended files.
+- A companion may load and explicitly re-export an adjacent dashboard-only
+  implementation module when it must control command imports. PAR IT Internal
+  uses this arrangement to import its implementation with `-Prefix PITI` while
+  retaining PSU's companion-loading entry point. Both files remain dashboard
+  resources; the implementation is not a platform module. Verify the exports in
+  deferred execution contexts as well as at app startup.
 - Keep presentation and resource orchestration in the resource. Shared modules
   own reusable operations and do not require a particular dashboard to run.
 - Separate source-data retrieval from report transformations. `ParData` owns

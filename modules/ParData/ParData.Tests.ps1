@@ -125,6 +125,29 @@ Describe 'Get-ParIntuneDevice' {
         (Get-ParIntuneDevice).DeviceName | Should -BeExactly 'SYNTH-TEST-001'
     }
 
+    It 'accepts the JSON object used by PSU variable injection' {
+        $global:PAR_FixturePaths = @{ IntuneDevice = $fixturePath } | ConvertTo-Json -Compress
+        Remove-Module ParData
+        Import-Module $modulePath -Force
+
+        (Get-ParIntuneDevice).DeviceName | Should -BeExactly 'SYNTH-TEST-001'
+    }
+
+    It 'rejects JSON that is not a source-path object' -ForEach @(
+        @{ Json = 'null' }, @{ Json = '[]' }, @{ Json = '[{"IntuneDevice":"unused.csv"}]' },
+        @{ Json = '"text"' }, @{ Json = '1' }
+    ) {
+        $global:PAR_FixturePaths = $Json
+        Remove-Module ParData
+        { Import-Module $modulePath -Force -ErrorAction Stop } | Should -Throw '*PAR_FixturePaths must be a hashtable*'
+    }
+
+    It 'validates paths parsed from shared JSON instead of using defaults' {
+        $global:PAR_FixturePaths = '{"IntuneDevice":""}'
+        Remove-Module ParData
+        { Import-Module $modulePath -Force -ErrorAction Stop } | Should -Throw '*must be a nonblank string*'
+    }
+
     It 'uses repository defaults for sources omitted from the shared setting' {
         $global:PAR_FixturePaths = @{}
         Remove-Module ParData

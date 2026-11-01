@@ -22,7 +22,8 @@ At import, ParData selects a path independently for each source, in this order:
 2. Global `$PAR_FixturePaths`, registered in `.universal/variables.ps1` for PSU.
 3. The repository-relative defaults above for omitted sources.
 
-Both configuration layers accept hashtables using the keys above and reject
+Explicit import arguments accept a hashtable. The shared variable also accepts
+a JSON object, used by the PSU registration. Both use the keys above and reject
 unknown keys and blank, null, or non-string paths. The PSU execution environment
 must include `PAR_FixturePaths` or `*` for variable injection; outside PSU, no
 registration commands are needed.
