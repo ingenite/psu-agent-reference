@@ -13,7 +13,69 @@ Agents: follow [AGENTS.md](AGENTS.md) before working. Changes to the running PSU
 3. Open a PR linking the issue with `Closes #<issue-number>`. Describe the resulting behavior, verification, and any remaining limitations.
 4. Review, then squash merge when authorized. Set the Project item to **Done** and remove the work branch.
 
-`main` requires PRs. Direct pushes, force pushes, and branch deletion are blocked. Required reviewer approvals start at zero to support a solo workflow; required CI checks will be added as CI is established.
+`main` requires PRs and the successful **Pester (full suite)** check from GitHub
+Actions. Direct pushes, force pushes, and branch deletion are blocked. Required
+reviewer approvals start at zero to support a solo workflow.
+
+## Tests and build tasks
+
+Use PowerShell 7.4 or higher on Windows. Test dependencies are pinned in
+`tools/BuildDependencies.psd1`. To install those versions for the current user,
+run this explicitly when setting up a contributor environment:
+
+```powershell
+$dependencies = Import-PowerShellDataFile ./tools/BuildDependencies.psd1
+foreach ($dependency in $dependencies.GetEnumerator()) {
+    Install-PSResource -Name $dependency.Key -Version $dependency.Value -Repository PSGallery -Scope CurrentUser -TrustRepository
+}
+```
+
+`Install-PSResource` is provided by Microsoft.PowerShell.PSResourceGet. The
+installation command trusts PSGallery for this operation; it does not change
+the repository's saved trust setting. Test tasks require installed dependencies
+and do not install them automatically.
+
+Run commands from the repository root in a fresh PowerShell session. Import the
+pinned InvokeBuild version, then use the same task that CI runs:
+
+```powershell
+$dependencies = Import-PowerShellDataFile ./tools/BuildDependencies.psd1
+Import-Module InvokeBuild -RequiredVersion $dependencies.InvokeBuild
+Invoke-Build                       # Full suite; equivalent to Invoke-Build Test
+Invoke-Build Test -Suite Dashboards
+Invoke-Build Test -Suite Dashboards,Data,Reports
+```
+
+| Suite | Test locations |
+| --- | --- |
+| `All` (default) | Every repository `*.Tests.ps1` file, excluding `tools/output/`. Automatically includes new test locations. |
+| `Data` | `modules/ParData/`, recursively. |
+| `Reports` | `modules/ParReports/`, recursively. |
+| `Dashboards` | `dashboards/`, recursively; these are offline composition and state tests. |
+| `Factories` | `tools/factories/`, recursively. |
+| `Tools` | Tests directly in `tools/`, including the test-task checks. |
+
+Named suites may be combined; each test file runs once. `All` must be selected
+alone. During development, select the changed area and any affected consumers
+or dependencies. A dashboard-only presentation change can start with
+`Dashboards`; changes spanning report or data behavior should also run `Reports`
+or `Data`. Factory/exporter changes generally warrant `Factories`, `Data`, and
+their affected report/dashboard consumers. Suite selection is explicit, not an
+automatic dependency analysis. Run the full suite before every PR.
+
+The task fails on failing tests, discovery errors, or an empty test selection.
+Each run writes NUnit3 XML under `tools/output/tests/`, with a filename based on
+the sorted selection (`all.xml`, `dashboards.xml`, or `dashboards-data-reports.xml`).
+Rerunning that selection replaces its report. Reports are generated artifacts,
+so `tools/output/` remains ignored by Git. GitHub Actions uploads reports from
+the current run even when tests fail; they do not need to be committed.
+
+GitHub Actions runs the full task for PRs targeting `main`, pushes to `main`,
+and manual workflow dispatches on a Windows runner using PowerShell 7. The
+workflow installs the pinned dependencies and saves the XML reports as the
+`pester-results` artifact. These tests use synthetic inputs and mocked API
+calls; a passing check does not verify live PSU, browser rendering, Graph, or
+CMDB behavior. PSU deployment and synchronization are separate operations.
 
 ## Agent workflow skills
 

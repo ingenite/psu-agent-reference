@@ -12,10 +12,19 @@ help and known verification gaps in errata. Keep links sparse outside the index.
 
 ## Build, Test, and Development Commands
 
-No build, server launcher, formatter, linter, or CI is configured.
+Invoke-Build provides the shared local and CI test entry point. Install the
+versions in `tools/BuildDependencies.psd1` before running it; tasks do not install
+dependencies. No server launcher, formatter, or linter is configured.
 
-- `pwsh -NoProfile -Command "Invoke-Pester -Path . -Output Detailed"`: run repository tests with Pester installed.
+- `Invoke-Build`: run the complete Pester suite (the default task).
+- `Invoke-Build Test -Suite Dashboards,Data,Reports`: run a union of focused suites.
 - `git diff --check`: check patch whitespace.
+
+Use focused suites during development based on the change and its dependencies;
+always run the complete suite before submitting a PR. GitHub Actions runs the
+complete suite on PRs targeting `main` and pushes to `main`; its successful
+`Pester (full suite)` check is required before merge. CONTRIBUTING owns setup,
+suite selection, and test-result guidance.
 
 Do not run `tools/Initialize-SecretVault.ps1` as a routine check: it changes the current user's SecretStore configuration.
 
