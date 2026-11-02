@@ -6,6 +6,7 @@ and module names follow ADR-0002 and ADR-0003.
 | Location | Purpose |
 | --- | --- |
 | `*.build.ps1` | Invoke-Build task entry point at the repository root. |
+| `PSScriptAnalyzerSettings.psd1` | Built-in rules selected for local and CI static analysis. |
 | `.github/workflows/` | GitHub Actions workflows. |
 | `.universal/` | PSU resource registrations and configuration, including shared variables. |
 | `endpoints/` | API endpoint implementation scripts. |
@@ -13,9 +14,9 @@ and module names follow ADR-0002 and ADR-0003.
 | `dashboards/` | Dashboard implementations and their dashboard-specific companion modules. |
 | `modules/` | PowerShell modules shared by scripts, endpoints, and dashboards. |
 | `data/` | Versioned synthetic datasets. |
-| `tools/` | Utilities run explicitly for development or host administration, including the test runner and pinned build/test dependencies. |
+| `tools/` | Utilities run explicitly for development or host administration, including test and analysis runners and pinned build dependencies. |
 | `tools/factories/` | Synthetic-data factories, exporters, and offline model probes. |
-| `tools/output/` | Generated probe and test results; ignored by Git. |
+| `tools/output/` | Generated probe, test, and analysis results; ignored by Git. |
 | `docs/` | Documentation index, example prompts, directory guide, and errata. |
 | `docs/adr/` | Architecture decision records. |
 | `docs/setup/` | Configuration and setup procedures. |

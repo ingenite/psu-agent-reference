@@ -6,8 +6,13 @@ param(
 )
 
 # Synopsis: Run all Pester tests, or a union of the selected development suites.
-task Test {
+Add-BuildTask Test {
     & (Join-Path $BuildRoot 'tools/Invoke-RepositoryTest.ps1') -Suite $Suite
 }
 
-task . Test
+# Synopsis: Check PowerShell source with the repository's PSScriptAnalyzer settings.
+Add-BuildTask Analyze {
+    & (Join-Path $BuildRoot 'tools/Invoke-RepositoryAnalysis.ps1')
+}
+
+Add-BuildTask . Test

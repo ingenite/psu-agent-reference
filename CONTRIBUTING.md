@@ -13,13 +13,13 @@ Agents: follow [AGENTS.md](AGENTS.md) before working. Changes to the running PSU
 3. Open a PR linking the issue with `Closes #<issue-number>`. Describe the resulting behavior, verification, and any remaining limitations.
 4. Review, then squash merge when authorized. Set the Project item to **Done** and remove the work branch.
 
-`main` requires PRs and the successful **Pester (full suite)** check from GitHub
-Actions. Direct pushes, force pushes, and branch deletion are blocked. Required
-reviewer approvals start at zero to support a solo workflow.
+`main` requires PRs and successful **Pester (full suite)** and **PSScriptAnalyzer**
+checks from GitHub Actions. Direct pushes, force pushes, and branch deletion are
+blocked. Required reviewer approvals start at zero to support a solo workflow.
 
 ## Tests and build tasks
 
-Use PowerShell 7.4 or higher on Windows. Test dependencies are pinned in
+Use PowerShell 7.4 or higher on Windows. Build dependencies are pinned in
 `tools/BuildDependencies.psd1`. To install those versions for the current user,
 run this explicitly when setting up a contributor environment:
 
@@ -32,11 +32,11 @@ foreach ($dependency in $dependencies.GetEnumerator()) {
 
 `Install-PSResource` is provided by Microsoft.PowerShell.PSResourceGet. The
 installation command trusts PSGallery for this operation; it does not change
-the repository's saved trust setting. Test tasks require installed dependencies
+the repository's saved trust setting. Build tasks require installed dependencies
 and do not install them automatically.
 
 Run commands from the repository root in a fresh PowerShell session. Import the
-pinned InvokeBuild version, then use the same task that CI runs:
+pinned InvokeBuild version, then use the same tasks that CI runs:
 
 ```powershell
 $dependencies = Import-PowerShellDataFile ./tools/BuildDependencies.psd1
@@ -44,6 +44,8 @@ Import-Module InvokeBuild -RequiredVersion $dependencies.InvokeBuild
 Invoke-Build                       # Full suite; equivalent to Invoke-Build Test
 Invoke-Build Test -Suite Dashboards
 Invoke-Build Test -Suite Dashboards,Data,Reports
+Invoke-Build Analyze               # Static analysis; independent of -Suite
+Invoke-Build Analyze,Test          # Both checks required before a PR
 ```
 
 | Suite | Test locations |
@@ -61,7 +63,7 @@ or dependencies. A dashboard-only presentation change can start with
 `Dashboards`; changes spanning report or data behavior should also run `Reports`
 or `Data`. Factory/exporter changes generally warrant `Factories`, `Data`, and
 their affected report/dashboard consumers. Suite selection is explicit, not an
-automatic dependency analysis. Run the full suite before every PR.
+automatic dependency analysis. Run analysis and the full suite before every PR.
 
 The task fails on failing tests, discovery errors, or an empty test selection.
 Each run writes NUnit3 XML under `tools/output/tests/`, with a filename based on
@@ -76,6 +78,48 @@ workflow installs the pinned dependencies and saves the XML reports as the
 `pester-results` artifact. These tests use synthetic inputs and mocked API
 calls; a passing check does not verify live PSU, browser rendering, Graph, or
 CMDB behavior. PSU deployment and synchronization are separate operations.
+
+## Static analysis
+
+`Invoke-Build Analyze` uses the pinned PSScriptAnalyzer version and the root
+`PSScriptAnalyzerSettings.psd1`. It checks `.ps1`, `.psm1`, and `.psd1` files
+throughout the repository, including `.universal/` and Pester tests, excluding
+Git internals and generated `tools/output/` files. The default build still runs
+Pester only; use `Analyze,Test` to run both checks locally.
+
+The settings select eight built-in rules:
+
+| Rule | Detects |
+| --- | --- |
+| `PSUseApprovedVerbs` | Function names with unapproved verbs. |
+| `PSAvoidUsingCmdletAliases` | Aliases where explicit command names should be used. |
+| `PSAvoidUsingEmptyCatchBlock` | Empty exception handlers. |
+| `PSAvoidUsingInvokeExpression` | Use of `Invoke-Expression`. |
+| `PSAvoidAssignmentToAutomaticVariable` | Assignment to automatic variables covered by the rule. |
+| `PSAvoidUsingPlainTextForPassword` | Password parameters using plaintext types. |
+| `PSAvoidUsingConvertToSecureStringWithPlainText` | Plaintext conversion through `ConvertTo-SecureString -AsPlainText`. |
+| `PSMisleadingBacktick` | Whitespace after a backtick that defeats intended line continuation. |
+
+`PSMisleadingBacktick` permits valid backtick continuation; this profile does not
+ban continuation or ordinary backtick escapes. No custom rules or automatic
+fixes are configured. These checks identify selected code patterns; they do not
+prove security or live PSU compatibility.
+
+Any unsuppressed diagnostic, including a warning or parse error, fails the task.
+Findings include the source path, line, column, rule, severity, and message in
+`tools/output/analysis/findings.json`; a clean run writes `[]`. CI runs analysis
+as a separate job on the same triggers as Pester and uploads that report as
+`psscriptanalyzer-results`, including when findings fail the check. A failure
+before a report is produced remains a failed job and may have no artifact.
+
+To reuse this check in another PSU repository, copy the settings, analysis
+runner, and relevant pinned dependencies; add the `Analyze` task to its build
+file and adapt the workflow job. Change `IncludeRules` to choose a different
+baseline, and review the runner's exclusions for that repository's generated
+files. Retain the task's explicit diagnostic failure check so warnings cannot
+silently pass CI. The separate Pester job and its dependencies are optional for
+consumers adopting analysis alone. Configure that repository's required status
+checks separately; copying workflow YAML does not establish branch protection.
 
 ## Agent workflow skills
 

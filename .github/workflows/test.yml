@@ -11,6 +11,40 @@ permissions:
   contents: read
 
 jobs:
+  analyze:
+    name: PSScriptAnalyzer
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install pinned analysis dependencies
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dependencies = Import-PowerShellDataFile ./tools/BuildDependencies.psd1
+          foreach ($name in 'InvokeBuild', 'PSScriptAnalyzer') {
+              Install-PSResource -Name $name -Version $dependencies[$name] -Repository PSGallery -Scope CurrentUser -TrustRepository -Quiet
+          }
+
+      - name: Analyze PowerShell source through Invoke-Build
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dependencies = Import-PowerShellDataFile ./tools/BuildDependencies.psd1
+          Import-Module InvokeBuild -RequiredVersion $dependencies.InvokeBuild
+          Invoke-Build Analyze
+
+      - name: Upload analysis results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: psscriptanalyzer-results
+          path: tools/output/analysis/findings.json
+          if-no-files-found: warn
+
   test:
     name: Pester (full suite)
     runs-on: windows-latest

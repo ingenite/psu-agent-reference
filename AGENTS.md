@@ -12,19 +12,21 @@ help and known verification gaps in errata. Keep links sparse outside the index.
 
 ## Build, Test, and Development Commands
 
-Invoke-Build provides the shared local and CI test entry point. Install the
+Invoke-Build provides shared local and CI test and analysis tasks. Install the
 versions in `tools/BuildDependencies.psd1` before running it; tasks do not install
-dependencies. No server launcher, formatter, or linter is configured.
+dependencies. PSScriptAnalyzer uses the root PSScriptAnalyzerSettings.psd1;
+no server launcher or formatter is configured.
 
 - `Invoke-Build`: run the complete Pester suite (the default task).
 - `Invoke-Build Test -Suite Dashboards,Data,Reports`: run a union of focused suites.
+- `Invoke-Build Analyze`: check repository PowerShell source with the selected built-in rules.
 - `git diff --check`: check patch whitespace.
 
 Use focused suites during development based on the change and its dependencies;
-always run the complete suite before submitting a PR. GitHub Actions runs the
-complete suite on PRs targeting `main` and pushes to `main`; its successful
-`Pester (full suite)` check is required before merge. CONTRIBUTING owns setup,
-suite selection, and test-result guidance.
+always run analysis and the complete suite before submitting a PR. GitHub Actions
+runs both on PRs targeting `main` and pushes to `main`; successful
+`PSScriptAnalyzer` and `Pester (full suite)` checks are required before merge.
+CONTRIBUTING owns setup, suite selection, and result guidance.
 
 Do not run `tools/Initialize-SecretVault.ps1` as a routine check: it changes the current user's SecretStore configuration.
 
