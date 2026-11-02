@@ -48,6 +48,7 @@ available yet.
 | Choose file locations | [Directory guide](directory-guide.md) |
 | Read agent instructions | [AGENTS.md](../AGENTS.md) |
 | Run full or focused Pester suites locally and in CI | [Test tasks](../CONTRIBUTING.md#tests-and-build-tasks) |
+| Run or adapt the PSScriptAnalyzer CI check | [Static analysis](../CONTRIBUTING.md#static-analysis), [rule settings](../PSScriptAnalyzerSettings.psd1) |
 | Review and deliver a change | [Contributing](../CONTRIBUTING.md) |
 
 ## Architecture decisions
