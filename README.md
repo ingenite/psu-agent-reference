@@ -50,6 +50,7 @@ Use **PowerShell 7.4 or higher**. Module versions in the reference environment:
 | `Microsoft.Graph.DeviceManagement` | 2.41.2 (exact) | Intune device retrieval and synthetic data tools |
 | `Microsoft.Graph.Users` | 2.41.2 (exact) | Entra user retrieval and synthetic data tools |
 | `Pester` | 6.1.0 | Repository tests |
+| `InvokeBuild` | 5.14.23 | Shared local and CI test tasks |
 | `Microsoft.PowerShell.SecretManagement` | 1.1.2 | Vault-backed AppToken access |
 | `Microsoft.PowerShell.SecretStore` | 1.0.6 | Optional local SecretStore example; other vault providers may be used |
 
