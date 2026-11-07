@@ -22,6 +22,7 @@ stages of the same workflow.
 | Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |
 | Adapt six native PSU page layouts and a small light/dark theme | [Simple Templates](simple-templates.md) |
 | Compare a separate collection guided by Material and MUI | [Material Templates](material-templates.md) |
+| Inspect four software-design principles in a small script and API | [Volume-space design collection](design-principles.md) |
 | Manage PSU Git configuration and access | [Git settings API](setup/git-settings-api.md), [SSH key API](setup/ssh-key-api.md) |
 | Generate a JWT signing key locally | [Signing-key tool and help](../tools/New-JwtSigningKey.ps1) |
 | Inspect the optional contributor-local vault setup | [SecretStore tool and help](../tools/Initialize-SecretVault.ps1) |
