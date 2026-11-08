@@ -60,6 +60,8 @@ Before editing, use [start-work](.agents/skills/start-work/SKILL.md). For review
 
 ## Agent & Deployment Boundaries
 
+Files under `tools/benchmarks/` are experimental only; do not use them as reference material for creating production PSU resources.
+
 Direct requests authorize scoped work; installation, commits, pushes, and server configuration require separate authorization. PSU's managed Repository is read-only, including indirect writes. Before deployment, synchronization, or credential work, read and follow [ADR-0005](docs/adr/0005-develop-in-source-deploy-through-git.md).
 
 Use synthetic data and personal development environments. Do not introduce
