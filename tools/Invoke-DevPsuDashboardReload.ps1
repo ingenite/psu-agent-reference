@@ -13,7 +13,13 @@ Calls the dashboards.ps1 configuration reload verified with PSU 2026.3.0.
 $appToken = Get-Secret -Name 'dev-psu-codex-mgmt-api' -AsPlainText -ErrorAction Stop
 $headers = @{ Authorization = "Bearer $appToken" }
 
-Invoke-RestMethod -Uri 'http://127.0.0.1:5100/api/v1/configuration/sync/dashboards.ps1' `
-    -Method Put -Headers $headers -MaximumRedirection 0 -ErrorAction Stop | Out-Null
+$requestParameters = @{
+    Uri = 'http://127.0.0.1:5100/api/v1/configuration/sync/dashboards.ps1'
+    Method = 'Put'
+    Headers = $headers
+    MaximumRedirection = 0
+    ErrorAction = 'Stop'
+}
+Invoke-RestMethod @requestParameters | Out-Null
 
 Write-Host 'Reloaded dev-psu dashboard configuration.'

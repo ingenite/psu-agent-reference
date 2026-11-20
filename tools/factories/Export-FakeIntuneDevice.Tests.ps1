@@ -10,14 +10,19 @@ Describe 'Export-FakeIntuneDevice' {
 
     It 'exports multiple models with the 15 selected columns and round-trippable CSV text' {
         $path = Join-Path $TestDrive 'nested/intune-devices.csv'
+        $assignedDeviceParameters = @{
+            DeviceName = 'SYNTH-ASSIGNED'
+            Id = '20000000-0000-4000-8000-000000000001'
+            AzureAdDeviceId = '30000000-0000-4000-8000-000000000001'
+            UserId = '10000000-0000-4000-8000-000000000001'
+            UserDisplayName = 'Example, Alex'
+            EmailAddress = 'alex@example.invalid'
+            UserPrincipalName = 'alex@example.invalid'
+            Manufacturer = 'Fictional, "Devices"'
+            DeviceEnrollmentType = 'unknown'
+        }
         $devices = @(
-            & $factoryPath @common -DeviceName 'SYNTH-ASSIGNED' `
-                -Id '20000000-0000-4000-8000-000000000001' `
-                -AzureAdDeviceId '30000000-0000-4000-8000-000000000001' `
-                -UserId '10000000-0000-4000-8000-000000000001' `
-                -UserDisplayName 'Example, Alex' -EmailAddress 'alex@example.invalid' `
-                -UserPrincipalName 'alex@example.invalid' -Manufacturer 'Fictional, "Devices"' `
-                -DeviceEnrollmentType 'unknown'
+            & $factoryPath @common @assignedDeviceParameters
             & $factoryPath @common -DeviceName 'SYNTH-UNASSIGNED' -UserId $null
         )
 

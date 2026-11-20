@@ -1026,9 +1026,12 @@ Describe 'Resolve-ParCmdbAssignedUser' {
     }
 
     It 'matches identical literal wildcard characters in references and UPNs' {
+        $resolutionParameters = @{
+            PersonMapping = New-TestPersonMapping -Reference 'CMDB-*.[1]' -Upn 'alex*[1]@example.invalid'
+            EntraUser = New-TestPersonUser -Upn 'alex*[1]@example.invalid'
+        }
         $row = New-TestPersonAsset -Reference 'CMDB-*.[1]' |
-            Resolve-ParCmdbAssignedUser -PersonMapping (New-TestPersonMapping -Reference 'CMDB-*.[1]' -Upn 'alex*[1]@example.invalid') `
-                -EntraUser (New-TestPersonUser -Upn 'alex*[1]@example.invalid')
+            Resolve-ParCmdbAssignedUser @resolutionParameters
 
         $row.Outcome | Should -BeExactly 'Unique'
     }

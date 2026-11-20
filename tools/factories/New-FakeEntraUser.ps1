@@ -32,8 +32,13 @@ Microsoft.Graph.PowerShell.Models.MicrosoftGraphUser
 
 One SDK model. Invalid identifiers, names, or optional value types terminate.
 .EXAMPLE
-./tools/factories/New-FakeEntraUser.ps1 -DisplayName 'Alex Example' `
-    -Id '10000000-0000-4000-8000-000000000001' -UserPrincipalName 'alex@example.invalid'
+$userParameters = @{
+    DisplayName = 'Alex Example'
+    Id = '10000000-0000-4000-8000-000000000001'
+    UserPrincipalName = 'alex@example.invalid'
+}
+./tools/factories/New-FakeEntraUser.ps1 @userParameters
+
 Creates a repeatable offline user with unspecified mail and account state.
 #>
 [CmdletBinding()]

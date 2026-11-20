@@ -64,10 +64,12 @@ Describe 'New-FakeIntuneDevice' {
     }
 
     It 'rejects a last sync before enrollment' {
-        {
-            & $factoryPath -DeviceName 'SYNTH-INVALID' -EnrolledDateTime '2026-10-24T18:30:00Z' `
-                -LastSyncDateTime '2026-09-01T12:00:00Z'
-        } | Should -Throw '*LastSyncDateTime must be on or after EnrolledDateTime*'
+        $deviceParameters = @{
+            DeviceName = 'SYNTH-INVALID'
+            EnrolledDateTime = '2026-10-24T18:30:00Z'
+            LastSyncDateTime = '2026-09-01T12:00:00Z'
+        }
+        { & $factoryPath @deviceParameters } | Should -Throw '*LastSyncDateTime must be on or after EnrolledDateTime*'
     }
 
     It 'omits an empty enrollment type' {
