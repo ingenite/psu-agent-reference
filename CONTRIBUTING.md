@@ -100,10 +100,10 @@ The settings select eight built-in rules:
 | `PSAvoidUsingConvertToSecureStringWithPlainText` | Plaintext conversion through `ConvertTo-SecureString -AsPlainText`. |
 | `PSMisleadingBacktick` | Whitespace after a backtick that defeats intended line continuation. |
 
-`PSMisleadingBacktick` permits valid backtick continuation; this profile does not
-ban continuation or ordinary backtick escapes. No custom rules or automatic
-fixes are configured. These checks identify selected code patterns; they do not
-prove security or live PSU compatibility.
+`PSMisleadingBacktick` permits valid continuation and ordinary backtick escapes.
+See [AGENTS.md](AGENTS.md) for the repository's continuation rule. No custom rules
+or automatic fixes are configured. These checks identify selected code patterns;
+they do not prove security or live PSU compatibility.
 
 Any unsuppressed diagnostic, including a warning or parse error, fails the task.
 Findings include the source path, line, column, rule, severity, and message in

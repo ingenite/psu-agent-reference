@@ -220,12 +220,11 @@ Describe 'Get-ParIntuneDevice' {
     }
 
     It 'fails retrieval if the source-specific SDK cannot be loaded' {
-        Mock Import-Module -ModuleName ParData { throw 'Required SDK is unavailable.' } `
-            -ParameterFilter { $Name -eq 'Microsoft.Graph.DeviceManagement' -and $RequiredVersion -eq '2.41.2' }
+        $sdkFilter = { $Name -eq 'Microsoft.Graph.DeviceManagement' -and $RequiredVersion -eq '2.41.2' }
+        Mock Import-Module -ModuleName ParData -ParameterFilter $sdkFilter { throw 'Required SDK is unavailable.' }
 
         { Get-ParIntuneDevice } | Should -Throw '*Required SDK is unavailable*'
-        Should -Invoke Import-Module -ModuleName ParData -Exactly -Times 1 `
-            -ParameterFilter { $Name -eq 'Microsoft.Graph.DeviceManagement' -and $RequiredVersion -eq '2.41.2' }
+        Should -Invoke Import-Module -ModuleName ParData -Exactly -Times 1 -ParameterFilter $sdkFilter
     }
 
     It 'normalizes empty user-association cells to actual null values' {
@@ -384,8 +383,13 @@ Describe 'Get-ParIntuneDevice' {
     It 'retrieves the existing factory and exporter output without invoking them at retrieval time' {
         $factoryPath = Join-Path $PSScriptRoot '../../tools/factories/New-FakeIntuneDevice.ps1'
         $exportPath = Join-Path $PSScriptRoot '../../tools/factories/Export-FakeIntuneDevice.ps1'
-        $source = & $factoryPath -DeviceName 'SYNTH-ROUNDTRIP' -UserId $null `
-            -EnrolledDateTime '2026-09-01T12:00:00Z' -LastSyncDateTime '2026-10-24T18:30:00Z'
+        $deviceParameters = @{
+            DeviceName = 'SYNTH-ROUNDTRIP'
+            UserId = $null
+            EnrolledDateTime = '2026-09-01T12:00:00Z'
+            LastSyncDateTime = '2026-10-24T18:30:00Z'
+        }
+        $source = & $factoryPath @deviceParameters
         $source | & $exportPath -Path $fixturePath
 
         $device = Get-ParIntuneDevice
@@ -778,12 +782,11 @@ Describe 'Get-ParEntraUser model restoration' {
     }
 
     It 'fails retrieval when the exact Users SDK cannot load' {
-        Mock Import-Module -ModuleName ParData { throw 'Required Users SDK unavailable.' } `
-            -ParameterFilter { $Name -eq 'Microsoft.Graph.Users' -and $RequiredVersion -eq '2.41.2' }
+        $sdkFilter = { $Name -eq 'Microsoft.Graph.Users' -and $RequiredVersion -eq '2.41.2' }
+        Mock Import-Module -ModuleName ParData -ParameterFilter $sdkFilter { throw 'Required Users SDK unavailable.' }
 
         { Get-ParEntraUser } | Should -Throw '*Required Users SDK unavailable*'
-        Should -Invoke Import-Module -ModuleName ParData -Exactly -Times 1 `
-            -ParameterFilter { $Name -eq 'Microsoft.Graph.Users' -and $RequiredVersion -eq '2.41.2' }
+        Should -Invoke Import-Module -ModuleName ParData -Exactly -Times 1 -ParameterFilter $sdkFilter
     }
 
     It 'round-trips factory and exporter values through temporary files including null, empty, true, and false' {

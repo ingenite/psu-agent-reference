@@ -36,6 +36,8 @@ Before writing PowerShell, read and follow the [runtime](docs/adr/0001-prefer-po
 
 Use four-space indentation and descriptive variables, with plural collections and singular items. Limit comments to unusual implementations, version requirements, and production breadcrumbs.
 
+No backtick line continuation. Prefer splatting or continuing after a pipe (`|`). Tests that exercise PSScriptAnalyzer rules may use backtick continuation in their fixtures.
+
 ## Command Discovery & Probe Scripts
 
 Never guess command syntax or outputs. Before using new or unfamiliar PowerShell cmdlets, attempt local discovery with `Get-Help Unfamiliar-Cmdlet` or inspect output from a safe, authorized invocation using `Unfamiliar-Cmdlet | Get-Member`.

@@ -7,9 +7,14 @@ Describe 'Export-FakeEntraUser' {
 
     It 'exports only the selected columns and round-trips CSV text without changing the model' {
         $path = Join-Path $TestDrive 'nested/users[1].csv'
-        $user = & $factoryPath -DisplayName "Example, `"Alex`"`nCafé" `
-            -Id '10000000-0000-4000-8000-000000000001' `
-            -UserPrincipalName 'alex.signin@example.invalid' -Mail 'alex.mail@example.invalid' -AccountEnabled $false
+        $userParameters = @{
+            DisplayName = "Example, `"Alex`"`nCafé"
+            Id = '10000000-0000-4000-8000-000000000001'
+            UserPrincipalName = 'alex.signin@example.invalid'
+            Mail = 'alex.mail@example.invalid'
+            AccountEnabled = $false
+        }
+        $user = & $factoryPath @userParameters
         $user.Department = 'not exported'
         $before = $user.ToJsonString()
 
