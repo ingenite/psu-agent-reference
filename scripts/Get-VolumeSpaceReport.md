@@ -12,5 +12,5 @@ the module's `Get-ParVolumeReport` directly.
 
 The resource imports `ParVolumeReport` and calls `Get-ParVolumeReport`.
 Reading and assessment live in separate commands, the reader can be replaced,
-and the API endpoint calls the same rule. The collection guide is
-`docs/design-principles.md`; parameter contracts are in PowerShell help.
+and the API endpoint calls the same rule; the wiki's Design Principles Example
+explains why. Parameter contracts are in PowerShell help.

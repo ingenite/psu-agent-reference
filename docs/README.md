@@ -1,65 +1,36 @@
 # Documentation index
 
-This reference is intended for agents and the administrators directing them.
-Start with a task below, read the relevant source and command help, and consult
-the errata before drawing conclusions about deployment or live service behavior.
-The same documentation serves both audiences; there is no separate agent manual.
+Repository docs are for agents: short notes that give the reason for a choice and
+point to the evidence. Human guides are in the
+[GitHub Wiki](https://github.com/ingenite/psu-agent-reference/wiki). ADR-0010
+explains the split. Read `errata.md` before claiming anything about live behavior.
 
-## Explore and use the examples
+## Find the evidence
 
-The synthetic workflow uses related Intune devices, Entra users, and CMDB assets.
-Factories generate source objects, `ParData` retrieves them from fixtures, and
-`ParReports` applies report and resolution rules. The guides below cover these
-stages of the same workflow.
-
-| Task | Reference |
+| Need | Look at |
 | --- | --- |
-| Ask an agent to explain or adapt an example | [Example prompts](prompts.md) |
-| Understand known limitations and verification gaps | [Errata](errata.md) |
-| Prepare synthetic device, user, and asset data | [Generation](setup/fixture-generation.md), [retrieval](setup/fixture-retrieval.md), SDK probes: [Intune](../tools/factories/Test-IntuneDeviceModel.ps1) and [Entra](../tools/factories/Test-EntraUserModel.ps1) |
-| Understand the device-assignment investigation experience | [Investigation workflow and acceptance scenarios](reports/device-assignment-investigation.md) |
-| Use the implemented report and supporting transformations | [Missing-primary-user report](reports/intune-devices-without-primary-user.md), [device correlation](reports/intune-cmdb-correlation.md), [assigned-user resolution](reports/cmdb-assigned-user-resolution.md), [assignment comparison](reports/device-assignment-comparison.md) |
-| Understand the introductory PSU automation | [Show-HelloWorld](../scripts/Show-HelloWorld.md) |
-| Adapt six native PSU page layouts and a small light/dark theme | [Simple Templates](simple-templates.md) |
-| Compare a separate collection guided by Material and MUI | [Material Templates](material-templates.md) |
-| Inspect four software-design principles in a small script and API | [Volume-space design collection](design-principles.md) |
-| Manage PSU Git configuration and access | [Git settings API](setup/git-settings-api.md), [SSH key API](setup/ssh-key-api.md) |
-| Generate a JWT signing key locally | [Signing-key tool and help](../tools/New-JwtSigningKey.ps1) |
-| Inspect the optional contributor-local vault setup | [SecretStore tool and help](../tools/Initialize-SecretVault.ps1) |
+| What is unverified | `docs/errata.md` |
+| Where files belong | `docs/directory-guide.md`, ADR-0007 |
+| Command parameters, outputs and side effects | `Get-Help <command> -Full` after importing the module, or `Get-Help ./path/script.ps1 -Full` |
+| Source retrieval and fixture configuration | `modules/ParData` help; `.universal/variables.ps1` |
+| Report, correlation and comparison rules | `modules/ParReports` help |
+| Shared demonstration scenarios | `data/`, exercised by `modules/ParReports/ParReports.Tests.ps1` |
+| Synthetic data creation | `tools/factories/` help; SDK model probes `Test-IntuneDeviceModel.ps1`, `Test-EntraUserModel.ps1` |
+| Device-assignment app constraints | `dashboards/ParITInternal/README.md` |
+| Page layout templates | `dashboards/SimpleTemplates/`, `dashboards/MaterialTemplates/` |
+| Design-principles example | `modules/ParVolumeReport/`, `scripts/Get-VolumeSpaceReport.md` |
+| PSU Git settings and SSH keys | `tools/Invoke-GitSettingsApi.ps1`, `tools/Invoke-SshKeyApi.ps1` help |
+| Management API schemas | Your instance's `/swagger/index.html` |
+| Experimental performance results | `tools/benchmarks/Findings.md`, `tools/benchmarks/DatabaseProviders.md` |
+| Tests, analysis and delivery | `CONTRIBUTING.md` |
 
-Run command examples from the repository root unless stated otherwise. Command
-help owns parameter details, output, and command-specific behavior. For example:
-
-```powershell
-Get-Help ./tools/Invoke-GitSettingsApi.ps1 -Full
-Import-Module ./modules/ParReports/ParReports.psd1
-Get-Help Get-ParIntuneDeviceWithoutPrimaryUserReport -Full
-```
-
-For PSU Management API request and response schemas, use your instance's
-`/swagger/index.html`.
-
-## Work in the repository
-
-`AGENTS.md` contains instructions for developing this reference. A separate
-`AGENTS.production.md` is planned for downstream adoption of the whole repository;
-when it ships, adopters will rename it to `AGENTS.md` in their own copy. It is not
-available yet.
-
-| Task | Reference |
-| --- | --- |
-| Choose file locations | [Directory guide](directory-guide.md) |
-| Read agent instructions | [AGENTS.md](../AGENTS.md) |
-| Run full or focused Pester suites locally and in CI | [Test tasks](../CONTRIBUTING.md#tests-and-build-tasks) |
-| Reproduce local PSU cache, execution, output and collection experiments | [Benchmark harness](../tools/benchmarks/README.md), [findings](../tools/benchmarks/Findings.md) |
-| Compare the experimental SQLite/PostgreSQL/SQL Server application-database results | [Database provider findings](../tools/benchmarks/DatabaseProviders.md) |
-| Run or adapt the PSScriptAnalyzer CI check | [Static analysis](../CONTRIBUTING.md#static-analysis), [rule settings](../PSScriptAnalyzerSettings.psd1) |
-| Review and deliver a change | [Contributing](../CONTRIBUTING.md) |
+Run commands from the repository root. Wiki drafts are reviewed in `wiki/` before
+publication (ADR-0010).
 
 ## Architecture decisions
 
-ADRs record lasting choices and their reasons. Read the decisions relevant to
-the task; proposed records do not establish project requirements.
+ADRs record lasting choices and the reasons for them. Proposed records are not
+requirements.
 
 | Record | Decision |
 | --- | --- |
@@ -71,5 +42,6 @@ the task; proposed records do not establish project requirements.
 | [0005](adr/0005-develop-in-source-deploy-through-git.md) | Develop in source; deploy through Git |
 | [0006](adr/0006-standardize-shared-psu-configuration.md) | Standardize shared PSU configuration |
 | [0007](adr/0007-place-modules-by-responsibility.md) | Place modules by responsibility |
-| [0008](adr/0008-define-documentation-ownership.md) | Define documentation ownership |
+| [0008](adr/0008-define-documentation-ownership.md) | Define documentation ownership (superseded) |
 | [0009](adr/0009-use-fixed-agent-attribution.md) | Use fixed agent attribution |
+| [0010](adr/0010-separate-agent-and-human-documentation.md) | Separate agent and human documentation |

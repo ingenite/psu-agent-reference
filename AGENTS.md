@@ -7,8 +7,10 @@ Build realistic, idiomatic PowerShell Universal examples for AI agents and Windo
 Use `docs/README.md` as the documentation entry point and read `docs/errata.md`
 before making claims about live behavior. Before choosing file locations, read
 `docs/directory-guide.md` and ADR-0007. Shared PSU configuration follows ADR-0006.
-Documentation ownership follows ADR-0008; keep command contracts in PowerShell
-help and known verification gaps in errata. Keep links sparse outside the index.
+Documentation follows ADR-0010: repository docs are short signposts for agents,
+and human guides belong in the GitHub Wiki. Explain why, not what the code already
+shows; keep command contracts in PowerShell help. Errata lists open gaps only, one
+row each; record what you verified in the PR description, not in errata.
 
 ## Build, Test, and Development Commands
 
@@ -58,7 +60,7 @@ Use sibling Pester tests with behavior-focused assertions and reusable setup. No
 
 ## Commit & Pull Request Guidelines
 
-Before editing, use [start-work](.agents/skills/start-work/SKILL.md). For reviewed changes, use [submit-work](.agents/skills/submit-work/SKILL.md); after merge, use [finish-work](.agents/skills/finish-work/SKILL.md). Follow [CONTRIBUTING.md](CONTRIBUTING.md) for Git commands and [ADR-0009](docs/adr/0009-use-fixed-agent-attribution.md) for attribution.
+Before editing, use [start-work](.agents/skills/start-work/SKILL.md). For reviewed changes, use [submit-work](.agents/skills/submit-work/SKILL.md); after merge, use [finish-work](.agents/skills/finish-work/SKILL.md). Each skill contains its Git commands; follow [ADR-0009](docs/adr/0009-use-fixed-agent-attribution.md) for attribution.
 
 ## Agent & Deployment Boundaries
 

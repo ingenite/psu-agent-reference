@@ -1,20 +1,23 @@
 # Example prompts
 
-Give your agent access to this repository, then use or adapt one of these prompts.
-These prompts will evolve as resources are shipped. The documentation index and
-command help provide the technical details.
+Agents work best when you tell them to read first and change nothing until you
+agree. Each prompt below does that. Give your agent access to the repository, then
+paste one in.
 
-## Explain and try the report
+## Get an overview
+
+> Explore this project and read its documentation and errata. Explain what the
+> PSU instance provides today and how I could use it in my own environment.
+> Give me a short overview before making any changes.
+
+## Try the report locally
 
 > Read docs/README.md and docs/errata.md, then inspect the Intune report example
 > and its command help. Explain what I can run today, which dependencies I need,
 > and what the results mean. Give me the commands to try it locally from the
 > repository root. Do not execute them or change files.
 
-Expected result: a short explanation, prerequisites, and commands with enough
-context to recognize the expected report results.
-
-## Plan an adaptation
+## Adapt a feature for your own instance
 
 Replace `<target project>` with the location of your project.
 
@@ -25,5 +28,8 @@ Replace `<target project>` with the location of your project.
 > requirements of the reusable example, and follow the target project's own
 > instructions. Present the proposal before editing or changing either runtime.
 
-Expected result: a bounded implementation proposal that identifies dependencies,
-target-specific decisions, and what would need further verification.
+## Why these prompts work
+
+- **"Read the errata"** stops the agent claiming something was verified when it wasn't.
+- **"Smallest adaptation"** keeps the agent from bringing over the whole project.
+- **"Before editing"** gives you a review point before anything changes.

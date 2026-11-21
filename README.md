@@ -2,10 +2,12 @@
 
 This project builds a full PowerShell Universal (PSU) reference instance **for coding
 agents** working on Windows and Microsoft administration tools. The instance is
-being developed incrementally. The [documentation index](docs/README.md) provides
-setup and reference material, including known limitations. More specific [example prompts](docs/prompts.md)
-are available as starting points. Have your agent inspect the source and extract
-individual resources for your own implementation.
+being developed incrementally. Humans: start with the [Wiki](https://github.com/ingenite/psu-agent-reference/wiki),
+which explains each example and offers prompts to give your agent. Agents: start
+with the [documentation index](docs/README.md) and [errata](docs/errata.md).
+Have your agent inspect the source and extract individual resources for your own
+implementation. A separate `AGENTS.production.md` for adopting the whole
+repository is planned.
 
 > [!WARNING]
 > **Do not synchronize this repository into a production PSU deployment.**

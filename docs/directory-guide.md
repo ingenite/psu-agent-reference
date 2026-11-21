@@ -11,16 +11,15 @@ and module names follow ADR-0002 and ADR-0003.
 | `.universal/` | PSU resource registrations and configuration, including shared variables. |
 | `endpoints/` | API endpoint implementation scripts. |
 | `scripts/` | PSU automation scripts and adjacent resource documentation. |
-| `dashboards/` | Dashboard implementations and their dashboard-specific companion modules. |
+| `dashboards/` | Dashboard implementations, dashboard-specific companion modules, and optional short READMEs. |
 | `modules/` | PowerShell modules shared by scripts, endpoints, and dashboards. |
 | `data/` | Versioned synthetic datasets. |
 | `tools/` | Utilities run explicitly for development or host administration, including test and analysis runners and pinned build dependencies. |
 | `tools/factories/` | Synthetic-data factories, exporters, and offline model probes. |
 | `tools/output/` | Generated probe, test, and analysis results; ignored by Git. |
-| `docs/` | Documentation index, example prompts, directory guide, and errata. |
+| `docs/` | Documentation index, directory guide, and errata only; `docs/Documentation.Tests.ps1` enforces this. |
 | `docs/adr/` | Architecture decision records. |
-| `docs/setup/` | Configuration and setup procedures. |
-| `docs/reports/` | Report scenarios and interpretation. |
+| `wiki/` | Temporary drafts of GitHub Wiki pages under review (ADR-0010). |
 
 Pester tests live beside the code they test as `<Name>.Tests.ps1`. Empty scaffold
 directories may contain `.gitkeep` placeholders.
