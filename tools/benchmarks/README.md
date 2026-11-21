@@ -3,6 +3,11 @@
 
 Run only against the dedicated `C:\dev-psu` instance. Findings.md covers the four
 initial questions; AdminScenarios.md covers common admin tasks and crossover ranges.
+DatabaseProviders.md covers the separate SQLite/PostgreSQL/SQL Server application-database
+comparison; its portable evidence is in `database/`. Its scripts are archived,
+unmaintained, in `database/DatabaseHarness.zip` so they stay out of the reviewed
+source; the findings, not the scripts, are the useful part.
+DatabaseReview.md records the independent-review corrections and SQL Server rerun.
 
 PowerShell keeps workloads readable and comparable across jobs, endpoints, and
 callbacks. Stopwatch measures elapsed time, JSONL retains samples, and the bundled

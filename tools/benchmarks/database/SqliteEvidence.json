@@ -1,0 +1,4541 @@
+{
+  "Pass": "sqlite-local",
+  "MeasuredUtc": "2026-11-09T04:42:03.8758266Z",
+  "BaseCommit": "68e715b909919b452e3a874ca60615a79c0fe302",
+  "Status": "SQLite measured; SQL Server and PostgreSQL not measured. Experimental only.",
+  "SampleSelection": "Sequential direct results use client-boundary/ outer clocks. Original root read/write samples and original direct projection samples remain retained stage evidence. Endpoint/import/burst/control samples are unchanged.",
+  "Units": "milliseconds except counts, bytes and operations/second",
+  "Statistics": "Warm-ups excluded; medians/observed ranges; nearest-rank P95. Burst request latencies are correlated. Rate uses one wall time per burst.",
+  "Host": {
+    "Disks": {
+      "Number": 1,
+      "FriendlyName": "WD_BLACK SN850X 2000GB",
+      "BusType": "NVMe",
+      "Size": 2000398934016
+    },
+    "MemoryBytes": 33945432064,
+    "PowerPlan": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
+    "Processor": {
+      "Name": "AMD Ryzen 5 9600X 6-Core Processor             ",
+      "NumberOfCores": 6,
+      "NumberOfLogicalProcessors": 12
+    },
+    "OS": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26200",
+      "BuildNumber": "26200"
+    }
+  },
+  "Runtime": {
+    "Configuration": {
+      "PsuJob": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.12"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App",
+            "version": "10.0.12"
+          }
+        ],
+        "rollForwardOnNoCandidateFx": 1,
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+          "System.Runtime.TieredCompilation": true,
+          "System.Runtime.TieredCompilation.QuickJit": true,
+          "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+          "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+        }
+      },
+      "PsuServer": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.12"
+          },
+          {
+            "name": "Microsoft.AspNetCore.App",
+            "version": "10.0.12"
+          }
+        ],
+        "configProperties": {
+          "System.GC.Server": true,
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Reflection.NullabilityInfoContext.IsSupported": true,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": true
+        }
+      },
+      "Harness": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.14"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App",
+            "version": "10.0.14"
+          }
+        ],
+        "rollForwardOnNoCandidateFx": 1,
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+          "System.Runtime.TieredCompilation": true,
+          "System.Runtime.TieredCompilation.QuickJit": true,
+          "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+          "System.Runtime.Loader.UseRidGraph": true,
+          "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+        }
+      }
+    },
+    "Provider": "Microsoft.Data.Sqlite, Version=10.0.10.0, Culture=neutral, PublicKeyToken=adb9793829ddae60",
+    "HarnessPowerShell": "7.6.9",
+    "PsuPowerShell": "7.6.5",
+    "Psu": "2026.3.0",
+    "Engine": {
+      "Version": "3.53.3",
+      "SourceId": "2026-06-26 20:14:12 d4c0e51e4aeb96955b99185ab9cde75c339e2c29c3f3f12428d364a10d782c62"
+    }
+  },
+  "Configuration": {
+    "PsuLogging": "Information",
+    "Pragmas": "WAL; synchronous=FULL; cache_size=-8192; foreign_keys=ON; wal_autocheckpoint=1000",
+    "EnvironmentMaxRunspaces": 25,
+    "PersistentRunspace": false,
+    "Connection": "Pooling=False;Cache=Private;Default Timeout=5",
+    "PsuSecurity": "Strict",
+    "Psu": {
+      "concurrentJobLimit": 1000,
+      "maxJobMemory": 0,
+      "scriptBaseFolder": "scripts",
+      "gitSyncEnabled": false
+    }
+  },
+  "Fixture": "Seed 1108; Id 1..N; Name process-N; Category group-(Id%10); Enabled Id%4!=0; Cpu (Id*37+1108)%1000; exact ASCII x payload; Revision=0. Shapes 1000/256, 10000/256, 10000/2048. Fixture and document JSON prepared outside database timers.",
+  "Boundaries": [
+    "Sequential direct totals include helper invocation/return and owned-connection disposal; internal database/object stages are retained. Optional JSON serialization is measured separately after the client clock.",
+    "ExecuteReaderMs is not engine execution time: further SQL stepping and JSON parsing occur in FetchObjectMs.",
+    "Batch client clocks include the transaction helper call/return, setup, parameter assignment, execution and commit on an open connection.",
+    "Endpoint clients include HTTP transfer and JSON parsing; request JSON preparation and validation are outside timers. ResponseBytes is Invoke-WebRequest RawContentLength (body, excluding headers); compression was not separately audited.",
+    "Import ClientMs includes source file/JSON decoding, job startup/status polling and saved JSON result retrieval. CompletedMs stops when completion is observed (50ms polls).",
+    "Concurrency opens/warms independent processes before the gate. Burst wall time spans earliest actual start to latest finish, including between-operation driver work; per-operation clocks exclude sample recording.",
+    "Endpoint projection and initial reads ran in separate blocks; direction and body sizes support the result, not a paired latency estimate."
+  ],
+  "Reads": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.6534,
+        "Median": 2.0014,
+        "P95": 2.1974,
+        "Max": 2.1974
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.5711,
+        "Median": 1.9051,
+        "P95": 2.0495,
+        "Max": 2.0495
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3829,
+        "Median": 0.4082,
+        "P95": 0.6761,
+        "Max": 0.6761
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.032399999999999984,
+        "Median": 0.032999999999999974,
+        "P95": 0.09619999999999995,
+        "Max": 0.09619999999999995
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.9899,
+        "Median": 1.23,
+        "P95": 1.4328999999999998,
+        "Max": 1.4328999999999998
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.3968,
+        "Median": 0.5762,
+        "P95": 0.6578,
+        "Max": 0.6578
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.0759,
+        "Median": 1.3265,
+        "P95": 1.7467,
+        "Max": 1.7467
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.0034,
+        "Median": 1.2354,
+        "P95": 1.5859,
+        "Max": 1.5859
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0016,
+        "Median": 0.0022,
+        "P95": 0.0044,
+        "Max": 0.0044
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0392,
+        "Median": 0.040600000000000004,
+        "P95": 0.07359999999999998,
+        "Max": 0.07359999999999998
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.9112,
+        "Median": 1.1407000000000003,
+        "P95": 1.4121,
+        "Max": 1.4121
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.3903,
+        "Median": 0.5254,
+        "P95": 0.6883,
+        "Max": 0.6883
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 2.2771,
+        "Median": 2.523,
+        "P95": 2.7487,
+        "Max": 2.7487
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 2.1398,
+        "Median": 2.4293,
+        "P95": 2.5929,
+        "Max": 2.5929
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.4042,
+        "Median": 0.4925,
+        "P95": 0.7187,
+        "Max": 0.7187
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.03200000000000003,
+        "Median": 0.03520000000000001,
+        "P95": 0.03839999999999999,
+        "Max": 0.03839999999999999
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 1.5238,
+        "Median": 1.6409999999999998,
+        "P95": 1.8466999999999998,
+        "Max": 1.8466999999999998
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.4554,
+        "Median": 0.6037,
+        "P95": 0.6783,
+        "Max": 0.6783
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.4941,
+        "Median": 1.7365,
+        "P95": 2.1004,
+        "Max": 2.1004
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.4115,
+        "Median": 1.6103,
+        "P95": 1.9481,
+        "Max": 1.9481
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0018,
+        "Median": 0.0032,
+        "P95": 0.0052,
+        "Max": 0.0052
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.040999999999999995,
+        "Median": 0.043300000000000005,
+        "P95": 0.0767,
+        "Max": 0.0767
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 1.3167,
+        "Median": 1.5106,
+        "P95": 1.7754,
+        "Max": 1.7754
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.414,
+        "Median": 0.5616,
+        "P95": 0.6458,
+        "Max": 0.6458
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.7007,
+        "Median": 0.7815,
+        "P95": 0.8238,
+        "Max": 0.8238
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.5915,
+        "Median": 0.6576,
+        "P95": 0.694,
+        "Max": 0.694
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3853,
+        "Median": 0.4182,
+        "P95": 0.4849,
+        "Max": 0.4849
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.020199999999999996,
+        "Median": 0.021100000000000008,
+        "P95": 0.03069999999999995,
+        "Max": 0.03069999999999995
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.07100000000000006,
+        "Median": 0.07279999999999998,
+        "P95": 0.10819999999999996,
+        "Max": 0.10819999999999996
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0509,
+        "Median": 0.0566,
+        "P95": 0.0614,
+        "Max": 0.0614
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.239,
+        "Median": 0.4403,
+        "P95": 0.4752,
+        "Max": 0.4752
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.151,
+        "Median": 0.287,
+        "P95": 0.2967,
+        "Max": 0.2967
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0021,
+        "Median": 0.0032,
+        "P95": 0.0052,
+        "Max": 0.0052
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0269,
+        "Median": 0.049,
+        "P95": 0.052500000000000005,
+        "Max": 0.052500000000000005
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.06870000000000001,
+        "Median": 0.1223,
+        "P95": 0.13890000000000002,
+        "Max": 0.13890000000000002
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0478,
+        "Median": 0.0839,
+        "P95": 0.1018,
+        "Max": 0.1018
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 2.1209,
+        "Median": 2.398,
+        "P95": 3.7371,
+        "Max": 3.7371
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 2.0508,
+        "Median": 2.2589,
+        "P95": 3.6414,
+        "Max": 3.6414
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3786,
+        "Median": 0.4137,
+        "P95": 0.5736,
+        "Max": 0.5736
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.03210000000000002,
+        "Median": 0.0348,
+        "P95": 0.042100000000000026,
+        "Max": 0.042100000000000026
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 1.4888,
+        "Median": 1.6687000000000003,
+        "P95": 3.0862,
+        "Max": 3.0862
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.3959,
+        "Median": 0.5929,
+        "P95": 0.6397,
+        "Max": 0.6397
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.6167,
+        "Median": 1.7815,
+        "P95": 2.2691,
+        "Max": 2.2691
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.5309,
+        "Median": 1.7092,
+        "P95": 2.0446,
+        "Max": 2.0446
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0016,
+        "Median": 0.0025,
+        "P95": 0.0032,
+        "Max": 0.0032
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.038,
+        "Median": 0.04189999999999999,
+        "P95": 0.0817,
+        "Max": 0.0817
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 1.4240000000000002,
+        "Median": 1.6195,
+        "P95": 1.8489999999999998,
+        "Max": 1.8489999999999998
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.3897,
+        "Median": 0.618,
+        "P95": 1.8653,
+        "Max": 1.8653
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.6899,
+        "Median": 0.9126,
+        "P95": 1.1344,
+        "Max": 1.1344
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.6045,
+        "Median": 0.7593,
+        "P95": 0.9991,
+        "Max": 0.9991
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3991,
+        "Median": 0.5732,
+        "P95": 0.7686,
+        "Max": 0.7686
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.02210000000000001,
+        "Median": 0.023699999999999943,
+        "P95": 0.02779999999999999,
+        "Max": 0.02779999999999999
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.05359999999999998,
+        "Median": 0.056499999999999995,
+        "P95": 0.06440000000000001,
+        "Max": 0.06440000000000001
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0595,
+        "Median": 0.0664,
+        "P95": 0.074,
+        "Max": 0.074
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.2133,
+        "Median": 0.4082,
+        "P95": 0.4689,
+        "Max": 0.4689
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.1388,
+        "Median": 0.2656,
+        "P95": 0.3033,
+        "Max": 0.3033
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0017,
+        "Median": 0.0032,
+        "P95": 0.0056,
+        "Max": 0.0056
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.032100000000000004,
+        "Median": 0.0563,
+        "P95": 0.06289999999999998,
+        "Max": 0.06289999999999998
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.053099999999999994,
+        "Median": 0.1039,
+        "P95": 0.1254,
+        "Max": 0.1254
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0565,
+        "Median": 0.1048,
+        "P95": 0.1491,
+        "Max": 0.1491
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.3164,
+        "Median": 1.4238,
+        "P95": 1.7529,
+        "Max": 1.7529
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.2235,
+        "Median": 1.2776,
+        "P95": 1.6067,
+        "Max": 1.6067
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3793,
+        "Median": 0.4341,
+        "P95": 0.7546,
+        "Max": 0.7546
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.034499999999999975,
+        "Median": 0.03639999999999999,
+        "P95": 0.04539999999999994,
+        "Max": 0.04539999999999994
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.6616000000000001,
+        "Median": 0.6751999999999999,
+        "P95": 0.7483,
+        "Max": 0.7483
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1985,
+        "Median": 0.2737,
+        "P95": 0.3268,
+        "Max": 0.3268
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.8745,
+        "Median": 1.1597,
+        "P95": 1.3211,
+        "Max": 1.3211
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.7623,
+        "Median": 0.9962,
+        "P95": 1.1781,
+        "Max": 1.1781
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.003,
+        "Median": 0.0032,
+        "P95": 0.0037,
+        "Max": 0.0037
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.059,
+        "Median": 0.07909999999999999,
+        "P95": 0.0927,
+        "Max": 0.0927
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.6259999999999999,
+        "Median": 0.7665,
+        "P95": 0.9999999999999999,
+        "Max": 0.9999999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.19,
+        "Median": 0.2687,
+        "P95": 0.2982,
+        "Max": 0.2982
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.3003,
+        "Median": 1.5175,
+        "P95": 1.7216,
+        "Max": 1.7216
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.2103,
+        "Median": 1.3841,
+        "P95": 1.5767,
+        "Max": 1.5767
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3855,
+        "Median": 0.513,
+        "P95": 0.71,
+        "Max": 0.71
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.03640000000000004,
+        "Median": 0.03770000000000007,
+        "P95": 0.04189999999999999,
+        "Max": 0.04189999999999999
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.6085999999999999,
+        "Median": 0.6941000000000002,
+        "P95": 0.7192,
+        "Max": 0.7192
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1919,
+        "Median": 0.2699,
+        "P95": 0.3009,
+        "Max": 0.3009
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.7872,
+        "Median": 0.8972,
+        "P95": 1.1459,
+        "Max": 1.1459
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.6751,
+        "Median": 0.7906,
+        "P95": 0.9929,
+        "Max": 0.9929
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0016,
+        "Median": 0.0029,
+        "P95": 0.0055,
+        "Max": 0.0055
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.041199999999999994,
+        "Median": 0.05819999999999999,
+        "P95": 0.1088,
+        "Max": 0.1088
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5828,
+        "Median": 0.6616,
+        "P95": 0.812,
+        "Max": 0.812
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1855,
+        "Median": 0.2673,
+        "P95": 0.3182,
+        "Max": 0.3182
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 10.8855,
+        "Median": 11.6527,
+        "P95": 18.5938,
+        "Max": 18.5938
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 10.8327,
+        "Median": 11.5819,
+        "P95": 18.5075,
+        "Max": 18.5075
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3651,
+        "Median": 0.562,
+        "P95": 0.792,
+        "Max": 0.792
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.041100000000000025,
+        "Median": 0.04359999999999997,
+        "P95": 0.06789999999999996,
+        "Max": 0.06789999999999996
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 9.878,
+        "Median": 10.9068,
+        "P95": 17.5925,
+        "Max": 17.5925
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 1.9576,
+        "Median": 2.4662,
+        "P95": 5.8455,
+        "Max": 5.8455
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 9.2711,
+        "Median": 11.3126,
+        "P95": 14.1256,
+        "Max": 14.1256
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 9.1934,
+        "Median": 11.2268,
+        "P95": 14.0253,
+        "Max": 14.0253
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0011,
+        "Median": 0.0021,
+        "P95": 0.0031,
+        "Max": 0.0031
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.063,
+        "Median": 0.0699,
+        "P95": 0.134,
+        "Max": 0.134
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 9.0551,
+        "Median": 11.104899999999999,
+        "P95": 13.807699999999999,
+        "Max": 13.807699999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 1.9284,
+        "Median": 2.3056,
+        "P95": 7.2817,
+        "Max": 7.2817
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-scan",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 39.0288,
+        "Median": 40.431,
+        "P95": 43.0882,
+        "Max": 43.0882
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 38.9539,
+        "Median": 40.3269,
+        "P95": 42.9838,
+        "Max": 42.9838
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.365,
+        "Median": 0.4768,
+        "P95": 0.7749,
+        "Max": 0.7749
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.03920000000000001,
+        "Median": 0.041600000000000026,
+        "P95": 0.047699999999999965,
+        "Max": 0.047699999999999965
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 37.7368,
+        "Median": 38.9485,
+        "P95": 41.3599,
+        "Max": 41.3599
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 2.1945,
+        "Median": 2.5073,
+        "P95": 4.2078,
+        "Max": 4.2078
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 36.9198,
+        "Median": 38.349,
+        "P95": 43.3919,
+        "Max": 43.3919
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 36.8515,
+        "Median": 38.2663,
+        "P95": 43.3103,
+        "Max": 43.3103
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0014,
+        "Median": 0.0022,
+        "P95": 0.0026,
+        "Max": 0.0026
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.057999999999999996,
+        "Median": 0.08529999999999999,
+        "P95": 0.0993,
+        "Max": 0.0993
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 36.7419,
+        "Median": 38.1135,
+        "P95": 43.168400000000005,
+        "Max": 43.168400000000005
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 2.0074,
+        "Median": 2.3204,
+        "P95": 3.1968,
+        "Max": 3.1968
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.5816,
+        "Median": 0.6652,
+        "P95": 1.1116,
+        "Max": 1.1116
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.5374,
+        "Median": 0.6141,
+        "P95": 1.023,
+        "Max": 1.023
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3854,
+        "Median": 0.4563,
+        "P95": 0.7747,
+        "Max": 0.7747
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.018899999999999972,
+        "Median": 0.025500000000000078,
+        "P95": 0.0474,
+        "Max": 0.0474
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.038000000000000034,
+        "Median": 0.04260000000000003,
+        "P95": 0.07240000000000002,
+        "Max": 0.07240000000000002
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0265,
+        "Median": 0.0282,
+        "P95": 0.0308,
+        "Max": 0.0308
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.1555,
+        "Median": 0.2557,
+        "P95": 0.3334,
+        "Max": 0.3334
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.1139,
+        "Median": 0.1879,
+        "P95": 0.2457,
+        "Max": 0.2457
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0012,
+        "Median": 0.0026,
+        "P95": 0.0027,
+        "Max": 0.0027
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.030000000000000002,
+        "Median": 0.07400000000000001,
+        "P95": 0.08020000000000001,
+        "Max": 0.08020000000000001
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.046200000000000005,
+        "Median": 0.05949999999999997,
+        "P95": 0.0854,
+        "Max": 0.0854
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.024,
+        "Median": 0.0316,
+        "P95": 0.0481,
+        "Max": 0.0481
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 14.4613,
+        "Median": 15.7877,
+        "P95": 18.1574,
+        "Max": 18.1574
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 14.381,
+        "Median": 15.746,
+        "P95": 18.078,
+        "Max": 18.078
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3618,
+        "Median": 0.5225,
+        "P95": 0.745,
+        "Max": 0.745
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.04139999999999999,
+        "Median": 0.0499,
+        "P95": 0.08360000000000001,
+        "Max": 0.08360000000000001
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 13.4001,
+        "Median": 15.2185,
+        "P95": 17.1118,
+        "Max": 17.1118
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 2.019,
+        "Median": 2.5711,
+        "P95": 7.9442,
+        "Max": 7.9442
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 12.4467,
+        "Median": 15.1566,
+        "P95": 19.7772,
+        "Max": 19.7772
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 12.4079,
+        "Median": 15.1119,
+        "P95": 19.6932,
+        "Max": 19.6932
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0011,
+        "Median": 0.0016,
+        "P95": 0.003,
+        "Max": 0.003
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0423,
+        "Median": 0.06670000000000001,
+        "P95": 0.12580000000000002,
+        "Max": 0.12580000000000002
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 12.3157,
+        "Median": 15.0288,
+        "P95": 19.4847,
+        "Max": 19.4847
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 1.9005,
+        "Median": 2.332,
+        "P95": 7.4291,
+        "Max": 7.4291
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.5454,
+        "Median": 0.8352,
+        "P95": 1.0487,
+        "Max": 1.0487
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.5064,
+        "Median": 0.7625,
+        "P95": 0.9864,
+        "Max": 0.9864
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3611,
+        "Median": 0.6122,
+        "P95": 0.7481,
+        "Max": 0.7481
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.024500000000000022,
+        "Median": 0.02640000000000009,
+        "P95": 0.047799999999999954,
+        "Max": 0.047799999999999954
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.04059999999999997,
+        "Median": 0.04289999999999994,
+        "P95": 0.06940000000000002,
+        "Max": 0.06940000000000002
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0295,
+        "Median": 0.031,
+        "P95": 0.0367,
+        "Max": 0.0367
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.1571,
+        "Median": 0.2388,
+        "P95": 2.3274,
+        "Max": 2.3274
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.1191,
+        "Median": 0.1803,
+        "P95": 2.2876,
+        "Max": 2.2876
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0013,
+        "Median": 0.0023,
+        "P95": 0.0029,
+        "Max": 0.0029
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.037200000000000004,
+        "Median": 0.0655,
+        "P95": 0.0902,
+        "Max": 0.0902
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.043100000000000006,
+        "Median": 0.0476,
+        "P95": 2.2057,
+        "Max": 2.2057
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0274,
+        "Median": 0.0313,
+        "P95": 0.058,
+        "Max": 0.058
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.1641,
+        "Median": 1.2761,
+        "P95": 4.4632,
+        "Max": 4.4632
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.0997,
+        "Median": 1.1889,
+        "P95": 1.4902,
+        "Max": 1.4902
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.4174,
+        "Median": 0.4675,
+        "P95": 0.7028,
+        "Max": 0.7028
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0505000000000001,
+        "Median": 0.05840000000000001,
+        "P95": 0.0928,
+        "Max": 0.0928
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5429999999999999,
+        "Median": 0.5539000000000001,
+        "P95": 0.5691999999999999,
+        "Max": 0.5691999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1021,
+        "Median": 0.1042,
+        "P95": 0.1134,
+        "Max": 0.1134
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.6588,
+        "Median": 0.9323,
+        "P95": 4.4248,
+        "Max": 4.4248
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.618,
+        "Median": 0.8721,
+        "P95": 4.3693,
+        "Max": 4.3693
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0013,
+        "Median": 0.002,
+        "P95": 0.0032,
+        "Max": 0.0032
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0654,
+        "Median": 0.09140000000000001,
+        "P95": 0.14939999999999998,
+        "Max": 0.14939999999999998
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5104,
+        "Median": 0.7163999999999999,
+        "P95": 4.2404,
+        "Max": 4.2404
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0986,
+        "Median": 0.1062,
+        "P95": 0.1271,
+        "Max": 0.1271
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.1451,
+        "Median": 1.2999,
+        "P95": 1.3628,
+        "Max": 1.3628
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.0971,
+        "Median": 1.216,
+        "P95": 1.3037,
+        "Max": 1.3037
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.416,
+        "Median": 0.5069,
+        "P95": 0.6052,
+        "Max": 0.6052
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.04420000000000002,
+        "Median": 0.04850000000000004,
+        "P95": 0.05589999999999995,
+        "Max": 0.05589999999999995
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5483,
+        "Median": 0.5576999999999999,
+        "P95": 0.5694,
+        "Max": 0.5694
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1032,
+        "Median": 0.1048,
+        "P95": 0.1328,
+        "Max": 0.1328
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.6346,
+        "Median": 0.7253,
+        "P95": 1.0933,
+        "Max": 1.0933
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.5992,
+        "Median": 0.669,
+        "P95": 1.0064,
+        "Max": 1.0064
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.001,
+        "Median": 0.0017,
+        "P95": 0.0036,
+        "Max": 0.0036
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.047,
+        "Median": 0.0794,
+        "P95": 0.1322,
+        "Max": 0.1322
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5035000000000001,
+        "Median": 0.5302,
+        "P95": 0.7915,
+        "Max": 0.7915
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0977,
+        "Median": 0.1009,
+        "P95": 3.8124,
+        "Max": 3.8124
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 11.9218,
+        "Median": 15.5128,
+        "P95": 18.7384,
+        "Max": 18.7384
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 11.84,
+        "Median": 15.3787,
+        "P95": 18.6033,
+        "Max": 18.6033
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.4505,
+        "Median": 0.531,
+        "P95": 0.785,
+        "Max": 0.785
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.04190000000000005,
+        "Median": 0.04859999999999998,
+        "P95": 0.07809999999999995,
+        "Max": 0.07809999999999995
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 10.7548,
+        "Median": 14.2415,
+        "P95": 17.804199999999998,
+        "Max": 17.804199999999998
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 1.7957,
+        "Median": 4.8838,
+        "P95": 8.3598,
+        "Max": 8.3598
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 10.33,
+        "Median": 15.1327,
+        "P95": 15.7759,
+        "Max": 15.7759
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 10.2711,
+        "Median": 15.0308,
+        "P95": 15.6333,
+        "Max": 15.6333
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0013,
+        "Median": 0.0027,
+        "P95": 0.0072,
+        "Max": 0.0072
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0522,
+        "Median": 0.06319999999999999,
+        "P95": 0.1013,
+        "Max": 0.1013
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 10.164599999999998,
+        "Median": 14.8897,
+        "P95": 15.424900000000001,
+        "Max": 15.424900000000001
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 2.1367,
+        "Median": 4.7669,
+        "P95": 8.3209,
+        "Max": 8.3209
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 16.6514,
+        "Median": 20.3506,
+        "P95": 24.5538,
+        "Max": 24.5538
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 16.5498,
+        "Median": 20.2279,
+        "P95": 24.4247,
+        "Max": 24.4247
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3762,
+        "Median": 0.6321,
+        "P95": 0.7239,
+        "Max": 0.7239
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0403,
+        "Median": 0.04479999999999995,
+        "P95": 0.06740000000000002,
+        "Max": 0.06740000000000002
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 15.455499999999999,
+        "Median": 19.218500000000002,
+        "P95": 23.3737,
+        "Max": 23.3737
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 2.022,
+        "Median": 4.6406,
+        "P95": 6.3665,
+        "Max": 6.3665
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 13.7677,
+        "Median": 16.1019,
+        "P95": 20.7928,
+        "Max": 20.7928
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 13.6684,
+        "Median": 15.9847,
+        "P95": 20.6962,
+        "Max": 20.6962
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0016,
+        "Median": 0.0032,
+        "P95": 0.0039,
+        "Max": 0.0039
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.04750000000000001,
+        "Median": 0.07320000000000002,
+        "P95": 0.1056,
+        "Max": 0.1056
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 13.5517,
+        "Median": 15.7948,
+        "P95": 20.5563,
+        "Max": 20.5563
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 1.9581,
+        "Median": 4.8529,
+        "P95": 7.8108,
+        "Max": 7.8108
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.7213,
+        "Median": 0.9174,
+        "P95": 1.1564,
+        "Max": 1.1564
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.6637,
+        "Median": 0.8226,
+        "P95": 1.039,
+        "Max": 1.039
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.455,
+        "Median": 0.5769,
+        "P95": 0.7683,
+        "Max": 0.7683
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.030200000000000005,
+        "Median": 0.037899999999999934,
+        "P95": 0.05369999999999997,
+        "Max": 0.05369999999999997
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.05559999999999998,
+        "Median": 0.0825999999999999,
+        "P95": 0.08979999999999999,
+        "Max": 0.08979999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.032,
+        "Median": 0.0477,
+        "P95": 0.0539,
+        "Max": 0.0539
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.2356,
+        "Median": 0.2967,
+        "P95": 0.3458,
+        "Max": 0.3458
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.17,
+        "Median": 0.1804,
+        "P95": 0.2353,
+        "Max": 0.2353
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0021,
+        "Median": 0.0026,
+        "P95": 0.0035,
+        "Max": 0.0035
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0466,
+        "Median": 0.0544,
+        "P95": 0.07239999999999999,
+        "Max": 0.07239999999999999
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.06029999999999999,
+        "Median": 0.0708,
+        "P95": 0.0995,
+        "Max": 0.0995
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0315,
+        "Median": 0.0473,
+        "P95": 0.0552,
+        "Max": 0.0552
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 14.4602,
+        "Median": 17.8432,
+        "P95": 20.9648,
+        "Max": 20.9648
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 14.3998,
+        "Median": 17.7395,
+        "P95": 20.884,
+        "Max": 20.884
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.4531,
+        "Median": 0.4934,
+        "P95": 0.7742,
+        "Max": 0.7742
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.044399999999999995,
+        "Median": 0.0494,
+        "P95": 0.07320000000000004,
+        "Max": 0.07320000000000004
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 13.5525,
+        "Median": 16.891000000000002,
+        "P95": 20.1468,
+        "Max": 20.1468
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 1.983,
+        "Median": 5.1454,
+        "P95": 7.3142,
+        "Max": 7.3142
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 12.3947,
+        "Median": 13.461,
+        "P95": 17.8666,
+        "Max": 17.8666
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 12.3407,
+        "Median": 13.3596,
+        "P95": 17.788,
+        "Max": 17.788
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0015,
+        "Median": 0.0027,
+        "P95": 0.0036,
+        "Max": 0.0036
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.04869999999999999,
+        "Median": 0.06369999999999999,
+        "P95": 0.10749999999999998,
+        "Max": 0.10749999999999998
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 12.236899999999999,
+        "Median": 13.241299999999999,
+        "P95": 17.683,
+        "Max": 17.683
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 2.8467,
+        "Median": 5.144,
+        "P95": 9.5769,
+        "Max": 9.5769
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.692,
+        "Median": 0.7698,
+        "P95": 0.9848,
+        "Max": 0.9848
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.6227,
+        "Median": 0.6763,
+        "P95": 0.8969,
+        "Max": 0.8969
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.433,
+        "Median": 0.4787,
+        "P95": 0.7297,
+        "Max": 0.7297
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.02980000000000005,
+        "Median": 0.03310000000000002,
+        "P95": 0.03789999999999999,
+        "Max": 0.03789999999999999
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.0403,
+        "Median": 0.04490000000000005,
+        "P95": 0.05449999999999999,
+        "Max": 0.05449999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0374,
+        "Median": 0.0526,
+        "P95": 0.0587,
+        "Max": 0.0587
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.2353,
+        "Median": 0.3351,
+        "P95": 0.4208,
+        "Max": 0.4208
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.1635,
+        "Median": 0.2388,
+        "P95": 0.2876,
+        "Max": 0.2876
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0026,
+        "Median": 0.0035,
+        "P95": 0.008,
+        "Max": 0.008
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0477,
+        "Median": 0.0684,
+        "P95": 0.09010000000000001,
+        "Max": 0.09010000000000001
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.05330000000000001,
+        "Median": 0.08509999999999997,
+        "P95": 0.09339999999999998,
+        "Max": 0.09339999999999998
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0396,
+        "Median": 0.0582,
+        "P95": 0.1025,
+        "Max": 0.1025
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.163,
+        "Median": 1.4371,
+        "P95": 1.745,
+        "Max": 1.745
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.1104,
+        "Median": 1.3528,
+        "P95": 1.6293,
+        "Max": 1.6293
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.3909,
+        "Median": 0.5942,
+        "P95": 0.7136,
+        "Max": 0.7136
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.05359999999999998,
+        "Median": 0.062000000000000055,
+        "P95": 0.12319999999999998,
+        "Max": 0.12319999999999998
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5387,
+        "Median": 0.5652,
+        "P95": 0.7082999999999999,
+        "Max": 0.7082999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1028,
+        "Median": 0.2286,
+        "P95": 0.3063,
+        "Max": 0.3063
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.6763,
+        "Median": 0.9282,
+        "P95": 1.1686,
+        "Max": 1.1686
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.601,
+        "Median": 0.8424,
+        "P95": 1.0694,
+        "Max": 1.0694
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0015,
+        "Median": 0.003,
+        "P95": 0.0038,
+        "Max": 0.0038
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.0513,
+        "Median": 0.09039999999999998,
+        "P95": 0.11970000000000003,
+        "Max": 0.11970000000000003
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.49849999999999994,
+        "Median": 0.6209,
+        "P95": 0.8759999999999999,
+        "Max": 0.8759999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1002,
+        "Median": 0.2231,
+        "P95": 0.2996,
+        "Max": 0.2996
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.1657,
+        "Median": 1.3923,
+        "P95": 1.463,
+        "Max": 1.463
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.1128,
+        "Median": 1.2916,
+        "P95": 1.3642,
+        "Max": 1.3642
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.4279,
+        "Median": 0.4914,
+        "P95": 0.6793,
+        "Max": 0.6793
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.05010000000000003,
+        "Median": 0.05400000000000005,
+        "P95": 0.0786,
+        "Max": 0.0786
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.5394000000000001,
+        "Median": 0.5778000000000001,
+        "P95": 0.6983999999999999,
+        "Max": 0.6983999999999999
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.1025,
+        "Median": 0.234,
+        "P95": 0.3226,
+        "Max": 0.3226
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.7278,
+        "Median": 0.813,
+        "P95": 1.0459,
+        "Max": 1.0459
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 0.6205,
+        "Median": 0.7054,
+        "P95": 0.9377,
+        "Max": 0.9377
+      },
+      "OpenConfigureMs": {
+        "N": 7,
+        "Min": 0.0021,
+        "Median": 0.0027,
+        "P95": 0.006,
+        "Max": 0.006
+      },
+      "ExecuteReaderMs": {
+        "N": 7,
+        "Min": 0.047200000000000006,
+        "Median": 0.07219999999999999,
+        "P95": 0.103,
+        "Max": 0.103
+      },
+      "FetchObjectMs": {
+        "N": 7,
+        "Min": 0.4969,
+        "Median": 0.5781000000000001,
+        "P95": 0.7361,
+        "Max": 0.7361
+      },
+      "SerializeMs": {
+        "N": 7,
+        "Min": 0.0978,
+        "Median": 0.2257,
+        "P95": 0.2957,
+        "Max": 0.2957
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    }
+  ],
+  "Writes": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "autocommit-rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 32.619,
+        "Median": 33.5717,
+        "P95": 36.7091,
+        "Max": 36.7091
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 32.5179,
+        "Median": 33.4635,
+        "P95": 36.5896,
+        "Max": 36.5896
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.0033000000000029672,
+        "Median": 0.004100000000001103,
+        "P95": 0.005400000000001626,
+        "Max": 0.005400000000001626
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "documents",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.0518,
+        "Median": 1.2064,
+        "P95": 1.3429,
+        "Max": 1.3429
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 0.9594,
+        "Median": 1.0923,
+        "P95": 1.2274,
+        "Max": 1.2274
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.34750000000000003,
+        "Median": 0.4089999999999999,
+        "P95": 0.5411999999999999,
+        "Max": 0.5411999999999999
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-documents",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.024,
+        "Median": 1.1274,
+        "P95": 2.9283,
+        "Max": 2.9283
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 0.9251,
+        "Median": 1.0267,
+        "P95": 2.7946,
+        "Max": 2.7946
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.3378,
+        "Median": 0.37640000000000007,
+        "P95": 1.0518,
+        "Max": 1.0518
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.9331,
+        "Median": 1.0262,
+        "P95": 1.3675,
+        "Max": 1.3675
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 0.844,
+        "Median": 0.9098,
+        "P95": 1.2172,
+        "Max": 1.2172
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.32689999999999997,
+        "Median": 0.3548,
+        "P95": 0.38150000000000006,
+        "Max": 0.38150000000000006
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.5632,
+        "Median": 1.6513,
+        "P95": 1.7232,
+        "Max": 1.7232
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 1.465,
+        "Median": 1.5409,
+        "P95": 1.6165,
+        "Max": 1.6165
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.3365,
+        "Median": 0.39360000000000017,
+        "P95": 0.4549000000000001,
+        "Max": 0.4549000000000001
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "autocommit-rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 32.8078,
+        "Median": 34.7925,
+        "P95": 38.0479,
+        "Max": 38.0479
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 32.7612,
+        "Median": 34.7369,
+        "P95": 37.9953,
+        "Max": 37.9953
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.0015000000000000568,
+        "Median": 0.0018999999999991246,
+        "P95": 0.002300000000005298,
+        "Max": 0.002300000000005298
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "documents",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.2759,
+        "Median": 1.3086,
+        "P95": 1.3938,
+        "Max": 1.3938
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 1.2287,
+        "Median": 1.2623,
+        "P95": 1.3404,
+        "Max": 1.3404
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.6949000000000001,
+        "Median": 0.7158,
+        "P95": 0.8036,
+        "Max": 0.8036
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-documents",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.2751,
+        "Median": 1.3455,
+        "P95": 1.3653,
+        "Max": 1.3653
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 1.2316,
+        "Median": 1.3019,
+        "P95": 1.3211,
+        "Max": 1.3211
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.6887999999999999,
+        "Median": 0.7474999999999999,
+        "P95": 0.7764000000000001,
+        "Max": 0.7764000000000001
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.1601,
+        "Median": 1.5028,
+        "P95": 2.2489,
+        "Max": 2.2489
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 1.1211,
+        "Median": 1.4566,
+        "P95": 2.2065,
+        "Max": 2.2065
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.7048000000000001,
+        "Median": 1.0468000000000002,
+        "P95": 1.7966999999999997,
+        "Max": 1.7966999999999997
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.4246,
+        "Median": 1.4488,
+        "P95": 1.5202,
+        "Max": 1.5202
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 1.3795,
+        "Median": 1.4047,
+        "P95": 1.4768,
+        "Max": 1.4768
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.7258,
+        "Median": 0.7525000000000001,
+        "P95": 0.8221,
+        "Max": 0.8221
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "autocommit-rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 32.1532,
+        "Median": 33.7927,
+        "P95": 34.8062,
+        "Max": 34.8062
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 32.0935,
+        "Median": 33.7254,
+        "P95": 34.7489,
+        "Max": 34.7489
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.002200000000001978,
+        "Median": 0.002600000000001046,
+        "P95": 0.0031000000000034333,
+        "Max": 0.0031000000000034333
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "documents",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.9274,
+        "Median": 0.9461,
+        "P95": 1.0232,
+        "Max": 1.0232
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 0.8705,
+        "Median": 0.8893,
+        "P95": 0.9564,
+        "Max": 0.9564
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.3285,
+        "Median": 0.34409999999999996,
+        "P95": 0.39059999999999995,
+        "Max": 0.39059999999999995
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-documents",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.9219,
+        "Median": 0.9352,
+        "P95": 1.0414,
+        "Max": 1.0414
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 0.869,
+        "Median": 0.8809,
+        "P95": 0.9871,
+        "Max": 0.9871
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.33429999999999993,
+        "Median": 0.3487,
+        "P95": 0.4656,
+        "Max": 0.4656
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 0.8008,
+        "Median": 0.8867,
+        "P95": 0.8945,
+        "Max": 0.8945
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 0.7575,
+        "Median": 0.8293,
+        "P95": 0.8389,
+        "Max": 0.8389
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.32110000000000005,
+        "Median": 0.3466,
+        "P95": 0.37790000000000007,
+        "Max": 0.37790000000000007
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "rows",
+      "TotalMs": {
+        "N": 7,
+        "Min": 1.2334,
+        "Median": 1.3046,
+        "P95": 1.5018,
+        "Max": 1.5018
+      },
+      "TransactionMs": {
+        "N": 7,
+        "Min": 1.1773,
+        "Median": 1.2474,
+        "P95": 1.4464,
+        "Max": 1.4464
+      },
+      "CommitMs": {
+        "N": 7,
+        "Min": 0.33089999999999997,
+        "Median": 0.3547999999999999,
+        "P95": 0.4659000000000001,
+        "Max": 0.4659000000000001
+      },
+      "Rows": 100
+    }
+  ],
+  "Endpoints": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.0395,
+        "Median": 21.1662,
+        "P95": 29.0156,
+        "Max": 29.0156
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.5816,
+        "Median": 20.5946,
+        "P95": 28.4517,
+        "Max": 28.4517
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.4344000000000001,
+        "Median": 0.5669000000000004,
+        "P95": 1.0003000000000029,
+        "Max": 1.0003000000000029
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.5723,
+        "Median": 3.2673,
+        "P95": 9.3213,
+        "Max": 9.3213
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 2.2392,
+        "Median": 2.8037,
+        "P95": 8.7944,
+        "Max": 8.7944
+      },
+      "Rows": 50,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 18254.0,
+        "Median": 18268.0,
+        "P95": 18268.0,
+        "Max": 18268.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.5597,
+        "Median": 19.08,
+        "P95": 23.1922,
+        "Max": 23.1922
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.3804,
+        "Median": 18.847,
+        "P95": 22.9442,
+        "Max": 22.9442
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1814,
+        "Median": 0.25060000000000215,
+        "P95": 0.31200000000000117,
+        "Max": 0.31200000000000117
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.647,
+        "Median": 2.0294,
+        "P95": 2.3391,
+        "Max": 2.3391
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.2731,
+        "Median": 1.642,
+        "P95": 1.8305,
+        "Max": 1.8305
+      },
+      "Rows": 1,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 638.0,
+        "Median": 640.0,
+        "P95": 640.0,
+        "Max": 640.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.353,
+        "Median": 21.6017,
+        "P95": 26.275,
+        "Max": 26.275
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.9324,
+        "Median": 20.8667,
+        "P95": 25.6834,
+        "Max": 25.6834
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.4231999999999978,
+        "Median": 0.595600000000001,
+        "P95": 0.7370999999999981,
+        "Max": 0.7370999999999981
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 3.0046,
+        "Median": 3.5156,
+        "P95": 4.407,
+        "Max": 4.407
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 2.6764,
+        "Median": 3.0402,
+        "P95": 3.9124,
+        "Max": 3.9124
+      },
+      "Rows": 50,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 18255.0,
+        "Median": 18257.0,
+        "P95": 18269.0,
+        "Max": 18269.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.5535,
+        "Median": 19.4405,
+        "P95": 23.8284,
+        "Max": 23.8284
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.3777,
+        "Median": 19.1505,
+        "P95": 23.4893,
+        "Max": 23.4893
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1778999999999975,
+        "Median": 0.23189999999999955,
+        "P95": 0.3423000000000016,
+        "Max": 0.3423000000000016
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.7303,
+        "Median": 2.0463,
+        "P95": 2.5425,
+        "Max": 2.5425
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.3798,
+        "Median": 1.6188,
+        "P95": 1.9786,
+        "Max": 1.9786
+      },
+      "Rows": 1,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 640.0,
+        "Median": 641.0,
+        "P95": 642.0,
+        "Max": 642.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.5358,
+        "Median": 19.8284,
+        "P95": 25.2101,
+        "Max": 25.2101
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.2652,
+        "Median": 19.1744,
+        "P95": 24.7938,
+        "Max": 24.7938
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.2727000000000004,
+        "Median": 0.40520000000000067,
+        "P95": 0.6579000000000015,
+        "Max": 0.6579000000000015
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.162,
+        "Median": 2.4575,
+        "P95": 3.3413,
+        "Max": 3.3413
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.8221,
+        "Median": 2.0501,
+        "P95": 2.8527,
+        "Max": 2.8527
+      },
+      "Rows": 20,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 7464.0,
+        "Median": 7475.0,
+        "P95": 7477.0,
+        "Max": 7477.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 35.1834,
+        "Median": 40.4556,
+        "P95": 64.7779,
+        "Max": 64.7779
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 33.364,
+        "Median": 35.1031,
+        "P95": 40.3048,
+        "Max": 40.3048
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.8096000000000032,
+        "Median": 2.2897999999999996,
+        "P95": 29.675799999999995,
+        "Max": 29.675799999999995
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 9.7694,
+        "Median": 11.579,
+        "P95": 14.2225,
+        "Max": 14.2225
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 9.4824,
+        "Median": 11.2842,
+        "P95": 13.8782,
+        "Max": 13.8782
+      },
+      "Rows": 500,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 1076640.0,
+        "Median": 1076655.0,
+        "P95": 1076667.0,
+        "Max": 1076667.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.4139,
+        "Median": 18.7674,
+        "P95": 21.1751,
+        "Max": 21.1751
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.2942,
+        "Median": 18.611,
+        "P95": 21.0554,
+        "Max": 21.0554
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.12040000000000006,
+        "Median": 0.13030000000000186,
+        "P95": 0.1791000000000018,
+        "Max": 0.1791000000000018
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.4658,
+        "Median": 1.6057,
+        "P95": 2.142,
+        "Max": 2.142
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.1798,
+        "Median": 1.3223,
+        "P95": 1.7012,
+        "Max": 1.7012
+      },
+      "Rows": 1,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2433.0,
+        "Median": 2434.0,
+        "P95": 2434.0,
+        "Max": 2434.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 41.9927,
+        "Median": 46.7648,
+        "P95": 62.1185,
+        "Max": 62.1185
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 39.7335,
+        "Median": 42.446,
+        "P95": 58.1169,
+        "Max": 58.1169
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.940400000000004,
+        "Median": 2.260399999999997,
+        "P95": 22.2294,
+        "Max": 22.2294
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 15.2243,
+        "Median": 16.247,
+        "P95": 34.3606,
+        "Max": 34.3606
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 14.9406,
+        "Median": 15.8417,
+        "P95": 34.0755,
+        "Max": 34.0755
+      },
+      "Rows": 500,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 1076655.0,
+        "Median": 1076657.0,
+        "P95": 1076667.0,
+        "Max": 1076667.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.7001,
+        "Median": 18.4421,
+        "P95": 23.4558,
+        "Max": 23.4558
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.5713,
+        "Median": 18.3076,
+        "P95": 23.3137,
+        "Max": 23.3137
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.12079999999999913,
+        "Median": 0.13519999999999754,
+        "P95": 0.14290000000000092,
+        "Max": 0.14290000000000092
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.5535,
+        "Median": 1.7345,
+        "P95": 1.8467,
+        "Max": 1.8467
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.2593,
+        "Median": 1.4,
+        "P95": 1.5689,
+        "Max": 1.5689
+      },
+      "Rows": 1,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2420.0,
+        "Median": 2434.0,
+        "P95": 2435.0,
+        "Max": 2435.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.3929,
+        "Median": 20.4732,
+        "P95": 24.3286,
+        "Max": 24.3286
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.1895,
+        "Median": 20.2284,
+        "P95": 24.1024,
+        "Max": 24.1024
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.2041000000000004,
+        "Median": 0.22390000000000043,
+        "P95": 0.2942,
+        "Max": 0.2942
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.0984,
+        "Median": 2.2488,
+        "P95": 3.1136,
+        "Max": 3.1136
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.8296,
+        "Median": 1.9687,
+        "P95": 2.7344,
+        "Max": 2.7344
+      },
+      "Rows": 20,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 43312.0,
+        "Median": 43326.0,
+        "P95": 43338.0,
+        "Max": 43338.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 33.8306,
+        "Median": 37.3823,
+        "P95": 47.9808,
+        "Max": 47.9808
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 27.0577,
+        "Median": 31.1783,
+        "P95": 40.9038,
+        "Max": 40.9038
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.7954000000000008,
+        "Median": 5.727399999999999,
+        "P95": 20.925499999999996,
+        "Max": 20.925499999999996
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 8.4112,
+        "Median": 9.4432,
+        "P95": 20.1231,
+        "Max": 20.1231
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 8.1338,
+        "Median": 9.1473,
+        "P95": 19.7443,
+        "Max": 19.7443
+      },
+      "Rows": 500,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 180652.0,
+        "Median": 180657.0,
+        "P95": 180667.0,
+        "Max": 180667.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.0436,
+        "Median": 19.0138,
+        "P95": 24.6454,
+        "Max": 24.6454
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.8465,
+        "Median": 18.8185,
+        "P95": 24.4723,
+        "Max": 24.4723
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.17439999999999856,
+        "Median": 0.20639999999999858,
+        "P95": 0.23179999999999978,
+        "Max": 0.23179999999999978
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.5826,
+        "Median": 1.786,
+        "P95": 2.1969,
+        "Max": 2.1969
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.2939,
+        "Median": 1.4154,
+        "P95": 1.8344,
+        "Max": 1.8344
+      },
+      "Rows": 1,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 640.0,
+        "Median": 641.0,
+        "P95": 642.0,
+        "Max": 642.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 40.1113,
+        "Median": 42.3179,
+        "P95": 64.2684,
+        "Max": 64.2684
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 34.3181,
+        "Median": 38.6405,
+        "P95": 58.2793,
+        "Max": 58.2793
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.7320999999999955,
+        "Median": 5.461399999999998,
+        "P95": 5.990699999999997,
+        "Max": 5.990699999999997
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 15.1329,
+        "Median": 17.9073,
+        "P95": 33.923,
+        "Max": 33.923
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 14.8622,
+        "Median": 17.601,
+        "P95": 33.5135,
+        "Max": 33.5135
+      },
+      "Rows": 500,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 180655.0,
+        "Median": 180656.0,
+        "P95": 180667.0,
+        "Max": 180667.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.9934,
+        "Median": 18.7821,
+        "P95": 21.1034,
+        "Max": 21.1034
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.857,
+        "Median": 18.5768,
+        "P95": 20.9034,
+        "Max": 20.9034
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.13759999999999906,
+        "Median": 0.20179999999999865,
+        "P95": 0.23160000000000025,
+        "Max": 0.23160000000000025
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.5376,
+        "Median": 1.8531,
+        "P95": 2.2566,
+        "Max": 2.2566
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.258,
+        "Median": 1.4773,
+        "P95": 1.8956,
+        "Max": 1.8956
+      },
+      "Rows": 1,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 640.0,
+        "Median": 641.0,
+        "P95": 642.0,
+        "Max": 642.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.5502,
+        "Median": 19.6447,
+        "P95": 24.1635,
+        "Max": 24.1635
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 18.1446,
+        "Median": 19.4211,
+        "P95": 23.9393,
+        "Max": 23.9393
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.21069999999999922,
+        "Median": 0.27720000000000056,
+        "P95": 0.4527000000000001,
+        "Max": 0.4527000000000001
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.0165,
+        "Median": 2.7742,
+        "P95": 3.5418,
+        "Max": 3.5418
+      },
+      "DatabaseObjectMs": {
+        "N": 7,
+        "Min": 1.734,
+        "Median": 2.4378,
+        "P95": 3.1645,
+        "Max": 3.1645
+      },
+      "Rows": 20,
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 7486.0,
+        "Median": 7487.0,
+        "P95": 7497.0,
+        "Max": 7497.0
+      },
+      "Engine": "3.53.3",
+      "PowerShell": "7.6.5"
+    }
+  ],
+  "Imports": [
+    {
+      "Location": "direct",
+      "ClientMs": {
+        "N": 7,
+        "Min": 21.8832,
+        "Median": 27.6575,
+        "P95": 41.4276,
+        "Max": 41.4276
+      },
+      "CompletedMs": {
+        "N": 7,
+        "Min": 21.8815,
+        "Median": 27.6566,
+        "P95": 41.4262,
+        "Max": 41.4262
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 6.663,
+        "Median": 7.6315,
+        "P95": 11.7448,
+        "Max": 11.7448
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 18.3592,
+        "Median": 23.8515,
+        "P95": 36.5669,
+        "Max": 36.5669
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "job",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1522.4703,
+        "Median": 1561.5864,
+        "P95": 2308.1642,
+        "Max": 2308.1642
+      },
+      "CompletedMs": {
+        "N": 7,
+        "Min": 1502.6843,
+        "Median": 1541.3702,
+        "P95": 2288.3695,
+        "Max": 2288.3695
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 34.1146,
+        "Median": 36.1574,
+        "P95": 37.3753,
+        "Max": 37.3753
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 126.1686,
+        "Median": 130.3154,
+        "P95": 137.6128,
+        "Max": 137.6128
+      },
+      "Rows": 1000
+    }
+  ],
+  "Bursts": [
+    {
+      "Location": "direct",
+      "Readers": 0,
+      "Writers": 1,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 200,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 112.6108,
+        "Median": 113.7978,
+        "P95": 122.7278,
+        "Max": 122.7278
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 1629.6226282879672,
+        "Median": 1757.503220624652,
+        "P95": 1776.0285869561358,
+        "Max": 1776.0285869561358
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 112.6108,
+        "Median": 113.7978,
+        "P95": 122.7278,
+        "Max": 122.7278
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.3585,
+            "Median": 0.44625,
+            "P95": 0.5372,
+            "Max": 15.9678
+          },
+          "InternalMs": {
+            "N": 600,
+            "Min": 0.3011,
+            "Median": 0.35895,
+            "P95": 0.4426,
+            "Max": 14.694
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "direct",
+      "Readers": 0,
+      "Writers": 4,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 800,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 559.9971,
+        "Median": 575.87,
+        "P95": 577.6688,
+        "Max": 577.6688
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 1384.87659364674,
+        "Median": 1389.20242415823,
+        "P95": 1428.5788265689232,
+        "Max": 1428.5788265689232
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 105.7149,
+        "Median": 110.0075,
+        "P95": 111.2501,
+        "Max": 111.2501
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 0.3451,
+            "Median": 0.44475,
+            "P95": 0.5371,
+            "Max": 328.6361
+          },
+          "InternalMs": {
+            "N": 2400,
+            "Min": 0.2918,
+            "Median": 0.3607,
+            "P95": 0.4414,
+            "Max": 317.962
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "direct",
+      "Readers": 1,
+      "Writers": 0,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 200,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 170.3389,
+        "Median": 170.6939,
+        "P95": 176.3748,
+        "Max": 176.3748
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 1133.9488407641002,
+        "Median": 1171.6880333743618,
+        "P95": 1174.1299256951877,
+        "Max": 1174.1299256951877
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 170.3389,
+        "Median": 170.6939,
+        "P95": 176.3748,
+        "Max": 176.3748
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.6789,
+            "Median": 0.72965,
+            "P95": 0.8662,
+            "Max": 10.5174
+          },
+          "InternalMs": {
+            "N": 600,
+            "Min": 0.6443,
+            "Median": 0.6856,
+            "P95": 0.7977,
+            "Max": 8.4382
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "direct",
+      "Readers": 3,
+      "Writers": 1,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 800,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 200.2123,
+        "Median": 202.0999,
+        "P95": 225.2932,
+        "Max": 225.2932
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 3550.9283014312014,
+        "Median": 3958.4383762683706,
+        "P95": 3995.758502349756,
+        "Max": 3995.758502349756
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 123.6258,
+        "Median": 123.6982,
+        "P95": 125.1123,
+        "Max": 125.1123
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 1800,
+            "Min": 0.6629,
+            "Median": 0.80495,
+            "P95": 1.4145,
+            "Max": 13.0766
+          },
+          "InternalMs": {
+            "N": 1800,
+            "Min": 0.6275,
+            "Median": 0.7453,
+            "P95": 1.2386,
+            "Max": 11.0477
+          },
+          "Errors": 0
+        },
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.3702,
+            "Median": 0.4713,
+            "P95": 0.6496,
+            "Max": 16.8367
+          },
+          "InternalMs": {
+            "N": 600,
+            "Min": 0.3031,
+            "Median": 0.3777,
+            "P95": 0.5445,
+            "Max": 5.4493
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "direct",
+      "Readers": 4,
+      "Writers": 0,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 800,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 189.0563,
+        "Median": 194.1365,
+        "P95": 214.4363,
+        "Max": 214.4363
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 3730.711637908321,
+        "Median": 4120.811902965182,
+        "P95": 4231.543725334728,
+        "Max": 4231.543725334728
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 174.2822,
+        "Median": 181.1379,
+        "P95": 183.6719,
+        "Max": 183.6719
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 0.6565,
+            "Median": 0.7483,
+            "P95": 1.2779,
+            "Max": 11.3138
+          },
+          "InternalMs": {
+            "N": 2400,
+            "Min": 0.6213,
+            "Median": 0.6979,
+            "P95": 1.1298,
+            "Max": 9.4134
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "endpoint",
+      "Readers": 0,
+      "Writers": 1,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 200,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 4220.8891,
+        "Median": 4262.0343,
+        "P95": 4276.1594,
+        "Max": 4276.1594
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 46.77094123292037,
+        "Median": 46.92594801501245,
+        "P95": 47.38338185668038,
+        "Max": 47.38338185668038
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 4220.8891,
+        "Median": 4262.0343,
+        "P95": 4276.1594,
+        "Max": 4276.1594
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 15.7558,
+            "Median": 17.551450000000003,
+            "P95": 19.6783,
+            "Max": 27.5141
+          },
+          "InternalMs": {
+            "N": 600,
+            "Min": 0.8852,
+            "Median": 1.0526499999999999,
+            "P95": 1.3171,
+            "Max": 2.4583
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "endpoint",
+      "Readers": 0,
+      "Writers": 4,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 800,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 14738.1989,
+        "Median": 15297.288,
+        "P95": 15538.3136,
+        "Max": 15538.3136
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 51.4856386989126,
+        "Median": 52.29685157264477,
+        "P95": 54.28071675705232,
+        "Max": 54.28071675705232
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 12439.079,
+        "Median": 14236.9876,
+        "P95": 14523.0713,
+        "Max": 14523.0713
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 13.4374,
+            "Median": 19.592,
+            "P95": 325.5544,
+            "Max": 743.8212
+          },
+          "InternalMs": {
+            "N": 2400,
+            "Min": 0.3534,
+            "Median": 0.49360000000000004,
+            "P95": 153.5756,
+            "Max": 473.5529
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "endpoint",
+      "Readers": 1,
+      "Writers": 0,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 200,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 4094.7529,
+        "Median": 4102.894,
+        "P95": 4103.5204,
+        "Max": 4103.5204
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 48.73863914506188,
+        "Median": 48.74608020582544,
+        "P95": 48.84299611827615,
+        "Max": 48.84299611827615
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 4094.7529,
+        "Median": 4102.894,
+        "P95": 4103.5204,
+        "Max": 4103.5204
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 600,
+            "Min": 14.9793,
+            "Median": 16.851599999999998,
+            "P95": 19.1776,
+            "Max": 25.1717
+          },
+          "InternalMs": {
+            "N": 600,
+            "Min": 1.6752,
+            "Median": 1.95075,
+            "P95": 2.2881,
+            "Max": 3.4422
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "endpoint",
+      "Readers": 3,
+      "Writers": 1,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 800,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 14030.6194,
+        "Median": 14577.9815,
+        "P95": 15958.1901,
+        "Max": 15958.1901
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 50.13099825148718,
+        "Median": 54.877281878838986,
+        "P95": 57.01815274099731,
+        "Max": 57.01815274099731
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 12547.4288,
+        "Median": 12582.2072,
+        "P95": 13775.8213,
+        "Max": 13775.8213
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 1800,
+            "Min": 13.5841,
+            "Median": 19.9056,
+            "P95": 325.8497,
+            "Max": 828.4136
+          },
+          "InternalMs": {
+            "N": 1800,
+            "Min": 1.0043,
+            "Median": 2.0471000000000004,
+            "P95": 151.2264,
+            "Max": 306.902
+          },
+          "Errors": 0
+        },
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 13.1465,
+            "Median": 20.1602,
+            "P95": 324.1456,
+            "Max": 652.3479
+          },
+          "InternalMs": {
+            "N": 600,
+            "Min": 0.3673,
+            "Median": 1.0798999999999999,
+            "P95": 1.3723,
+            "Max": 7.9539
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Location": "endpoint",
+      "Readers": 4,
+      "Writers": 0,
+      "IterationsPerWorker": 200,
+      "OperationsPerBurst": 800,
+      "Bursts": 3,
+      "WallMs": {
+        "N": 3,
+        "Min": 14390.3103,
+        "Median": 14600.9031,
+        "P95": 15888.0119,
+        "Max": 15888.0119
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 50.35242955728149,
+        "Median": 54.79113137871588,
+        "P95": 55.59296382927893,
+        "Max": 55.59296382927893
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 13282.1991,
+        "Median": 13339.2782,
+        "P95": 13620.1173,
+        "Max": 13620.1173
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 13.6153,
+            "Median": 19.51125,
+            "P95": 323.0322,
+            "Max": 921.3022
+          },
+          "InternalMs": {
+            "N": 2400,
+            "Min": 1.0092,
+            "Median": 2.0178,
+            "P95": 154.328,
+            "Max": 171.9299
+          },
+          "Errors": 0
+        }
+      ]
+    }
+  ],
+  "Projection": [
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Location": "endpoint",
+      "TotalMs": {
+        "N": 7,
+        "Min": 25.1935,
+        "Median": 27.2301,
+        "P95": 31.0904,
+        "Max": 31.0904
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 23140.0,
+        "Median": 23164.0,
+        "P95": 23165.0,
+        "Max": 23165.0
+      }
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Location": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 7.3209,
+        "Median": 7.6276,
+        "P95": 51.0536,
+        "Max": 51.0536
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Location": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 5.6591,
+        "Median": 8.0526,
+        "P95": 11.4446,
+        "Max": 11.4446
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Location": "endpoint",
+      "TotalMs": {
+        "N": 7,
+        "Min": 26.1548,
+        "Median": 27.964,
+        "P95": 39.9737,
+        "Max": 39.9737
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 23152.0,
+        "Median": 23163.0,
+        "P95": 23166.0,
+        "Max": 23166.0
+      }
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Location": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 7.9032,
+        "Median": 8.1182,
+        "P95": 13.064,
+        "Max": 13.064
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Location": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 6.234,
+        "Median": 7.8424,
+        "P95": 8.3097,
+        "Max": 8.3097
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Location": "endpoint",
+      "TotalMs": {
+        "N": 7,
+        "Min": 25.0599,
+        "Median": 28.0963,
+        "P95": 35.7218,
+        "Max": 35.7218
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 23152.0,
+        "Median": 23153.0,
+        "P95": 23163.0,
+        "Max": 23163.0
+      }
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Location": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 9.9746,
+        "Median": 12.5407,
+        "P95": 17.2949,
+        "Max": 17.2949
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Location": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 10.215,
+        "Median": 12.147,
+        "P95": 14.9436,
+        "Max": 14.9436
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Location": "endpoint",
+      "TotalMs": {
+        "N": 7,
+        "Min": 26.0573,
+        "Median": 27.5122,
+        "P95": 35.7701,
+        "Max": 35.7701
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 23152.0,
+        "Median": 23154.0,
+        "P95": 23164.0,
+        "Max": 23164.0
+      }
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Location": "new",
+      "TotalMs": {
+        "N": 7,
+        "Min": 8.1877,
+        "Median": 8.8001,
+        "P95": 10.9086,
+        "Max": 10.9086
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Location": "reuse",
+      "TotalMs": {
+        "N": 7,
+        "Min": 6.3893,
+        "Median": 6.9557,
+        "P95": 19.0722,
+        "Max": 19.0722
+      },
+      "Rows": 500,
+      "ResponseBytesOrAsciiCharacters": {
+        "N": 7,
+        "Min": 22885.0,
+        "Median": 22885.0,
+        "P95": 22885.0,
+        "Max": 22885.0
+      }
+    }
+  ],
+  "OrchestrationControl": [
+    {
+      "Block": 1,
+      "Operations": 100,
+      "QuietWallMs": 1272.9947,
+      "ActivityWallMs": 1280.7452,
+      "ChangePercent": 0.6088399268276756,
+      "ActivityCycles": 53
+    },
+    {
+      "Block": 2,
+      "Operations": 100,
+      "QuietWallMs": 1268.7985,
+      "ActivityWallMs": 1293.9831,
+      "ChangePercent": 1.9849172268094462,
+      "ActivityCycles": 55
+    },
+    {
+      "Block": 3,
+      "Operations": 100,
+      "QuietWallMs": 1274.5444,
+      "ActivityWallMs": 1308.2396,
+      "ChangePercent": 2.643705468401114,
+      "ActivityCycles": 57
+    }
+  ],
+  "Operations": {
+    "Snapshot": {
+      "Before": {
+        "Revisions": 0
+      },
+      "CheckpointDuring": {
+        "busy": 0,
+        "log": 1,
+        "checkpointed": 0
+      },
+      "After": {
+        "Revisions": 10
+      },
+      "Correct": true,
+      "CheckpointAfter": {
+        "busy": 0,
+        "log": 0,
+        "checkpointed": 0
+      },
+      "During": {
+        "Revisions": 0
+      }
+    },
+    "WriteLock": {
+      "SqliteErrorCode": 5,
+      "Message": "Exception calling \"BeginTransaction\" with \"0\" argument(s): \"SQLite Error 5: 'database is locked'.\"",
+      "TimeoutSeconds": 1,
+      "Correct": true,
+      "WaitMs": 1095.3647
+    },
+    "Rollback": {
+      "Revisions": 10,
+      "Correct": true
+    },
+    "Reopen": {
+      "Revisions": 10,
+      "Documents": 1000,
+      "Integrity": "ok",
+      "Correct": true,
+      "Rows": 1000
+    },
+    "BackupVerification": {
+      "Revisions": 10,
+      "Documents": 1000,
+      "Integrity": "ok",
+      "Correct": true,
+      "Rows": 1000
+    }
+  },
+  "Storage": [
+    {
+      "Name": "n1000-p256.db",
+      "Length": 806912
+    },
+    {
+      "Name": "n10000-p2048.db",
+      "Length": 82972672
+    },
+    {
+      "Name": "n10000-p256.db",
+      "Length": 7729152
+    }
+  ],
+  "Monitoring": [
+    {
+      "Phase": ".",
+      "Samples": 9,
+      "Counters": [
+        {
+          "Counter": "\\memory\\available mbytes",
+          "Values": {
+            "N": 9,
+            "Min": 20016.0,
+            "Median": 20116.0,
+            "P95": 20217.0,
+            "Max": 20217.0
+          }
+        },
+        {
+          "Counter": "\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 9,
+            "Min": 1.4770933165195462E-05,
+            "Median": 2.9516095890410958E-05,
+            "P95": 8.884631986718318E-05,
+            "Max": 8.884631986718318E-05
+          }
+        },
+        {
+          "Counter": "\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 9,
+            "Min": 5.184417749261305,
+            "Median": 14.24653389125311,
+            "P95": 18.071493466345668,
+            "Max": 18.071493466345668
+          }
+        }
+      ],
+      "ProcessPeaks": [
+        {
+          "Name": "pwsh",
+          "PeakOneProcessWorkingSetBytes": 345804800.0,
+          "PeakOneProcessPrivateBytes": 272412672.0
+        },
+        {
+          "Name": "Universal.Server",
+          "PeakOneProcessWorkingSetBytes": 542691328.0,
+          "PeakOneProcessPrivateBytes": 291700736.0
+        }
+      ]
+    },
+    {
+      "Phase": "followup",
+      "Samples": 313,
+      "Counters": [
+        {
+          "Counter": "\\memory\\available mbytes",
+          "Values": {
+            "N": 313,
+            "Min": 19381.0,
+            "Median": 19586.0,
+            "P95": 19852.0,
+            "Max": 20146.0
+          }
+        },
+        {
+          "Counter": "\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 313,
+            "Min": 0.0,
+            "Median": 3.483888888888889E-05,
+            "P95": 5.102676056338028E-05,
+            "Max": 0.00012525748427672954
+          }
+        },
+        {
+          "Counter": "\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 313,
+            "Min": 4.573293058754047,
+            "Median": 18.89839298029382,
+            "P95": 32.68949094213981,
+            "Max": 36.519669202116454
+          }
+        }
+      ],
+      "ProcessPeaks": [
+        {
+          "Name": "pwsh",
+          "PeakOneProcessWorkingSetBytes": 391417856.0,
+          "PeakOneProcessPrivateBytes": 296005632.0
+        },
+        {
+          "Name": "Universal.Server",
+          "PeakOneProcessWorkingSetBytes": 699875328.0,
+          "PeakOneProcessPrivateBytes": 422821888.0
+        }
+      ]
+    },
+    {
+      "Phase": "projection",
+      "Samples": 4,
+      "Counters": [
+        {
+          "Counter": "\\memory\\available mbytes",
+          "Values": {
+            "N": 4,
+            "Min": 19814.0,
+            "Median": 19844.0,
+            "P95": 19912.0,
+            "Max": 19912.0
+          }
+        },
+        {
+          "Counter": "\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 4,
+            "Min": 2.9647398843930636E-05,
+            "Median": 4.330810810810811E-05,
+            "P95": 4.408448275862069E-05,
+            "Max": 4.408448275862069E-05
+          }
+        },
+        {
+          "Counter": "\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 4,
+            "Min": 11.611786100255628,
+            "Median": 14.462411348424098,
+            "P95": 17.22266628694512,
+            "Max": 17.22266628694512
+          }
+        }
+      ],
+      "ProcessPeaks": [
+        {
+          "Name": "pwsh",
+          "PeakOneProcessWorkingSetBytes": 310173696.0,
+          "PeakOneProcessPrivateBytes": 229040128.0
+        },
+        {
+          "Name": "Universal.Server",
+          "PeakOneProcessWorkingSetBytes": 697180160.0,
+          "PeakOneProcessPrivateBytes": 418078720.0
+        }
+      ]
+    },
+    {
+      "Phase": "client-boundary",
+      "Samples": 9,
+      "Counters": [
+        {
+          "Counter": "\\memory\\available mbytes",
+          "Values": {
+            "N": 9,
+            "Min": 19744.0,
+            "Median": 19888.0,
+            "P95": 19967.0,
+            "Max": 19967.0
+          }
+        },
+        {
+          "Counter": "\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 9,
+            "Min": 1.770762711864407E-05,
+            "Median": 2.8334285714285716E-05,
+            "P95": 4.668571428571428E-05,
+            "Max": 4.668571428571428E-05
+          }
+        },
+        {
+          "Counter": "\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 9,
+            "Min": 10.309958790796813,
+            "Median": 16.09126533342845,
+            "P95": 17.470178292914397,
+            "Max": 17.470178292914397
+          }
+        }
+      ],
+      "ProcessPeaks": [
+        {
+          "Name": "pwsh",
+          "PeakOneProcessWorkingSetBytes": 369283072.0,
+          "PeakOneProcessPrivateBytes": 295895040.0
+        },
+        {
+          "Name": "Universal.Server",
+          "PeakOneProcessWorkingSetBytes": 734150656.0,
+          "PeakOneProcessPrivateBytes": 456220672.0
+        }
+      ]
+    }
+  ],
+  "EvidenceChecks": {
+    "reads.jsonl": {
+      "Correct": true,
+      "Rows": 336
+    },
+    "writes.jsonl": {
+      "Correct": true,
+      "Rows": 120
+    },
+    "followup/endpoints.jsonl": {
+      "Correct": true,
+      "Rows": 120
+    },
+    "followup/imports.jsonl": {
+      "Correct": true,
+      "Rows": 16
+    },
+    "followup/bursts.jsonl": {
+      "Correct": true,
+      "Rows": 40
+    },
+    "projection/samples.jsonl": {
+      "Correct": true,
+      "Rows": 96
+    },
+    "client-boundary/reads.jsonl": {
+      "Correct": true,
+      "Rows": 432
+    },
+    "client-boundary/writes.jsonl": {
+      "Correct": true,
+      "Rows": 120
+    },
+    "ConcurrentOperations": 22400,
+    "n1000-p256": {
+      "Rows": 1000,
+      "Mismatches": 0,
+      "Correct": true,
+      "Documents": 1000,
+      "Integrity": "ok"
+    },
+    "n10000-p256": {
+      "Rows": 10000,
+      "Mismatches": 0,
+      "Correct": true,
+      "Documents": 10000,
+      "Integrity": "ok"
+    },
+    "n10000-p2048": {
+      "Rows": 10000,
+      "Mismatches": 0,
+      "Correct": true,
+      "Documents": 10000,
+      "Integrity": "ok"
+    },
+    "ControlOperations": 600,
+    "PreviewRestored": true,
+    "Correct": true
+  },
+  "Evidence": {
+    "Snapshots": [
+      "source",
+      "followup/source",
+      "projection/source",
+      "operations/source",
+      "client-boundary/source"
+    ],
+    "Archive": "sqlite-local-evidence.zip",
+    "Root": "tools/output/database/sqlite-local",
+    "Raw": [
+      "client-boundary/reads.jsonl",
+      "client-boundary/writes.jsonl",
+      "reads.jsonl",
+      "writes.jsonl",
+      "followup/endpoints.jsonl",
+      "followup/imports.jsonl",
+      "followup/bursts.jsonl",
+      "followup/*/workers.json",
+      "followup/control.jsonl",
+      "projection/samples.jsonl"
+    ],
+    "Summary": "summary.json",
+    "Diagnostics": [
+      "n*-conditions.json",
+      "operations/checks.json",
+      "*/monitoring.jsonl",
+      "host.json",
+      "provider-hashes.json",
+      "runtime-conditions.json",
+      "psu-settings.json",
+      "psu-config-overrides.json",
+      "endpoint-auth-check.json",
+      "preview-backup/restored.txt"
+    ]
+  },
+  "Limitations": [
+    "Warm local data on a shared workstation; largest fixture 10000 records/2048 payload characters; initial database files include both layouts and indexes, not per-table sizes.",
+    "No provider installation, server database, remote host, frontend, sustained capacity, cold cache, service-account isolation, crash/power-loss, restore into a running application, pooling, or index-maintenance write cost comparison.",
+    "All-writer bursts share the same ten keys. Mixed readers query another table in the same database, not changing records. No fairness guarantee; provider busy waits are included and no application retry is added.",
+    "The background activity control is a small synthetic approximation, not every agent/tool operation. One-second monitoring cannot attribute individual subsecond operations.",
+    "PSU endpoint wrapper loads the helper on each call. Integrated endpoints and fresh automation processes use a different PowerShell/.NET runtime from the direct harness. HTTP/driver/logging costs and contention were not individually isolated.",
+    "Expression indexes were checked by EXPLAIN QUERY PLAN. Batch writes use separately indexed work tables, so they do not measure maintaining the main JSON expression index.",
+    "Historical metadata Runtime and Settings projections were empty; runtime-conditions.json and psu-settings.json/psu-config-overrides.json supply the separately verified values. Null HangfireWorkerCount does not establish an active worker count."
+  ]
+}

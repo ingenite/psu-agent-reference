@@ -1,0 +1,4611 @@
+{
+  "Pass": "postgres-local",
+  "MeasuredUtc": "2026-11-09T05:39:37.8179461Z",
+  "Status": "SQLite and PostgreSQL measured locally; SQL Server unmeasured. Experimental only.",
+  "Units": "milliseconds except counts, bytes and operations/second",
+  "Statistics": "Warm-ups excluded. Median, observed range and nearest-rank P95. Burst requests are correlated; one wall interval per burst.",
+  "Fixture": {
+    "WarmupsPerSequentialCase": 1,
+    "Seed": 1108,
+    "MeasuredBlocks": 7,
+    "Shapes": [
+      "1000 records / 256 ASCII characters",
+      "10000 records / 256 ASCII characters",
+      "10000 records / 2048 ASCII characters"
+    ],
+    "OperationsPerWorker": 200,
+    "MeasuredBurstBlocks": 3,
+    "Generator": "DatabaseFixture.ps1, identical arithmetic fields/JSON to SQLite"
+  },
+  "Boundaries": {
+    "Endpoint": "HTTP response plus JSON-to-object parsing; pooled database connection in handler",
+    "Import": "Whole script locally, or submit + 50ms completion polling + pipeline retrieval; fixture decoding and batch JSON preparation included",
+    "Burst": "One earliest-worker-start to latest-worker-end wall interval, including between-operation driver work",
+    "Direct": "Native Measure-Command around helper call/return, SQL, object construction and owned-connection disposal; serialization and checks follow clock"
+  },
+  "Host": {
+    "Provider": {
+      "FullName": "C:\\dev-psu\\Npgsql.dll",
+      "Version": "10.0.3.0"
+    },
+    "PowerPlan": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
+    "Services": [
+      {
+        "Name": "postgresql-x64-18",
+        "State": "Running",
+        "PathName": "\"C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe\" runservice -N \"postgresql-x64-18\" -D \"C:\\Program Files\\PostgreSQL\\18\\data\" -w",
+        "StartName": "NT AUTHORITY\\NetworkService"
+      }
+    ],
+    "Processor": {
+      "Name": "AMD Ryzen 5 9600X 6-Core Processor             ",
+      "NumberOfCores": 6,
+      "NumberOfLogicalProcessors": 12
+    },
+    "ProviderHash": {
+      "Path": "C:\\dev-psu\\Npgsql.dll",
+      "Hash": "E2BCAFE1660FE4543FE9DFCABED972EC8D32259E5EA8009462CE1DE23C7034C2"
+    },
+    "OS": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26200",
+      "BuildNumber": "26200"
+    },
+    "Computer": {
+      "TotalPhysicalMemory": 33945432064
+    },
+    "Disk": {
+      "Number": 1,
+      "FriendlyName": "WD_BLACK SN850X 2000GB",
+      "BusType": "NVMe",
+      "Size": 2000398934016
+    }
+  },
+  "Server": {
+    "version": "PostgreSQL 18.6 on x86_64-windows, compiled by msvc-19.44.35229, 64-bit",
+    "role": "postgres",
+    "address": "127.0.0.1",
+    "port": 5432,
+    "roles": [
+      {
+        "rolname": "postgres",
+        "rolsuper": true,
+        "rolcreatedb": true
+      }
+    ],
+    "settings": [
+      {
+        "name": "autovacuum",
+        "setting": "on",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "autovacuum_max_workers",
+        "setting": "3",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "block_size",
+        "setting": "8192",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "checkpoint_completion_target",
+        "setting": "0.9",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "checkpoint_timeout",
+        "setting": "300",
+        "unit": "s",
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "config_file",
+        "setting": "C:/Program Files/PostgreSQL/18/data/postgresql.conf",
+        "unit": null,
+        "source": "override",
+        "pending_restart": false
+      },
+      {
+        "name": "data_checksums",
+        "setting": "on",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "data_directory",
+        "setting": "C:/Program Files/PostgreSQL/18/data",
+        "unit": null,
+        "source": "override",
+        "pending_restart": false
+      },
+      {
+        "name": "default_toast_compression",
+        "setting": "pglz",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "default_transaction_isolation",
+        "setting": "read committed",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "effective_cache_size",
+        "setting": "524288",
+        "unit": "8kB",
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "effective_io_concurrency",
+        "setting": "16",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "fsync",
+        "setting": "on",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "full_page_writes",
+        "setting": "on",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "hba_file",
+        "setting": "C:/Program Files/PostgreSQL/18/data/pg_hba.conf",
+        "unit": null,
+        "source": "override",
+        "pending_restart": false
+      },
+      {
+        "name": "jit",
+        "setting": "on",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "listen_addresses",
+        "setting": "*",
+        "unit": null,
+        "source": "configuration file",
+        "pending_restart": false
+      },
+      {
+        "name": "maintenance_work_mem",
+        "setting": "65536",
+        "unit": "kB",
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "max_connections",
+        "setting": "100",
+        "unit": null,
+        "source": "configuration file",
+        "pending_restart": false
+      },
+      {
+        "name": "max_parallel_workers",
+        "setting": "8",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "max_parallel_workers_per_gather",
+        "setting": "2",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "max_wal_size",
+        "setting": "1024",
+        "unit": "MB",
+        "source": "configuration file",
+        "pending_restart": false
+      },
+      {
+        "name": "max_worker_processes",
+        "setting": "8",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "min_wal_size",
+        "setting": "80",
+        "unit": "MB",
+        "source": "configuration file",
+        "pending_restart": false
+      },
+      {
+        "name": "port",
+        "setting": "5432",
+        "unit": null,
+        "source": "configuration file",
+        "pending_restart": false
+      },
+      {
+        "name": "random_page_cost",
+        "setting": "4",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "server_encoding",
+        "setting": "UTF8",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "shared_buffers",
+        "setting": "16384",
+        "unit": "8kB",
+        "source": "configuration file",
+        "pending_restart": false
+      },
+      {
+        "name": "ssl",
+        "setting": "off",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "synchronous_commit",
+        "setting": "on",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "wal_buffers",
+        "setting": "512",
+        "unit": "8kB",
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "wal_compression",
+        "setting": "off",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "wal_level",
+        "setting": "replica",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "wal_sync_method",
+        "setting": "open_datasync",
+        "unit": null,
+        "source": "default",
+        "pending_restart": false
+      },
+      {
+        "name": "work_mem",
+        "setting": "4096",
+        "unit": "kB",
+        "source": "default",
+        "pending_restart": false
+      }
+    ],
+    "databases": [
+      {
+        "datname": "postgres",
+        "encoding": "UTF8",
+        "datcollate": "English_United States.1252",
+        "datctype": "English_United States.1252"
+      },
+      {
+        "datname": "template1",
+        "encoding": "UTF8",
+        "datcollate": "English_United States.1252",
+        "datctype": "English_United States.1252"
+      },
+      {
+        "datname": "template0",
+        "encoding": "UTF8",
+        "datcollate": "English_United States.1252",
+        "datctype": "English_United States.1252"
+      }
+    ]
+  },
+  "Metadata": {
+    "Utc": "2026-11-09T05:23:04.8193269Z",
+    "Bin": "C:/Program Files/PostgreSQL/18/bin",
+    "AdministrativeRole": "postgres",
+    "Connection": "TCP 127.0.0.1:5432; SCRAM password; SSL disabled in benchmark; no remote host",
+    "Repetitions": 7,
+    "PowerShell": "7.6.9",
+    "Seed": 1108,
+    "Runtime": {
+      "tfm": "net10.0",
+      "includedFrameworks": [
+        {
+          "name": "Microsoft.NETCore.App",
+          "version": "10.0.14"
+        },
+        {
+          "name": "Microsoft.WindowsDesktop.App",
+          "version": "10.0.14"
+        }
+      ],
+      "rollForwardOnNoCandidateFx": 1,
+      "configProperties": {
+        "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+        "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+        "System.Runtime.TieredCompilation": true,
+        "System.Runtime.TieredCompilation.QuickJit": true,
+        "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+        "System.Runtime.Loader.UseRidGraph": true,
+        "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+      }
+    },
+    "BaseCommit": "68e715b909919b452e3a874ca60615a79c0fe302"
+  },
+  "Psu": {
+    "PreviewHashes": [
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-PostgresEndpoint.ps1",
+        "Hash": "05E21FCC2F3E4D8195B8E42696690165E1C5237D2C4A87C3E00F8C11D0AAB4CA"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-PostgresImport.ps1",
+        "Hash": "5E801113EB50DBD086F13BD77A856865997A89F33A9072D166425B2695272901"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-SqliteEndpoint.ps1",
+        "Hash": "334AE7F7E0A98AE63279DC01D60AA6347394D55C90DD61C782FDDC3951EF97BD"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Postgres.ps1",
+        "Hash": "753A33E8701710CDE4E1ACF432939235E5CA85A44C2D447E2B5CF93FB4BFB378"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Sqlite.ps1",
+        "Hash": "046EC1BB10722967795CBA779AB4578CE5B9B58FC1795C74CC0011ADB1A3DB96"
+      }
+    ],
+    "Utc": "2026-11-09T05:30:29.4428383Z",
+    "Settings": {
+      "apiSecurityModel": null,
+      "concurrentJobLimit": 1000,
+      "maxJobMemory": 0,
+      "logLevel": null,
+      "scriptBaseFolder": "scripts",
+      "gitSyncEnabled": false
+    },
+    "Version": "2026.3.0",
+    "Environments": [
+      {
+        "name": "Integrated",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "PowerShell 7",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "Windows PowerShell 5.1",
+        "version": null,
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      }
+    ]
+  },
+  "Validation": {
+    "ConcurrentOperationsIncludingWarmups": 11200,
+    "Correct": true,
+    "Pass": "postgres-local",
+    "Files": [
+      {
+        "File": "direct/reads.jsonl",
+        "Samples": 600,
+        "Measured": 525,
+        "Correct": true
+      },
+      {
+        "File": "direct/writes.jsonl",
+        "Samples": 192,
+        "Measured": 168,
+        "Correct": true
+      },
+      {
+        "File": "followup/endpoints.jsonl",
+        "Samples": 168,
+        "Measured": 147,
+        "Correct": true
+      },
+      {
+        "File": "followup/imports.jsonl",
+        "Samples": 32,
+        "Measured": 28,
+        "Correct": true
+      },
+      {
+        "File": "concurrency/bursts.jsonl",
+        "Samples": 20,
+        "Measured": 15,
+        "Correct": true
+      }
+    ],
+    "PreviewRestored": true,
+    "OperationalChecks": 7,
+    "TemporaryPasswordRemoved": true
+  },
+  "Evidence": {
+    "Preservation": "Three measured database custom dumps and SQL schemas; operational dump restored and field-checked; archive is independent of installed server",
+    "Sources": "direct/source, followup/source, concurrency/source, operations/source, retained/source",
+    "Archive": "tools/output/database/postgres-local-evidence.zip",
+    "Manifest": "manifest.json SHA256 per file",
+    "Exclusions": [
+      "postgres-smoke",
+      "followup-initial",
+      "preview-backup-initial"
+    ],
+    "Root": "tools/output/database/postgres-local"
+  },
+  "Reads": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.6234,
+        "Median": 19.5913,
+        "P95": 21.7625,
+        "Max": 21.7625
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.6589,
+        "Median": 1.8776,
+        "P95": 2.1546,
+        "Max": 2.1546
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.6867,
+        "Median": 1.7903,
+        "P95": 2.6846,
+        "Max": 2.6846
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.5629,
+        "Median": 1.7433,
+        "P95": 1.9332,
+        "Max": 1.9332
+      },
+      "Rows": 50,
+      "JsonCharacters": null
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.0514,
+        "Median": 18.0153,
+        "P95": 19.7782,
+        "Max": 19.7782
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.5816,
+        "Median": 0.6807,
+        "P95": 0.7858,
+        "Max": 0.7858
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4559,
+        "Median": 0.6848,
+        "P95": 0.7147,
+        "Max": 0.7147
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.8462,
+        "Median": 19.658,
+        "P95": 20.0571,
+        "Max": 20.0571
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.5075,
+        "Median": 1.6728,
+        "P95": 1.9879,
+        "Max": 1.9879
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.4601,
+        "Median": 1.5887,
+        "P95": 1.7471,
+        "Max": 1.7471
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.9835,
+        "Median": 19.8524,
+        "P95": 120.0129,
+        "Max": 120.0129
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.9043,
+        "Median": 1.9947,
+        "P95": 3.0584,
+        "Max": 3.0584
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.6782,
+        "Median": 1.7326,
+        "P95": 2.2834,
+        "Max": 2.2834
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.9324,
+        "Median": 17.7283,
+        "P95": 121.3932,
+        "Max": 121.3932
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.5746,
+        "Median": 0.6628,
+        "P95": 0.8393,
+        "Max": 0.8393
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4313,
+        "Median": 0.5362,
+        "P95": 0.6937,
+        "Max": 0.6937
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.9167,
+        "Median": 18.5933,
+        "P95": 20.1252,
+        "Max": 20.1252
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.0852,
+        "Median": 1.2648,
+        "P95": 1.5186,
+        "Max": 1.5186
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.9548,
+        "Median": 1.1017,
+        "P95": 1.2724,
+        "Max": 1.2724
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.1843,
+        "Median": 18.8834,
+        "P95": 19.9094,
+        "Max": 19.9094
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.2881,
+        "Median": 1.5163,
+        "P95": 1.8517,
+        "Max": 1.8517
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.9967,
+        "Median": 1.099,
+        "P95": 1.4809,
+        "Max": 1.4809
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.2721,
+        "Median": 18.3935,
+        "P95": 18.7655,
+        "Max": 18.7655
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.1792,
+        "Median": 1.2965,
+        "P95": 1.4778,
+        "Max": 1.4778
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.0378,
+        "Median": 1.1517,
+        "P95": 1.4786,
+        "Max": 1.4786
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 26.6267,
+        "Median": 28.6666,
+        "P95": 31.5238,
+        "Max": 31.5238
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 8.9187,
+        "Median": 10.3186,
+        "P95": 13.5217,
+        "Max": 13.5217
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.0027,
+        "Median": 9.529,
+        "P95": 11.0752,
+        "Max": 11.0752
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 13.0463,
+        "Median": 14.1803,
+        "P95": 15.4159,
+        "Max": 15.4159
+      },
+      "Rows": 500,
+      "JsonCharacters": null
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.3456,
+        "Median": 18.1785,
+        "P95": 133.98,
+        "Max": 133.98
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4979,
+        "Median": 0.6252,
+        "P95": 0.7165,
+        "Max": 0.7165
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3439,
+        "Median": 0.4285,
+        "P95": 0.5247,
+        "Max": 0.5247
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 22.6619,
+        "Median": 23.9595,
+        "P95": 27.0564,
+        "Max": 27.0564
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.243,
+        "Median": 8.5836,
+        "P95": 9.0388,
+        "Max": 9.0388
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.0322,
+        "Median": 5.3478,
+        "P95": 9.8825,
+        "Max": 9.8825
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 26.3572,
+        "Median": 27.3075,
+        "P95": 28.7269,
+        "Max": 28.7269
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.5044,
+        "Median": 12.473,
+        "P95": 14.2103,
+        "Max": 14.2103
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.4991,
+        "Median": 9.6338,
+        "P95": 21.2207,
+        "Max": 21.2207
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.2113,
+        "Median": 18.0806,
+        "P95": 19.5297,
+        "Max": 19.5297
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4082,
+        "Median": 0.4824,
+        "P95": 0.6874,
+        "Max": 0.6874
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4081,
+        "Median": 0.4303,
+        "P95": 0.5091,
+        "Max": 0.5091
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.9779,
+        "Median": 18.7004,
+        "P95": 19.6861,
+        "Max": 19.6861
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.1072,
+        "Median": 1.1773,
+        "P95": 6.4189,
+        "Max": 6.4189
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.9666,
+        "Median": 1.1326,
+        "P95": 1.3676,
+        "Max": 1.3676
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 21.646,
+        "Median": 22.2669,
+        "P95": 25.9027,
+        "Max": 25.9027
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.6939,
+        "Median": 4.8726,
+        "P95": 7.3278,
+        "Max": 7.3278
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.6342,
+        "Median": 4.8745,
+        "P95": 5.5039,
+        "Max": 5.5039
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.4275,
+        "Median": 17.9666,
+        "P95": 18.9902,
+        "Max": 18.9902
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.8308,
+        "Median": 0.9981,
+        "P95": 1.1328,
+        "Max": 1.1328
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.7894,
+        "Median": 0.8916,
+        "P95": 1.0123,
+        "Max": 1.0123
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 23.383,
+        "Median": 25.2621,
+        "P95": 56.5839,
+        "Max": 56.5839
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.284,
+        "Median": 6.6155,
+        "P95": 10.3544,
+        "Max": 10.3544
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.2514,
+        "Median": 6.4511,
+        "P95": 9.9664,
+        "Max": 9.9664
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.9743,
+        "Median": 8.3142,
+        "P95": 10.5042,
+        "Max": 10.5042
+      },
+      "Rows": 500,
+      "JsonCharacters": null
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.6728,
+        "Median": 17.74,
+        "P95": 120.2852,
+        "Max": 120.2852
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3753,
+        "Median": 0.5197,
+        "P95": 0.7352,
+        "Max": 0.7352
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3801,
+        "Median": 0.4742,
+        "P95": 0.5125,
+        "Max": 0.5125
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 24.3921,
+        "Median": 25.4993,
+        "P95": 26.2793,
+        "Max": 26.2793
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.0119,
+        "Median": 5.2035,
+        "P95": 9.3106,
+        "Max": 9.3106
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.8742,
+        "Median": 6.1851,
+        "P95": 9.1046,
+        "Max": 9.1046
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 26.3099,
+        "Median": 27.3716,
+        "P95": 134.2632,
+        "Max": 134.2632
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.4327,
+        "Median": 9.5246,
+        "P95": 10.191,
+        "Max": 10.191
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 8.9955,
+        "Median": 9.3511,
+        "P95": 11.0554,
+        "Max": 11.0554
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.0441,
+        "Median": 17.6869,
+        "P95": 18.4285,
+        "Max": 18.4285
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3715,
+        "Median": 0.3973,
+        "P95": 0.7502,
+        "Max": 0.7502
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3185,
+        "Median": 0.4446,
+        "P95": 0.5546,
+        "Max": 0.5546
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.1226,
+        "Median": 19.2056,
+        "P95": 20.1539,
+        "Max": 20.1539
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.1089,
+        "Median": 1.314,
+        "P95": 1.5353,
+        "Max": 1.5353
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.1244,
+        "Median": 1.1833,
+        "P95": 1.4726,
+        "Max": 1.4726
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 21.6892,
+        "Median": 23.6548,
+        "P95": 125.6009,
+        "Max": 125.6009
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.8741,
+        "Median": 5.0577,
+        "P95": 5.6423,
+        "Max": 5.6423
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.8027,
+        "Median": 4.9642,
+        "P95": 5.3076,
+        "Max": 5.3076
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.8114,
+        "Median": 18.1196,
+        "P95": 18.799,
+        "Max": 18.799
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.94,
+        "Median": 1.0087,
+        "P95": 1.0926,
+        "Max": 1.0926
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.6569,
+        "Median": 0.9054,
+        "P95": 0.9899,
+        "Max": 0.9899
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    }
+  ],
+  "Writes": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "autocommit-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.8114,
+        "Median": 7.9159,
+        "P95": 9.749,
+        "Max": 9.749
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.9408,
+        "Median": 4.2389,
+        "P95": 5.6637,
+        "Max": 5.6637
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.5186,
+        "Median": 5.1465,
+        "P95": 8.561,
+        "Max": 8.561
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-documents-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.8076,
+        "Median": 0.8286,
+        "P95": 1.0143,
+        "Max": 1.0143
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.882,
+        "Median": 3.2801,
+        "P95": 3.5957,
+        "Max": 3.5957
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.6535,
+        "Median": 0.8312,
+        "P95": 0.9189,
+        "Max": 0.9189
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.7322,
+        "Median": 5.4482,
+        "P95": 6.1902,
+        "Max": 6.1902
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.7077,
+        "Median": 1.8612,
+        "P95": 2.0566,
+        "Max": 2.0566
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "autocommit-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.134,
+        "Median": 7.8375,
+        "P95": 9.7654,
+        "Max": 9.7654
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.9633,
+        "Median": 4.1865,
+        "P95": 4.9655,
+        "Max": 4.9655
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.545,
+        "Median": 3.8002,
+        "P95": 4.0434,
+        "Max": 4.0434
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-documents-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.1329,
+        "Median": 1.1777,
+        "P95": 1.239,
+        "Max": 1.239
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.6369,
+        "Median": 2.831,
+        "P95": 3.6925,
+        "Max": 3.6925
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4597,
+        "Median": 0.5156,
+        "P95": 0.5599,
+        "Max": 0.5599
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.7379,
+        "Median": 3.9625,
+        "P95": 4.2037,
+        "Max": 4.2037
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.007,
+        "Median": 4.4362,
+        "P95": 15.6438,
+        "Max": 15.6438
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "autocommit-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 6.6437,
+        "Median": 6.9668,
+        "P95": 7.5295,
+        "Max": 7.5295
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.4131,
+        "Median": 4.0991,
+        "P95": 4.4824,
+        "Max": 4.4824
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.8623,
+        "Median": 3.2434,
+        "P95": 3.5327,
+        "Max": 3.5327
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-documents-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.5938,
+        "Median": 0.6284,
+        "P95": 0.7798,
+        "Max": 0.7798
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.8097,
+        "Median": 3.4922,
+        "P95": 5.9799,
+        "Max": 5.9799
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.5172,
+        "Median": 0.6453,
+        "P95": 0.8494,
+        "Max": 0.8494
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.5461,
+        "Median": 3.8433,
+        "P95": 4.6459,
+        "Max": 4.6459
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.6652,
+        "Median": 1.7416,
+        "P95": 2.0187,
+        "Max": 2.0187
+      },
+      "Rows": 100
+    }
+  ],
+  "Endpoints": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.5104,
+        "Median": 17.3229,
+        "P95": 20.5726,
+        "Max": 20.5726
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.8318,
+        "Median": 16.6934,
+        "P95": 19.909,
+        "Max": 19.909
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.5027,
+        "Median": 0.5433,
+        "P95": 1.4702,
+        "Max": 1.4702
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.5565,
+        "Median": 1.6888,
+        "P95": 1.8684,
+        "Max": 1.8684
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 18086.0,
+        "Median": 18086.0,
+        "P95": 18086.0,
+        "Max": 18086.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 14.7042,
+        "Median": 15.7507,
+        "P95": 16.6479,
+        "Max": 16.6479
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 14.4767,
+        "Median": 15.24,
+        "P95": 16.3281,
+        "Max": 16.3281
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.133,
+        "Median": 0.1549,
+        "P95": 1.1317,
+        "Max": 1.1317
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.0109,
+        "Median": 1.0709,
+        "P95": 1.2767,
+        "Max": 1.2767
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 456.0,
+        "Median": 458.0,
+        "P95": 458.0,
+        "Max": 458.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.5484,
+        "Median": 17.4389,
+        "P95": 19.5752,
+        "Max": 19.5752
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.1546,
+        "Median": 17.0102,
+        "P95": 19.0864,
+        "Max": 19.0864
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.2942,
+        "Median": 0.316,
+        "P95": 0.3513,
+        "Max": 0.3513
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.5241,
+        "Median": 1.7078,
+        "P95": 2.0995,
+        "Max": 2.0995
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2335.0,
+        "Median": 2336.0,
+        "P95": 2336.0,
+        "Max": 2336.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.1697,
+        "Median": 16.9195,
+        "P95": 18.3183,
+        "Max": 18.3183
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.5938,
+        "Median": 16.3415,
+        "P95": 17.609,
+        "Max": 17.609
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.4785,
+        "Median": 0.4951,
+        "P95": 0.565,
+        "Max": 0.565
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.8661,
+        "Median": 1.9979,
+        "P95": 2.1714,
+        "Max": 2.1714
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 18086.0,
+        "Median": 18086.0,
+        "P95": 18086.0,
+        "Max": 18086.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 14.8652,
+        "Median": 15.4136,
+        "P95": 17.0202,
+        "Max": 17.0202
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 14.6215,
+        "Median": 15.0453,
+        "P95": 16.7139,
+        "Max": 16.7139
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1376,
+        "Median": 0.1557,
+        "P95": 0.2323,
+        "Max": 0.2323
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 0.9453,
+        "Median": 1.0115,
+        "P95": 1.1909,
+        "Max": 1.1909
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 458.0,
+        "Median": 458.0,
+        "P95": 458.0,
+        "Max": 458.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.1724,
+        "Median": 17.4685,
+        "P95": 19.1963,
+        "Max": 19.1963
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.8122,
+        "Median": 16.7631,
+        "P95": 18.7893,
+        "Max": 18.7893
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.2781,
+        "Median": 0.311,
+        "P95": 0.5746,
+        "Max": 0.5746
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.4765,
+        "Median": 1.5706,
+        "P95": 3.4275,
+        "Max": 3.4275
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2336.0,
+        "Median": 2336.0,
+        "P95": 2336.0,
+        "Max": 2336.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.2243,
+        "Median": 17.2416,
+        "P95": 19.0543,
+        "Max": 19.0543
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 14.8745,
+        "Median": 16.8283,
+        "P95": 18.6418,
+        "Max": 18.6418
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.2693,
+        "Median": 0.306,
+        "P95": 0.508,
+        "Max": 0.508
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.3585,
+        "Median": 1.4486,
+        "P95": 1.6463,
+        "Max": 1.6463
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 7294.0,
+        "Median": 7294.0,
+        "P95": 7294.0,
+        "Max": 7294.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 31.821,
+        "Median": 37.2982,
+        "P95": 50.9084,
+        "Max": 50.9084
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 30.1377,
+        "Median": 35.1777,
+        "P95": 37.8829,
+        "Max": 37.8829
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.6293,
+        "Median": 2.1051,
+        "P95": 14.2748,
+        "Max": 14.2748
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 7.5699,
+        "Median": 7.9108,
+        "P95": 10.4526,
+        "Max": 10.4526
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 1076481.0,
+        "Median": 1076482.0,
+        "P95": 1076483.0,
+        "Max": 1076483.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 14.4918,
+        "Median": 16.506,
+        "P95": 17.8121,
+        "Max": 17.8121
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 14.3698,
+        "Median": 16.3885,
+        "P95": 17.6642,
+        "Max": 17.6642
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.079,
+        "Median": 0.0974,
+        "P95": 0.1284,
+        "Max": 0.1284
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.0088,
+        "Median": 1.0595,
+        "P95": 1.2701,
+        "Max": 1.2701
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2250.0,
+        "Median": 2251.0,
+        "P95": 2251.0,
+        "Max": 2251.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 22.4443,
+        "Median": 25.2575,
+        "P95": 29.5869,
+        "Max": 29.5869
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 21.2821,
+        "Median": 24.063,
+        "P95": 25.2222,
+        "Max": 25.2222
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.5304,
+        "Median": 0.8004,
+        "P95": 8.2408,
+        "Max": 8.2408
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 5.8981,
+        "Median": 6.0174,
+        "P95": 8.0738,
+        "Max": 8.0738
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22982.0,
+        "Median": 22982.0,
+        "P95": 22982.0,
+        "Max": 22982.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 34.0741,
+        "Median": 38.7054,
+        "P95": 46.9442,
+        "Max": 46.9442
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 32.443,
+        "Median": 35.8123,
+        "P95": 36.9062,
+        "Max": 36.9062
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.5747,
+        "Median": 2.1216,
+        "P95": 10.2071,
+        "Max": 10.2071
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 10.1759,
+        "Median": 10.6261,
+        "P95": 11.2786,
+        "Max": 11.2786
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 1076482.0,
+        "Median": 1076483.0,
+        "P95": 1076483.0,
+        "Max": 1076483.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.0739,
+        "Median": 16.7701,
+        "P95": 17.4461,
+        "Max": 17.4461
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 14.8938,
+        "Median": 16.5896,
+        "P95": 17.2575,
+        "Max": 17.2575
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.0887,
+        "Median": 0.1174,
+        "P95": 0.1531,
+        "Max": 0.1531
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 0.9741,
+        "Median": 1.0001,
+        "P95": 1.4945,
+        "Max": 1.4945
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2250.0,
+        "Median": 2251.0,
+        "P95": 2251.0,
+        "Max": 2251.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 21.7074,
+        "Median": 23.4063,
+        "P95": 25.4225,
+        "Max": 25.4225
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 20.8815,
+        "Median": 22.8293,
+        "P95": 24.4705,
+        "Max": 24.4705
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.5301,
+        "Median": 0.7804,
+        "P95": 0.8983,
+        "Max": 0.8983
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 5.3645,
+        "Median": 5.5747,
+        "P95": 8.1267,
+        "Max": 8.1267
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22981.0,
+        "Median": 22982.0,
+        "P95": 22982.0,
+        "Max": 22982.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.0744,
+        "Median": 17.6947,
+        "P95": 20.1756,
+        "Max": 20.1756
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.8352,
+        "Median": 17.4974,
+        "P95": 19.9367,
+        "Max": 19.9367
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1471,
+        "Median": 0.1865,
+        "P95": 0.2415,
+        "Max": 0.2415
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.361,
+        "Median": 1.3933,
+        "P95": 1.4509,
+        "Max": 1.4509
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 43155.0,
+        "Median": 43156.0,
+        "P95": 43156.0,
+        "Max": 43156.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 29.8353,
+        "Median": 35.0208,
+        "P95": 44.6917,
+        "Max": 44.6917
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 24.2728,
+        "Median": 24.9728,
+        "P95": 26.6928,
+        "Max": 26.6928
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 5.3233,
+        "Median": 9.8794,
+        "P95": 19.0302,
+        "Max": 19.0302
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 6.0583,
+        "Median": 6.106,
+        "P95": 6.6235,
+        "Max": 6.6235
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 180481.0,
+        "Median": 180482.0,
+        "P95": 180482.0,
+        "Max": 180482.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 14.8169,
+        "Median": 16.1602,
+        "P95": 16.4561,
+        "Max": 16.4561
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 14.611,
+        "Median": 15.9561,
+        "P95": 16.2397,
+        "Max": 16.2397
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1306,
+        "Median": 0.1394,
+        "P95": 0.2226,
+        "Max": 0.2226
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 0.9648,
+        "Median": 1.0273,
+        "P95": 1.0841,
+        "Max": 1.0841
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 458.0,
+        "Median": 459.0,
+        "P95": 459.0,
+        "Max": 459.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 24.2466,
+        "Median": 27.0447,
+        "P95": 28.697,
+        "Max": 28.697
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 21.7781,
+        "Median": 24.0156,
+        "P95": 25.9111,
+        "Max": 25.9111
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 2.39,
+        "Median": 2.5643,
+        "P95": 2.9422,
+        "Max": 2.9422
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 5.6135,
+        "Median": 6.3233,
+        "P95": 9.3647,
+        "Max": 9.3647
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22981.0,
+        "Median": 22982.0,
+        "P95": 22982.0,
+        "Max": 22982.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 33.6917,
+        "Median": 36.3594,
+        "P95": 44.6553,
+        "Max": 44.6553
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 28.2674,
+        "Median": 30.3978,
+        "P95": 32.9695,
+        "Max": 32.9695
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 5.2149,
+        "Median": 5.8334,
+        "P95": 14.0366,
+        "Max": 14.0366
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 9.8053,
+        "Median": 10.0885,
+        "P95": 12.1483,
+        "Max": 12.1483
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 180481.0,
+        "Median": 180483.0,
+        "P95": 180483.0,
+        "Max": 180483.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.757,
+        "Median": 16.313,
+        "P95": 16.4575,
+        "Max": 16.4575
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.4222,
+        "Median": 16.0882,
+        "P95": 16.2222,
+        "Max": 16.2222
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1353,
+        "Median": 0.1457,
+        "P95": 0.2258,
+        "Max": 0.2258
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 0.9788,
+        "Median": 0.9989,
+        "P95": 1.2357,
+        "Max": 1.2357
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 458.0,
+        "Median": 459.0,
+        "P95": 459.0,
+        "Max": 459.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 23.8688,
+        "Median": 24.3926,
+        "P95": 29.3896,
+        "Max": 29.3896
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 21.2485,
+        "Median": 21.4778,
+        "P95": 23.8784,
+        "Max": 23.8784
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 2.4806,
+        "Median": 2.8209,
+        "P95": 6.7405,
+        "Max": 6.7405
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 5.525,
+        "Median": 5.6715,
+        "P95": 8.6715,
+        "Max": 8.6715
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22981.0,
+        "Median": 22982.0,
+        "P95": 22982.0,
+        "Max": 22982.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.7444,
+        "Median": 16.751,
+        "P95": 19.3993,
+        "Max": 19.3993
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.1249,
+        "Median": 16.3229,
+        "P95": 18.9285,
+        "Max": 18.9285
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.3404,
+        "Median": 0.3845,
+        "P95": 0.5205,
+        "Max": 0.5205
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 1.3565,
+        "Median": 1.3899,
+        "P95": 1.6027,
+        "Max": 1.6027
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 7315.0,
+        "Median": 7316.0,
+        "P95": 7316.0,
+        "Max": 7316.0
+      },
+      "PowerShell": "7.6.5"
+    }
+  ],
+  "Imports": [
+    {
+      "Location": "direct",
+      "Method": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 57.7511,
+        "Median": 64.0791,
+        "P95": 66.6944,
+        "Max": 66.6944
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 28.1212,
+        "Median": 32.4254,
+        "P95": 32.774,
+        "Max": 32.774
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 51.6092,
+        "Median": 58.6615,
+        "P95": 62.7927,
+        "Max": 62.7927
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "direct",
+      "Method": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 36.0148,
+        "Median": 39.2869,
+        "P95": 43.8656,
+        "Max": 43.8656
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 8.3389,
+        "Median": 8.99,
+        "P95": 9.3655,
+        "Max": 9.3655
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 32.0998,
+        "Median": 35.2327,
+        "P95": 39.7501,
+        "Max": 39.7501
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "job",
+      "Method": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1728.0479,
+        "Median": 1752.102,
+        "P95": 1756.1274,
+        "Max": 1756.1274
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 90.4046,
+        "Median": 95.1544,
+        "P95": 121.4837,
+        "Max": 121.4837
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 289.4574,
+        "Median": 297.581,
+        "P95": 323.3004,
+        "Max": 323.3004
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "job",
+      "Method": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1634.0356,
+        "Median": 1670.3655,
+        "P95": 1750.2927,
+        "Max": 1750.2927
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 50.0789,
+        "Median": 50.7101,
+        "P95": 51.892,
+        "Max": 51.892
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 250.2018,
+        "Median": 251.3952,
+        "P95": 362.4759,
+        "Max": 362.4759
+      },
+      "Rows": 1000
+    }
+  ],
+  "Bursts": [
+    {
+      "Readers": 0,
+      "Writers": 1,
+      "Bursts": 3,
+      "OperationsPerBurst": 200,
+      "WallMs": {
+        "N": 3,
+        "Min": 76.9915,
+        "Median": 78.3022,
+        "P95": 79.5381,
+        "Max": 79.5381
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 76.9915,
+        "Median": 78.3022,
+        "P95": 79.5381,
+        "Max": 79.5381
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 2514.518199454098,
+        "Median": 2554.206650643277,
+        "P95": 2597.689355318444,
+        "Max": 2597.689355318444
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.1647,
+            "Median": 0.18925,
+            "P95": 0.4325,
+            "Max": 21.542
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 0,
+      "Writers": 4,
+      "Bursts": 3,
+      "OperationsPerBurst": 800,
+      "WallMs": {
+        "N": 3,
+        "Min": 175.0637,
+        "Median": 179.76,
+        "P95": 180.8225,
+        "Max": 180.8225
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 172.4195,
+        "Median": 173.8665,
+        "P95": 178.9355,
+        "Max": 178.9355
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 4424.228179568361,
+        "Median": 4450.3782821539835,
+        "P95": 4569.765176904178,
+        "Max": 4569.765176904178
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 0.1843,
+            "Median": 0.7193,
+            "P95": 0.9967,
+            "Max": 19.5692
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 1,
+      "Writers": 0,
+      "Bursts": 3,
+      "OperationsPerBurst": 200,
+      "WallMs": {
+        "N": 3,
+        "Min": 185.3018,
+        "Median": 189.8813,
+        "P95": 192.8785,
+        "Max": 192.8785
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 185.3018,
+        "Median": 189.8813,
+        "P95": 192.8785,
+        "Max": 192.8785
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 1036.9222075036876,
+        "Median": 1053.2896077707494,
+        "P95": 1079.3203304015396,
+        "Max": 1079.3203304015396
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.6637,
+            "Median": 0.7462,
+            "P95": 1.0552,
+            "Max": 14.096
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 3,
+      "Writers": 1,
+      "Bursts": 3,
+      "OperationsPerBurst": 800,
+      "WallMs": {
+        "N": 3,
+        "Min": 203.973,
+        "Median": 208.6666,
+        "P95": 208.797,
+        "Max": 208.797
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 108.801,
+        "Median": 110.0699,
+        "P95": 111.5091,
+        "Max": 111.5091
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 3831.47267441582,
+        "Median": 3833.867039574134,
+        "P95": 3922.0877272972402,
+        "Max": 3922.0877272972402
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 1800,
+            "Min": 0.644,
+            "Median": 0.8372999999999999,
+            "P95": 1.245,
+            "Max": 8.0195
+          },
+          "Errors": 0
+        },
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.1788,
+            "Median": 0.3623,
+            "P95": 0.5553,
+            "Max": 23.0987
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 4,
+      "Writers": 0,
+      "Bursts": 3,
+      "OperationsPerBurst": 800,
+      "WallMs": {
+        "N": 3,
+        "Min": 204.2038,
+        "Median": 245.4892,
+        "P95": 248.0651,
+        "Max": 248.0651
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 195.8842,
+        "Median": 200.1791,
+        "P95": 200.8996,
+        "Max": 200.8996
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 3224.959899639248,
+        "Median": 3258.7991650956537,
+        "P95": 3917.654813475557,
+        "Max": 3917.654813475557
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 0.683,
+            "Median": 0.85955,
+            "P95": 1.3479,
+            "Max": 8.0358
+          },
+          "Errors": 0
+        }
+      ]
+    }
+  ],
+  "Operations": {
+    "RepeatableRead": {
+      "During": 0,
+      "Correct": true,
+      "After": 10,
+      "Before": 0
+    },
+    "RowLocks": {
+      "Correct": true,
+      "ConflictingWriteMs": 266.0659,
+      "IndependentKey": 2,
+      "SqlState": "55P03",
+      "IndependentWriteMs": 6.4738,
+      "HeldKey": 1,
+      "LockTimeoutMs": 250
+    },
+    "Rollback": {
+      "Correct": true,
+      "Revisions": 11
+    },
+    "ReadCommitted": {
+      "During": 21,
+      "Correct": true,
+      "Before": 11
+    },
+    "BackupRestore": {
+      "RestoreMs": 88.9307,
+      "Correct": true,
+      "BackupMs": 123.4257,
+      "Bytes": 37210
+    },
+    "par_pg_postgres_local_operations": {
+      "Correct": true,
+      "Documents": 1000,
+      "FieldEquality": true,
+      "AmcheckExitCode": 0,
+      "Records": 1000,
+      "BatchRecords": 1000,
+      "Revisions": 21
+    },
+    "par_pg_postgres_local_restore": {
+      "Correct": true,
+      "Documents": 1000,
+      "FieldEquality": true,
+      "AmcheckExitCode": 0,
+      "Records": 1000,
+      "BatchRecords": 1000,
+      "Revisions": 21
+    }
+  },
+  "Storage": [
+    {
+      "Shape": "n1000-p256",
+      "Relations": [
+        {
+          "relname": "records",
+          "heap_bytes": 344064,
+          "total_bytes": 491520
+        },
+        {
+          "relname": "documents",
+          "heap_bytes": 458752,
+          "total_bytes": 589824
+        },
+        {
+          "relname": "batch_records",
+          "heap_bytes": 40960,
+          "total_bytes": 90112
+        },
+        {
+          "relname": "batch_documents",
+          "heap_bytes": 0,
+          "total_bytes": 16384
+        }
+      ]
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Relations": [
+        {
+          "relname": "records",
+          "heap_bytes": 1097728,
+          "total_bytes": 1777664
+        },
+        {
+          "relname": "documents",
+          "heap_bytes": 2162688,
+          "total_bytes": 2785280
+        },
+        {
+          "relname": "batch_records",
+          "heap_bytes": 24576,
+          "total_bytes": 73728
+        },
+        {
+          "relname": "batch_documents",
+          "heap_bytes": 0,
+          "total_bytes": 16384
+        }
+      ]
+    },
+    {
+      "Shape": "n10000-p256",
+      "Relations": [
+        {
+          "relname": "records",
+          "heap_bytes": 3416064,
+          "total_bytes": 4087808
+        },
+        {
+          "relname": "documents",
+          "heap_bytes": 4554752,
+          "total_bytes": 5177344
+        },
+        {
+          "relname": "batch_records",
+          "heap_bytes": 0,
+          "total_bytes": 16384
+        },
+        {
+          "relname": "batch_documents",
+          "heap_bytes": 98304,
+          "total_bytes": 147456
+        }
+      ]
+    }
+  ],
+  "Monitoring": [
+    {
+      "Phase": "direct",
+      "Samples": 19,
+      "FirstUtc": "2026-11-09T05:26:38.5136919Z",
+      "LastUtc": "2026-11-09T05:26:56.7647316Z",
+      "Counters": [
+        {
+          "Path": "\\\\corv-tta-96\\memory\\available mbytes",
+          "Values": {
+            "N": 19,
+            "Min": 19077.0,
+            "Median": 19198.0,
+            "P95": 19366.0,
+            "Max": 19366.0
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 19,
+            "Min": 0.0,
+            "Median": 3.0717148760330576E-05,
+            "P95": 0.00017389024390243905,
+            "Max": 0.00017389024390243905
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 19,
+            "Min": 9.965274208833751,
+            "Median": 14.868190445237184,
+            "P95": 26.381162185905072,
+            "Max": 26.381162185905072
+          }
+        }
+      ],
+      "Processes": [
+        {
+          "Id": 1900,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3665920.0,
+          "PeakWorkingSetBytes": 13316096.0
+        },
+        {
+          "Id": 1940,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3162112.0,
+          "PeakWorkingSetBytes": 16637952.0
+        },
+        {
+          "Id": 2764,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 2764800.0,
+          "PeakWorkingSetBytes": 12115968.0
+        },
+        {
+          "Id": 3744,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6774784.0,
+          "PeakWorkingSetBytes": 33640448.0
+        },
+        {
+          "Id": 6496,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 5017600.0,
+          "PeakWorkingSetBytes": 19542016.0
+        },
+        {
+          "Id": 8136,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6578176.0,
+          "PeakWorkingSetBytes": 29196288.0
+        },
+        {
+          "Id": 8768,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 7012352.0,
+          "PeakWorkingSetBytes": 25387008.0
+        },
+        {
+          "Id": 8820,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3166208.0,
+          "PeakWorkingSetBytes": 13611008.0
+        },
+        {
+          "Id": 9104,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 1880064.0,
+          "PeakWorkingSetBytes": 9863168.0
+        },
+        {
+          "Id": 9172,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3764224.0,
+          "PeakWorkingSetBytes": 15048704.0
+        },
+        {
+          "Id": 9232,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6651904.0,
+          "PeakWorkingSetBytes": 28143616.0
+        },
+        {
+          "Id": 9428,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3244032.0,
+          "PeakWorkingSetBytes": 15634432.0
+        },
+        {
+          "Id": 9860,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3223552.0,
+          "PeakWorkingSetBytes": 15847424.0
+        },
+        {
+          "Id": 10068,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3219456.0,
+          "PeakWorkingSetBytes": 12931072.0
+        },
+        {
+          "Id": 10300,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3248128.0,
+          "PeakWorkingSetBytes": 20176896.0
+        },
+        {
+          "Id": 11532,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 1.5625,
+          "PeakPrivateBytes": 60620800.0,
+          "PeakWorkingSetBytes": 130490368.0
+        },
+        {
+          "Id": 12880,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3338240.0,
+          "PeakWorkingSetBytes": 27258880.0
+        },
+        {
+          "Id": 14300,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3170304.0,
+          "PeakWorkingSetBytes": 12447744.0
+        },
+        {
+          "Id": 14456,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3190784.0,
+          "PeakWorkingSetBytes": 15659008.0
+        },
+        {
+          "Id": 14752,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.015625,
+          "PeakPrivateBytes": 48373760.0,
+          "PeakWorkingSetBytes": 128192512.0
+        },
+        {
+          "Id": 15160,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6455296.0,
+          "PeakWorkingSetBytes": 27844608.0
+        },
+        {
+          "Id": 15504,
+          "Name": "Universal.Server",
+          "CpuSecondsObserved": 0.078125,
+          "PeakPrivateBytes": 389435392.0,
+          "PeakWorkingSetBytes": 667586560.0
+        },
+        {
+          "Id": 17960,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6832128.0,
+          "PeakWorkingSetBytes": 31600640.0
+        },
+        {
+          "Id": 18772,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3686400.0,
+          "PeakWorkingSetBytes": 13176832.0
+        },
+        {
+          "Id": 19528,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3215360.0,
+          "PeakWorkingSetBytes": 15613952.0
+        },
+        {
+          "Id": 20140,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6193152.0,
+          "PeakWorkingSetBytes": 24682496.0
+        },
+        {
+          "Id": 20168,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.015625,
+          "PeakPrivateBytes": 44503040.0,
+          "PeakWorkingSetBytes": 113311744.0
+        },
+        {
+          "Id": 21420,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6131712.0,
+          "PeakWorkingSetBytes": 21745664.0
+        },
+        {
+          "Id": 21976,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 2060288.0,
+          "PeakWorkingSetBytes": 12091392.0
+        },
+        {
+          "Id": 22752,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 9.75,
+          "PeakPrivateBytes": 306298880.0,
+          "PeakWorkingSetBytes": 390443008.0
+        }
+      ]
+    },
+    {
+      "Phase": "followup",
+      "Samples": 41,
+      "FirstUtc": "2026-11-09T05:30:30.3743233Z",
+      "LastUtc": "2026-11-09T05:31:10.8653032Z",
+      "Counters": [
+        {
+          "Path": "\\\\corv-tta-96\\memory\\available mbytes",
+          "Values": {
+            "N": 41,
+            "Min": 18933.0,
+            "Median": 19068.0,
+            "P95": 19300.0,
+            "Max": 19358.0
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 41,
+            "Min": 3.43013986013986E-05,
+            "Median": 4.4396E-05,
+            "P95": 6.114807692307692E-05,
+            "Max": 7.944260563380282E-05
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 41,
+            "Min": 12.000833693976976,
+            "Median": 14.768309814041569,
+            "P95": 19.422747511820315,
+            "Max": 21.765928846025805
+          }
+        }
+      ],
+      "Processes": [
+        {
+          "Id": 1900,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3665920.0,
+          "PeakWorkingSetBytes": 13324288.0
+        },
+        {
+          "Id": 1940,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3162112.0,
+          "PeakWorkingSetBytes": 16637952.0
+        },
+        {
+          "Id": 2756,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3231744.0,
+          "PeakWorkingSetBytes": 15282176.0
+        },
+        {
+          "Id": 2764,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 2764800.0,
+          "PeakWorkingSetBytes": 12115968.0
+        },
+        {
+          "Id": 5376,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 4939776.0,
+          "PeakWorkingSetBytes": 19091456.0
+        },
+        {
+          "Id": 6080,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6066176.0,
+          "PeakWorkingSetBytes": 23670784.0
+        },
+        {
+          "Id": 7100,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6672384.0,
+          "PeakWorkingSetBytes": 21782528.0
+        },
+        {
+          "Id": 8640,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6324224.0,
+          "PeakWorkingSetBytes": 22765568.0
+        },
+        {
+          "Id": 8764,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6676480.0,
+          "PeakWorkingSetBytes": 26734592.0
+        },
+        {
+          "Id": 8820,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3166208.0,
+          "PeakWorkingSetBytes": 13660160.0
+        },
+        {
+          "Id": 9104,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6311936.0,
+          "PeakWorkingSetBytes": 26591232.0
+        },
+        {
+          "Id": 9172,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 4370432.0,
+          "PeakWorkingSetBytes": 77565952.0
+        },
+        {
+          "Id": 10068,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3219456.0,
+          "PeakWorkingSetBytes": 12931072.0
+        },
+        {
+          "Id": 10300,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3248128.0,
+          "PeakWorkingSetBytes": 20180992.0
+        },
+        {
+          "Id": 11936,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 843776.0,
+          "PeakWorkingSetBytes": 7073792.0
+        },
+        {
+          "Id": 12120,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 1.890625,
+          "PeakPrivateBytes": 61669376.0,
+          "PeakWorkingSetBytes": 132231168.0
+        },
+        {
+          "Id": 12480,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 12.859375,
+          "PeakPrivateBytes": 329564160.0,
+          "PeakWorkingSetBytes": 428576768.0
+        },
+        {
+          "Id": 12880,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3338240.0,
+          "PeakWorkingSetBytes": 27258880.0
+        },
+        {
+          "Id": 14300,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3170304.0,
+          "PeakWorkingSetBytes": 12447744.0
+        },
+        {
+          "Id": 14752,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 48373760.0,
+          "PeakWorkingSetBytes": 128192512.0
+        },
+        {
+          "Id": 15504,
+          "Name": "Universal.Server",
+          "CpuSecondsObserved": 9.671875,
+          "PeakPrivateBytes": 494985216.0,
+          "PeakWorkingSetBytes": 782774272.0
+        },
+        {
+          "Id": 18772,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3686400.0,
+          "PeakWorkingSetBytes": 13176832.0
+        },
+        {
+          "Id": 20168,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 44503040.0,
+          "PeakWorkingSetBytes": 113311744.0
+        },
+        {
+          "Id": 22712,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 4968448.0,
+          "PeakWorkingSetBytes": 19087360.0
+        },
+        {
+          "Id": 23416,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20815872.0
+        }
+      ]
+    },
+    {
+      "Phase": "concurrency",
+      "Samples": 39,
+      "FirstUtc": "2026-11-09T05:32:07.4670798Z",
+      "LastUtc": "2026-11-09T05:32:45.9632853Z",
+      "Counters": [
+        {
+          "Path": "\\\\corv-tta-96\\memory\\available mbytes",
+          "Values": {
+            "N": 39,
+            "Min": 19082.0,
+            "Median": 19235.0,
+            "P95": 19422.0,
+            "Max": 19427.0
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 39,
+            "Min": 0.0,
+            "Median": 3.504805825242718E-05,
+            "P95": 6.63E-05,
+            "Max": 6.865454545454546E-05
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 39,
+            "Min": 5.513000795331502,
+            "Median": 17.98951505478813,
+            "P95": 31.554789874245536,
+            "Max": 42.091658204742934
+          }
+        }
+      ],
+      "Processes": [
+        {
+          "Id": 1100,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 42184704.0,
+          "PeakWorkingSetBytes": 112930816.0
+        },
+        {
+          "Id": 1520,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6107136.0,
+          "PeakWorkingSetBytes": 20049920.0
+        },
+        {
+          "Id": 1772,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.421875,
+          "PeakPrivateBytes": 61358080.0,
+          "PeakWorkingSetBytes": 135151616.0
+        },
+        {
+          "Id": 1900,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3665920.0,
+          "PeakWorkingSetBytes": 13324288.0
+        },
+        {
+          "Id": 1940,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3162112.0,
+          "PeakWorkingSetBytes": 16637952.0
+        },
+        {
+          "Id": 2108,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.234375,
+          "PeakPrivateBytes": 48025600.0,
+          "PeakWorkingSetBytes": 121249792.0
+        },
+        {
+          "Id": 2152,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6115328.0,
+          "PeakWorkingSetBytes": 21614592.0
+        },
+        {
+          "Id": 2616,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6119424.0,
+          "PeakWorkingSetBytes": 19963904.0
+        },
+        {
+          "Id": 2620,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6144000.0,
+          "PeakWorkingSetBytes": 20000768.0
+        },
+        {
+          "Id": 2712,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.71875,
+          "PeakPrivateBytes": 43573248.0,
+          "PeakWorkingSetBytes": 114966528.0
+        },
+        {
+          "Id": 2764,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 2764800.0,
+          "PeakWorkingSetBytes": 12115968.0
+        },
+        {
+          "Id": 2956,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6119424.0,
+          "PeakWorkingSetBytes": 19968000.0
+        },
+        {
+          "Id": 2976,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6090752.0,
+          "PeakWorkingSetBytes": 21602304.0
+        },
+        {
+          "Id": 3048,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.546875,
+          "PeakPrivateBytes": 43450368.0,
+          "PeakWorkingSetBytes": 114601984.0
+        },
+        {
+          "Id": 3204,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6148096.0,
+          "PeakWorkingSetBytes": 20082688.0
+        },
+        {
+          "Id": 3212,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 42336256.0,
+          "PeakWorkingSetBytes": 113467392.0
+        },
+        {
+          "Id": 3292,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.609375,
+          "PeakPrivateBytes": 60542976.0,
+          "PeakWorkingSetBytes": 134373376.0
+        },
+        {
+          "Id": 3296,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.28125,
+          "PeakPrivateBytes": 47378432.0,
+          "PeakWorkingSetBytes": 119668736.0
+        },
+        {
+          "Id": 3444,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 41459712.0,
+          "PeakWorkingSetBytes": 112271360.0
+        },
+        {
+          "Id": 3448,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 41562112.0,
+          "PeakWorkingSetBytes": 112226304.0
+        },
+        {
+          "Id": 3488,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 64380928.0,
+          "PeakWorkingSetBytes": 137719808.0
+        },
+        {
+          "Id": 3832,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 40259584.0,
+          "PeakWorkingSetBytes": 110014464.0
+        },
+        {
+          "Id": 3952,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6127616.0,
+          "PeakWorkingSetBytes": 20058112.0
+        },
+        {
+          "Id": 4116,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.3125,
+          "PeakPrivateBytes": 47902720.0,
+          "PeakWorkingSetBytes": 120864768.0
+        },
+        {
+          "Id": 4300,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.421875,
+          "PeakPrivateBytes": 48148480.0,
+          "PeakWorkingSetBytes": 120803328.0
+        },
+        {
+          "Id": 4784,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6111232.0,
+          "PeakWorkingSetBytes": 20111360.0
+        },
+        {
+          "Id": 4872,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 62455808.0,
+          "PeakWorkingSetBytes": 135385088.0
+        },
+        {
+          "Id": 4908,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6156288.0,
+          "PeakWorkingSetBytes": 20045824.0
+        },
+        {
+          "Id": 5224,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.234375,
+          "PeakPrivateBytes": 49184768.0,
+          "PeakWorkingSetBytes": 121540608.0
+        },
+        {
+          "Id": 5260,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6131712.0,
+          "PeakWorkingSetBytes": 20017152.0
+        },
+        {
+          "Id": 5388,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.359375,
+          "PeakPrivateBytes": 56791040.0,
+          "PeakWorkingSetBytes": 129695744.0
+        },
+        {
+          "Id": 5640,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 60542976.0,
+          "PeakWorkingSetBytes": 133255168.0
+        },
+        {
+          "Id": 6080,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6066176.0,
+          "PeakWorkingSetBytes": 23670784.0
+        },
+        {
+          "Id": 6116,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 41377792.0,
+          "PeakWorkingSetBytes": 112078848.0
+        },
+        {
+          "Id": 6148,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6103040.0,
+          "PeakWorkingSetBytes": 21094400.0
+        },
+        {
+          "Id": 6200,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.453125,
+          "PeakPrivateBytes": 61038592.0,
+          "PeakWorkingSetBytes": 134742016.0
+        },
+        {
+          "Id": 6828,
+          "Name": "pwsh",
+          "CpuSecondsObserved": -0.4375,
+          "PeakPrivateBytes": 47808512.0,
+          "PeakWorkingSetBytes": 120537088.0
+        },
+        {
+          "Id": 6840,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6107136.0,
+          "PeakWorkingSetBytes": 20070400.0
+        },
+        {
+          "Id": 7124,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.359375,
+          "PeakPrivateBytes": 48459776.0,
+          "PeakWorkingSetBytes": 121946112.0
+        },
+        {
+          "Id": 7188,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.359375,
+          "PeakPrivateBytes": 61685760.0,
+          "PeakWorkingSetBytes": 134918144.0
+        },
+        {
+          "Id": 7364,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6082560.0,
+          "PeakWorkingSetBytes": 20054016.0
+        },
+        {
+          "Id": 7452,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.453125,
+          "PeakPrivateBytes": 62500864.0,
+          "PeakWorkingSetBytes": 136265728.0
+        },
+        {
+          "Id": 7616,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 60702720.0,
+          "PeakWorkingSetBytes": 133312512.0
+        },
+        {
+          "Id": 7964,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 42778624.0,
+          "PeakWorkingSetBytes": 113356800.0
+        },
+        {
+          "Id": 8172,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6090752.0,
+          "PeakWorkingSetBytes": 20066304.0
+        },
+        {
+          "Id": 8400,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.25,
+          "PeakPrivateBytes": 47960064.0,
+          "PeakWorkingSetBytes": 120950784.0
+        },
+        {
+          "Id": 8768,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6168576.0,
+          "PeakWorkingSetBytes": 20045824.0
+        },
+        {
+          "Id": 8820,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3166208.0,
+          "PeakWorkingSetBytes": 13692928.0
+        },
+        {
+          "Id": 8912,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20070400.0
+        },
+        {
+          "Id": 9036,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6139904.0,
+          "PeakWorkingSetBytes": 20066304.0
+        },
+        {
+          "Id": 9104,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6041600.0,
+          "PeakWorkingSetBytes": 26320896.0
+        },
+        {
+          "Id": 9172,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 4636672.0,
+          "PeakWorkingSetBytes": 94593024.0
+        },
+        {
+          "Id": 9276,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 1.859375,
+          "PeakPrivateBytes": 61706240.0,
+          "PeakWorkingSetBytes": 132108288.0
+        },
+        {
+          "Id": 9584,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 41771008.0,
+          "PeakWorkingSetBytes": 112537600.0
+        },
+        {
+          "Id": 9756,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6168576.0,
+          "PeakWorkingSetBytes": 20033536.0
+        },
+        {
+          "Id": 9760,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.3125,
+          "PeakPrivateBytes": 61079552.0,
+          "PeakWorkingSetBytes": 133947392.0
+        },
+        {
+          "Id": 9812,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6164480.0,
+          "PeakWorkingSetBytes": 20115456.0
+        },
+        {
+          "Id": 10068,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3219456.0,
+          "PeakWorkingSetBytes": 12931072.0
+        },
+        {
+          "Id": 10300,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3248128.0,
+          "PeakWorkingSetBytes": 20180992.0
+        },
+        {
+          "Id": 11456,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 52432896.0,
+          "PeakWorkingSetBytes": 125247488.0
+        },
+        {
+          "Id": 11532,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.421875,
+          "PeakPrivateBytes": 47562752.0,
+          "PeakWorkingSetBytes": 119545856.0
+        },
+        {
+          "Id": 11728,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20041728.0
+        },
+        {
+          "Id": 11772,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.4375,
+          "PeakPrivateBytes": 42565632.0,
+          "PeakWorkingSetBytes": 113405952.0
+        },
+        {
+          "Id": 11868,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20074496.0
+        },
+        {
+          "Id": 12116,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 4956160.0,
+          "PeakWorkingSetBytes": 18882560.0
+        },
+        {
+          "Id": 12284,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.328125,
+          "PeakPrivateBytes": 49238016.0,
+          "PeakWorkingSetBytes": 122118144.0
+        },
+        {
+          "Id": 12764,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 43450368.0,
+          "PeakWorkingSetBytes": 114905088.0
+        },
+        {
+          "Id": 12880,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3338240.0,
+          "PeakWorkingSetBytes": 27258880.0
+        },
+        {
+          "Id": 12940,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6135808.0,
+          "PeakWorkingSetBytes": 20037632.0
+        },
+        {
+          "Id": 13084,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6094848.0,
+          "PeakWorkingSetBytes": 20041728.0
+        },
+        {
+          "Id": 13112,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6127616.0,
+          "PeakWorkingSetBytes": 20062208.0
+        },
+        {
+          "Id": 13264,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6156288.0,
+          "PeakWorkingSetBytes": 20049920.0
+        },
+        {
+          "Id": 13604,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20041728.0
+        },
+        {
+          "Id": 14224,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6090752.0,
+          "PeakWorkingSetBytes": 20021248.0
+        },
+        {
+          "Id": 14300,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3170304.0,
+          "PeakWorkingSetBytes": 12447744.0
+        },
+        {
+          "Id": 14324,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.265625,
+          "PeakPrivateBytes": 48697344.0,
+          "PeakWorkingSetBytes": 121573376.0
+        },
+        {
+          "Id": 14504,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20058112.0
+        },
+        {
+          "Id": 14752,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 48373760.0,
+          "PeakWorkingSetBytes": 128192512.0
+        },
+        {
+          "Id": 14820,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6135808.0,
+          "PeakWorkingSetBytes": 20041728.0
+        },
+        {
+          "Id": 15072,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6119424.0,
+          "PeakWorkingSetBytes": 20013056.0
+        },
+        {
+          "Id": 15076,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6107136.0,
+          "PeakWorkingSetBytes": 20021248.0
+        },
+        {
+          "Id": 15332,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6127616.0,
+          "PeakWorkingSetBytes": 20078592.0
+        },
+        {
+          "Id": 15504,
+          "Name": "Universal.Server",
+          "CpuSecondsObserved": 0.375,
+          "PeakPrivateBytes": 483495936.0,
+          "PeakWorkingSetBytes": 771166208.0
+        },
+        {
+          "Id": 15536,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6111232.0,
+          "PeakWorkingSetBytes": 20070400.0
+        },
+        {
+          "Id": 17040,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6164480.0,
+          "PeakWorkingSetBytes": 20107264.0
+        },
+        {
+          "Id": 17060,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.15625,
+          "PeakPrivateBytes": 47636480.0,
+          "PeakWorkingSetBytes": 120160256.0
+        },
+        {
+          "Id": 17436,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6119424.0,
+          "PeakWorkingSetBytes": 20054016.0
+        },
+        {
+          "Id": 17528,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6127616.0,
+          "PeakWorkingSetBytes": 19996672.0
+        },
+        {
+          "Id": 17816,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 42930176.0,
+          "PeakWorkingSetBytes": 113741824.0
+        },
+        {
+          "Id": 17960,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 7.3125,
+          "PeakPrivateBytes": 110440448.0,
+          "PeakWorkingSetBytes": 198316032.0
+        },
+        {
+          "Id": 18056,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.34375,
+          "PeakPrivateBytes": 62668800.0,
+          "PeakWorkingSetBytes": 135704576.0
+        },
+        {
+          "Id": 18128,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.46875,
+          "PeakPrivateBytes": 47484928.0,
+          "PeakWorkingSetBytes": 119218176.0
+        },
+        {
+          "Id": 18708,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.28125,
+          "PeakPrivateBytes": 48066560.0,
+          "PeakWorkingSetBytes": 121487360.0
+        },
+        {
+          "Id": 18772,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 3686400.0,
+          "PeakWorkingSetBytes": 13176832.0
+        },
+        {
+          "Id": 19452,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.453125,
+          "PeakPrivateBytes": 42647552.0,
+          "PeakWorkingSetBytes": 113983488.0
+        },
+        {
+          "Id": 19820,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.234375,
+          "PeakPrivateBytes": 48111616.0,
+          "PeakWorkingSetBytes": 120881152.0
+        },
+        {
+          "Id": 20064,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6111232.0,
+          "PeakWorkingSetBytes": 20111360.0
+        },
+        {
+          "Id": 20168,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.015625,
+          "PeakPrivateBytes": 44503040.0,
+          "PeakWorkingSetBytes": 113311744.0
+        },
+        {
+          "Id": 20436,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 19984384.0
+        },
+        {
+          "Id": 21008,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6107136.0,
+          "PeakWorkingSetBytes": 20013056.0
+        },
+        {
+          "Id": 21680,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6119424.0,
+          "PeakWorkingSetBytes": 20013056.0
+        },
+        {
+          "Id": 21764,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.40625,
+          "PeakPrivateBytes": 64122880.0,
+          "PeakWorkingSetBytes": 137351168.0
+        },
+        {
+          "Id": 21792,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.4375,
+          "PeakPrivateBytes": 63553536.0,
+          "PeakWorkingSetBytes": 136732672.0
+        },
+        {
+          "Id": 21816,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6139904.0,
+          "PeakWorkingSetBytes": 20021248.0
+        },
+        {
+          "Id": 21844,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6111232.0,
+          "PeakWorkingSetBytes": 20066304.0
+        },
+        {
+          "Id": 22024,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.265625,
+          "PeakPrivateBytes": 49311744.0,
+          "PeakWorkingSetBytes": 122208256.0
+        },
+        {
+          "Id": 22084,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6127616.0,
+          "PeakWorkingSetBytes": 21569536.0
+        },
+        {
+          "Id": 22136,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.34375,
+          "PeakPrivateBytes": 49360896.0,
+          "PeakWorkingSetBytes": 123064320.0
+        },
+        {
+          "Id": 22396,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6115328.0,
+          "PeakWorkingSetBytes": 20078592.0
+        },
+        {
+          "Id": 22536,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6135808.0,
+          "PeakWorkingSetBytes": 20021248.0
+        },
+        {
+          "Id": 22556,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.234375,
+          "PeakPrivateBytes": 45219840.0,
+          "PeakWorkingSetBytes": 115748864.0
+        },
+        {
+          "Id": 22808,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6119424.0,
+          "PeakWorkingSetBytes": 19972096.0
+        },
+        {
+          "Id": 22936,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.53125,
+          "PeakPrivateBytes": 47538176.0,
+          "PeakWorkingSetBytes": 120287232.0
+        },
+        {
+          "Id": 23004,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.34375,
+          "PeakPrivateBytes": 42954752.0,
+          "PeakWorkingSetBytes": 114040832.0
+        },
+        {
+          "Id": 23012,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 41512960.0,
+          "PeakWorkingSetBytes": 112193536.0
+        },
+        {
+          "Id": 23076,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20013056.0
+        },
+        {
+          "Id": 23140,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.65625,
+          "PeakPrivateBytes": 42692608.0,
+          "PeakWorkingSetBytes": 113463296.0
+        },
+        {
+          "Id": 23184,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 4956160.0,
+          "PeakWorkingSetBytes": 18923520.0
+        },
+        {
+          "Id": 23336,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6086656.0,
+          "PeakWorkingSetBytes": 21708800.0
+        },
+        {
+          "Id": 23356,
+          "Name": "pwsh",
+          "CpuSecondsObserved": -0.09375,
+          "PeakPrivateBytes": 42942464.0,
+          "PeakWorkingSetBytes": 113905664.0
+        },
+        {
+          "Id": 23360,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6115328.0,
+          "PeakWorkingSetBytes": 20041728.0
+        },
+        {
+          "Id": 23388,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.46875,
+          "PeakPrivateBytes": 42700800.0,
+          "PeakWorkingSetBytes": 114049024.0
+        },
+        {
+          "Id": 23400,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 41836544.0,
+          "PeakWorkingSetBytes": 113016832.0
+        },
+        {
+          "Id": 23416,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20815872.0
+        },
+        {
+          "Id": 23460,
+          "Name": "pwsh",
+          "CpuSecondsObserved": 0.34375,
+          "PeakPrivateBytes": 61018112.0,
+          "PeakWorkingSetBytes": 133931008.0
+        },
+        {
+          "Id": 23472,
+          "Name": "postgres",
+          "CpuSecondsObserved": 0,
+          "PeakPrivateBytes": 6123520.0,
+          "PeakWorkingSetBytes": 20074496.0
+        }
+      ]
+    }
+  ],
+  "Limitations": [
+    "Same workstation/storage but later, unpaired provider passes; no universal ranking or isolated engine timings.",
+    "Warm synthetic tables of at most 10,000 records; ASCII x payloads compress unusually well with PostgreSQL TOAST. No production size or capacity estimate.",
+    "PostgreSQL JSONB normalization differs from SQLite JSON text. Expression B-tree indexes, not GIN; scan phase removes only the expression index and runs separately.",
+    "Direct outer clocks use native Measure-Command; SQLite used an explicit Stopwatch. Serialization is outside direct read clocks. No measured subtraction of harness overhead.",
+    "PostgreSQL defaults include 128 MiB shared buffers plus OS cache and per-operation memory; SQLite used 8 MiB private cache per connection. Memory budgets were not equalized.",
+    "Pooled PostgreSQL endpoints differ from unpooled SQLite endpoints. PG direct new/reuse/pooled modes expose the connection choice.",
+    "Per-row writes prepare once and send one request per row; set variants send one request using JSONB recordsets or an integer key array. Batch JSON is prebuilt for database clocks, inside whole-import clocks.",
+    "No PostgreSQL endpoint concurrency, cold-cache, remote-host, sustained-capacity, frontend, crash/power-loss, PITR, HA, production-identity or SQL Server tests.",
+    "One-second resource samples cannot attribute individual requests; working sets can double-count shared memory. Agent/tool activity was not isolated or controlled during PostgreSQL passes.",
+    "Initial incomplete followup and smoke passes are excluded; historical source snapshots retain the pre-import integer-conversion fix for direct measurements."
+  ],
+  "PsuCondition": {
+    "ApiSecurity": "Strict",
+    "Settings": {
+      "concurrentJobLimit": 1000,
+      "maxJobMemory": 0,
+      "scriptBaseFolder": "scripts",
+      "gitSyncEnabled": false
+    },
+    "Environments": [
+      {
+        "name": "Integrated",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "PowerShell 7",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "Windows PowerShell 5.1",
+        "version": null,
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      }
+    ],
+    "HangfireWorkerCount": null,
+    "SystemLogLevel": "Information",
+    "Runtime": {
+      "PsuServer": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.12"
+          },
+          {
+            "name": "Microsoft.AspNetCore.App",
+            "version": "10.0.12"
+          }
+        ],
+        "configProperties": {
+          "System.GC.Server": true,
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Reflection.NullabilityInfoContext.IsSupported": true,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": true
+        }
+      },
+      "Harness": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.14"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App",
+            "version": "10.0.14"
+          }
+        ],
+        "rollForwardOnNoCandidateFx": 1,
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+          "System.Runtime.TieredCompilation": true,
+          "System.Runtime.TieredCompilation.QuickJit": true,
+          "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+          "System.Runtime.Loader.UseRidGraph": true,
+          "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+        }
+      },
+      "PsuJob": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.12"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App",
+            "version": "10.0.12"
+          }
+        ],
+        "rollForwardOnNoCandidateFx": 1,
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+          "System.Runtime.TieredCompilation": true,
+          "System.Runtime.TieredCompilation.QuickJit": true,
+          "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+          "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+        }
+      }
+    }
+  }
+}

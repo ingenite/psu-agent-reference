@@ -48,6 +48,72 @@ Object-valued variable injection was unreliable here, so fixture paths use JSON.
 The synchronized instance and live Graph, CMDB, tenant data, and permissions
 remain unverified.
 
+## Database provider experiment
+
+Independent review found that the initial workers warmed reads even when assigned
+to write, and PostgreSQL/SQL Server measured indexed reads before a separate scan
+phase. Current scripts use ten checked operations of each worker's assigned role,
+verify/reset warm-up increments before the gate, and counterbalance paired index
+conditions with ten checked warm-ups outside each clock. SQL Server was first
+rerun with this protocol (`sqlserver-reviewed`); the portable SQLite/PostgreSQL
+files retain their historical evidence. The new SQL Server pass passed full direct/PSU/concurrency
+and operational checks, using a new non-sysadmin disposable SQL login provisioned
+through Windows authentication. Its paired index advantage held in six of seven
+10,000/2,048 observations but in none of the seven 10,000/256 observations.
+Residual first-operation latency and substantial changes in untouched write
+paths limit steady-state and causal before/after interpretations. The old SQL
+portable evidence remains unchanged; SqlServerReviewedEvidence.json and the
+database review comparison document record the new results. Temporary PSU
+registrations were restored and both credential/login-selector files removed.
+
+November 20 repeated passes ran each provider's complete corrected workflow three
+times; all passed validation, but single passes disagreed. SQLite's and SQL
+Server's first passes and PostgreSQL's second key-order pass differed from the
+other two by up to about a factor of two in sequential direct reads, mostly at
+1,000 records. The cause was not isolated, so single-pass small-shape read
+medians remain uncertain. Unordered PostgreSQL writer increments deadlocked 45 times
+in one four-writer burst; the increment now locks rows in key order, which lowers
+writer throughput, so PostgreSQL writer bursts compare only with key-order passes.
+These passes did not change the portable evidence files, add a paired orchestration
+control or test the SQL Server update (17.0.1155.3) against its earlier build.
+
+The SQLite, native Windows PostgreSQL 18.6 and SQL Server 2025 Standard Developer
+(17.0.1000.7) experiments exercised seeded local
+application databases, direct PowerShell access, authenticated Integrated endpoints,
+automation imports, short direct read/write bursts, isolation/locking, rollback,
+backup and reopen on the dedicated PSU 2026.3.0 instance. PostgreSQL also passed
+logical dump/restore field checks and native relation checks; SQLite exercised
+WAL checkpoint behavior. SQL Server passed checksum backup/actual restore,
+full main-table field checks and DBCC CHECKDB on all three measured databases
+and the operational/restored pair. Its default read committed used locks (RCSI
+off); repeatable read blocked a competing writer. PostgreSQL and SQL Server
+endpoint concurrency was not repeated. None tested remote hosts/storage, frontend behavior,
+sustained capacity, cold-cache behavior, crash/power-loss durability, PITR/HA or
+production service-account permissions. Provider passes were separate, used
+different connection/pooling and cache budgets, and do not isolate engine speed.
+Repeated ASCII payloads compress unusually well under PostgreSQL TOAST, limiting
+size and payload-performance conclusions. The direct harness and PSU used different
+PowerShell/.NET runtime versions. Brief one-second resource samples do not explain
+individual slow requests; PostgreSQL and SQL Server passes had no paired orchestration
+control. SQL Server process CPU values were unavailable under the diagnostic
+identity; host counters and process memory were retained. SQL Server used encrypted
+TCP with an unvalidated local certificate, default dynamic memory settings and
+uncompressed Unicode JSON text/computed indexes. Its original Windows-authenticated
+pass used administrative access; a separately retained full follow-up used local
+SQL login par_benchmark_sql, no server administrative role and ownership of only
+the dedicated benchmark databases. Direct, endpoint and job identity probes passed;
+backup/provisioning administration still used Windows access. SQL authentication
+raised fresh keyed-read latency to about 65 ms while pooled reads stayed below
+1 ms; provider passes do not separately isolate password hashing, TLS or privileges.
+Native SQL Server 2025 JSON types/indexes,
+snapshot isolation and least-privilege production identities were not tested.
+The databases are separate from PSU's internal database; the harness remains
+experimental. Both server providers' evidence and backups are retained outside
+their temporary installations. Temporary PSU registrations were restored; the SQL
+login's temporary password file was removed and no password is in evidence.
+The SQL Server installation was uninstalled after the November 20 passes. The
+reinstalled PostgreSQL listened on all interfaces; benchmark connections used loopback.
+
 ## Management API tools and Git
 
 The Git settings and SSH-key wrappers were checked against PSU 2026.3.0's

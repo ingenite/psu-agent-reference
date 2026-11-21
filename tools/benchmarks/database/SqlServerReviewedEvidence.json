@@ -1,0 +1,4819 @@
+{
+  "Pass": "sqlserver-reviewed",
+  "MeasuredUtc": "2026-11-09T07:06:34.3483194Z",
+  "Status": "SQLite, PostgreSQL and SQL Server measured locally. Experimental only.",
+  "Units": "milliseconds except counts, bytes and operations/second",
+  "Statistics": "Warm-ups excluded. Median, observed range and nearest-rank P95. Burst requests are correlated; one wall interval per burst.",
+  "Fixture": {
+    "Generator": "DatabaseFixture.ps1, identical arithmetic fields/JSON to SQLite",
+    "Seed": 1108,
+    "MeasuredBurstBlocks": 3,
+    "OperationsPerWorker": 200,
+    "MeasuredBlocks": 7,
+    "WarmupsPerSequentialCase": 1,
+    "Shapes": [
+      "1000 records / 256 ASCII characters",
+      "10000 records / 256 ASCII characters",
+      "10000 records / 2048 ASCII characters"
+    ]
+  },
+  "Boundaries": {
+    "Direct": "Native Measure-Command around helper call/return, SQL, object construction and owned-connection disposal; serialization and checks follow clock",
+    "Endpoint": "HTTP response plus JSON-to-object parsing; pooled database connection in handler",
+    "Burst": "One earliest-worker-start to latest-worker-end wall interval, including between-operation driver work",
+    "Import": "Whole script locally, or submit + 50ms completion polling + pipeline retrieval; fixture decoding and batch JSON preparation included"
+  },
+  "Host": {
+    "OS": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26200",
+      "BuildNumber": "26200"
+    },
+    "Computer": {
+      "TotalPhysicalMemory": 33945432064
+    },
+    "PowerPlan": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
+    "Services": [
+      {
+        "Name": "MSSQLSERVER",
+        "State": "Running",
+        "PathName": "\"C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\Binn\\sqlservr.exe\" -sMSSQLSERVER",
+        "StartName": "NT Service\\MSSQLSERVER"
+      }
+    ],
+    "ProviderHash": {
+      "Path": "C:\\dev-psu\\Microsoft.Data.SqlClient.dll",
+      "Hash": "15CF9FD194927CCA11E0D3E8289B85F965712F1BF7D359EBDA2C537C7E9E8409"
+    },
+    "Provider": {
+      "FullName": "C:\\dev-psu\\Microsoft.Data.SqlClient.dll",
+      "Version": "6.14.26015.4"
+    },
+    "Disk": {
+      "Number": 1,
+      "FriendlyName": "WD_BLACK SN850X 2000GB",
+      "BusType": "NVMe",
+      "Size": 2000398934016
+    },
+    "Processor": {
+      "Name": "AMD Ryzen 5 9600X 6-Core Processor             ",
+      "NumberOfCores": 6,
+      "NumberOfLogicalProcessors": 12
+    }
+  },
+  "Server": {
+    "Configuration": [
+      {
+        "name": "access check cache bucket count",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Default hash bucket count for the access check result security cache"
+      },
+      {
+        "name": "access check cache quota",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Default quota for the access check result security cache"
+      },
+      {
+        "name": "Ad Hoc Distributed Queries",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable Ad Hoc Distributed Queries"
+      },
+      {
+        "name": "ADR cleaner lock timeout (s)",
+        "value": 5,
+        "value_in_use": 5,
+        "description": "ADR cleaner lock timeout"
+      },
+      {
+        "name": "ADR cleaner retry timeout (min)",
+        "value": 15,
+        "value_in_use": 15,
+        "description": "ADR cleaner retry timeout."
+      },
+      {
+        "name": "ADR Cleaner Thread Count",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Max number of threads ADR cleaner can assign."
+      },
+      {
+        "name": "ADR Preallocation Factor",
+        "value": 4,
+        "value_in_use": 4,
+        "description": "ADR Preallocation Factor."
+      },
+      {
+        "name": "affinity I/O mask",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "affinity I/O mask"
+      },
+      {
+        "name": "affinity mask",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "affinity mask"
+      },
+      {
+        "name": "affinity64 I/O mask",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "affinity64 I/O mask"
+      },
+      {
+        "name": "affinity64 mask",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "affinity64 mask"
+      },
+      {
+        "name": "Agent XPs",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable Agent XPs"
+      },
+      {
+        "name": "allow filesystem enumeration",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Allow enumeration of filesystem"
+      },
+      {
+        "name": "allow polybase export",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Allows writing into an external table using PolyBase"
+      },
+      {
+        "name": "allow server scoped db credentials",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable use of server managed identity in database scoped credentials"
+      },
+      {
+        "name": "allow updates",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Allow updates to system tables"
+      },
+      {
+        "name": "automatic soft-NUMA disabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Automatic soft-NUMA is enabled by default"
+      },
+      {
+        "name": "backup checksum default",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable checksum of backups by default"
+      },
+      {
+        "name": "backup compression algorithm",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Configure default backup compression algorithm"
+      },
+      {
+        "name": "backup compression default",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable compression of backups by default"
+      },
+      {
+        "name": "blocked process threshold (s)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Blocked process reporting threshold"
+      },
+      {
+        "name": "c2 audit mode",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "c2 audit mode"
+      },
+      {
+        "name": "clr enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "CLR user code execution enabled in the server"
+      },
+      {
+        "name": "clr strict security",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "CLR strict security enabled in the server"
+      },
+      {
+        "name": "column encryption enclave type",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Type of enclave used for computations on encrypted columns"
+      },
+      {
+        "name": "contained database authentication",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enables contained databases and contained authentication"
+      },
+      {
+        "name": "cost threshold for parallelism",
+        "value": 5,
+        "value_in_use": 5,
+        "description": "cost threshold for parallelism"
+      },
+      {
+        "name": "cross db ownership chaining",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Allow cross db ownership chaining"
+      },
+      {
+        "name": "cursor threshold",
+        "value": -1,
+        "value_in_use": -1,
+        "description": "cursor threshold"
+      },
+      {
+        "name": "Data processed daily limit in TB",
+        "value": 2147483647,
+        "value_in_use": 2147483647,
+        "description": "SQL On-demand data processed daily limit in TB"
+      },
+      {
+        "name": "Data processed monthly limit in TB",
+        "value": 2147483647,
+        "value_in_use": 2147483647,
+        "description": "SQL On-demand data processed monthly limit in TB"
+      },
+      {
+        "name": "Data processed weekly limit in TB",
+        "value": 2147483647,
+        "value_in_use": 2147483647,
+        "description": "SQL On-demand data processed weekly limit in TB"
+      },
+      {
+        "name": "Database Mail XPs",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable Database Mail XPs"
+      },
+      {
+        "name": "default full-text language",
+        "value": 1033,
+        "value_in_use": 1033,
+        "description": "default full-text language"
+      },
+      {
+        "name": "default language",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "default language"
+      },
+      {
+        "name": "default trace enabled",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Enable or disable the default trace"
+      },
+      {
+        "name": "disallow results from triggers",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Disallow returning results from triggers"
+      },
+      {
+        "name": "EKM provider enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable EKM provider"
+      },
+      {
+        "name": "external AI runtimes enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable using external AI runtimes"
+      },
+      {
+        "name": "external rest endpoint enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable invocations of external REST endpoints"
+      },
+      {
+        "name": "external scripts enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Allows execution of external scripts"
+      },
+      {
+        "name": "external xtp dll gen util enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable using external xtp dll generation via HkDllGen.exe"
+      },
+      {
+        "name": "filestream access level",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Sets the FILESTREAM access level"
+      },
+      {
+        "name": "fill factor (%)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Default fill factor percentage"
+      },
+      {
+        "name": "ft crawl bandwidth (max)",
+        "value": 100,
+        "value_in_use": 100,
+        "description": "Max number of full-text crawl buffers"
+      },
+      {
+        "name": "ft crawl bandwidth (min)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Number of reserved full-text crawl buffers"
+      },
+      {
+        "name": "ft notify bandwidth (max)",
+        "value": 100,
+        "value_in_use": 100,
+        "description": "Max number of full-text notifications buffers"
+      },
+      {
+        "name": "ft notify bandwidth (min)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Number of reserved full-text notifications buffers"
+      },
+      {
+        "name": "hadoop connectivity",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Configure SQL Server to connect to external Hadoop or Microsoft Azure storage blob data sources through PolyBase"
+      },
+      {
+        "name": "hardware offload config",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Configure hardware offload accelerator"
+      },
+      {
+        "name": "hardware offload enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable hardware offloading on the server"
+      },
+      {
+        "name": "hardware offload mode",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Configure hardware offload accelerator mode"
+      },
+      {
+        "name": "index create memory (KB)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Memory for index create sorts (kBytes)"
+      },
+      {
+        "name": "in-doubt xact resolution",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Recovery policy for DTC transactions with unknown outcome"
+      },
+      {
+        "name": "lightweight pooling",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "User mode scheduler uses lightweight pooling"
+      },
+      {
+        "name": "locks",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Number of locks for all users"
+      },
+      {
+        "name": "max degree of parallelism",
+        "value": 12,
+        "value_in_use": 12,
+        "description": "maximum degree of parallelism"
+      },
+      {
+        "name": "max full-text crawl range",
+        "value": 4,
+        "value_in_use": 4,
+        "description": "Maximum  crawl ranges allowed in full-text indexing"
+      },
+      {
+        "name": "max RPC request params (KB)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Maximum memory for RPC request parameters (kBytes)"
+      },
+      {
+        "name": "max server memory (MB)",
+        "value": 2147483647,
+        "value_in_use": 2147483647,
+        "description": "Maximum size of server memory (MB)"
+      },
+      {
+        "name": "max text repl size (B)",
+        "value": 65536,
+        "value_in_use": 65536,
+        "description": "Maximum size of a text field in replication."
+      },
+      {
+        "name": "max worker threads",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Maximum worker threads"
+      },
+      {
+        "name": "media retention",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Tape retention period in days"
+      },
+      {
+        "name": "min memory per query (KB)",
+        "value": 1024,
+        "value_in_use": 1024,
+        "description": "minimum memory per query (kBytes)"
+      },
+      {
+        "name": "min server memory (MB)",
+        "value": 0,
+        "value_in_use": 16,
+        "description": "Minimum size of server memory (MB)"
+      },
+      {
+        "name": "nested triggers",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Allow triggers to be invoked within triggers"
+      },
+      {
+        "name": "network packet size (B)",
+        "value": 4096,
+        "value_in_use": 4096,
+        "description": "Network packet size"
+      },
+      {
+        "name": "Ole Automation Procedures",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable Ole Automation Procedures"
+      },
+      {
+        "name": "open objects",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Number of open database objects"
+      },
+      {
+        "name": "openrowset auto_create_statistics",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Enable or disable auto create statistics for openrowset sources."
+      },
+      {
+        "name": "optimize for ad hoc workloads",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "When this option is set, plan cache size is further reduced for single-use adhoc OLTP workload."
+      },
+      {
+        "name": "PH timeout (s)",
+        "value": 60,
+        "value_in_use": 60,
+        "description": "DB connection timeout for full-text protocol handler (s)"
+      },
+      {
+        "name": "polybase enabled",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Configure SQL Server to connect to external data sources through PolyBase"
+      },
+      {
+        "name": "polybase network encryption",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Configure SQL Server to encrypt control and data channels when using PolyBase"
+      },
+      {
+        "name": "precompute rank",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Use precomputed rank for full-text query"
+      },
+      {
+        "name": "priority boost",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Priority boost"
+      },
+      {
+        "name": "query governor cost limit",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Maximum estimated cost allowed by query governor"
+      },
+      {
+        "name": "query wait (s)",
+        "value": -1,
+        "value_in_use": -1,
+        "description": "maximum time to wait for query memory (s)"
+      },
+      {
+        "name": "recovery interval (min)",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Maximum recovery interval in minutes"
+      },
+      {
+        "name": "remote access",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Allow remote access"
+      },
+      {
+        "name": "remote admin connections",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Dedicated Admin Connections are allowed from remote clients"
+      },
+      {
+        "name": "remote data archive",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Allow the use of the REMOTE_DATA_ARCHIVE data access for databases"
+      },
+      {
+        "name": "remote login timeout (s)",
+        "value": 10,
+        "value_in_use": 10,
+        "description": "remote login timeout"
+      },
+      {
+        "name": "remote proc trans",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Create DTC transaction for remote procedures"
+      },
+      {
+        "name": "remote query timeout (s)",
+        "value": 600,
+        "value_in_use": 600,
+        "description": "remote query timeout"
+      },
+      {
+        "name": "Replication XPs",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable Replication XPs"
+      },
+      {
+        "name": "scan for startup procs",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "scan for startup stored procedures"
+      },
+      {
+        "name": "server trigger recursion",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Allow recursion for server level triggers"
+      },
+      {
+        "name": "set working set size",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "set working set size"
+      },
+      {
+        "name": "show advanced options",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "show advanced options"
+      },
+      {
+        "name": "SLOG memory quota (%)",
+        "value": 75,
+        "value_in_use": 75,
+        "description": "SLOG memory quota percentage"
+      },
+      {
+        "name": "SMO and DMO XPs",
+        "value": 1,
+        "value_in_use": 1,
+        "description": "Enable or disable SMO and DMO XPs"
+      },
+      {
+        "name": "suppress recovery model errors",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Return warning instead of error for unsupported ALTER DATABASE SET RECOVERY command"
+      },
+      {
+        "name": "tempdb metadata memory-optimized",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Tempdb metadata memory-optimized is disabled by default."
+      },
+      {
+        "name": "transform noise words",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Transform noise words for full-text query"
+      },
+      {
+        "name": "two digit year cutoff",
+        "value": 2049,
+        "value_in_use": 2049,
+        "description": "two digit year cutoff"
+      },
+      {
+        "name": "user connections",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Number of user connections allowed"
+      },
+      {
+        "name": "user options",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "user options"
+      },
+      {
+        "name": "version high part of SQL Server",
+        "value": 1114112,
+        "value_in_use": 1114112,
+        "description": "version high part of SQL Server that model database copied for"
+      },
+      {
+        "name": "version low part of SQL Server",
+        "value": 65536007,
+        "value_in_use": 65536007,
+        "description": "version low part of SQL Server that model database copied for"
+      },
+      {
+        "name": "xp_cmdshell",
+        "value": 0,
+        "value_in_use": 0,
+        "description": "Enable or disable command shell"
+      }
+    ],
+    "System": [
+      {
+        "cpu_count": 12,
+        "scheduler_count": 12,
+        "physical_memory_kb": 33149836,
+        "committed_kb": 876336,
+        "committed_target_kb": 16835672,
+        "sqlserver_start_time": "2026-11-08T22:19:04.247"
+      }
+    ],
+    "Files": [
+      {
+        "database_name": "master",
+        "name": "master",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\master.mdf",
+        "size": 592,
+        "growth": 10,
+        "is_percent_growth": true
+      },
+      {
+        "database_name": "master",
+        "name": "mastlog",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\mastlog.ldf",
+        "size": 256,
+        "growth": 10,
+        "is_percent_growth": true
+      },
+      {
+        "database_name": "tempdb",
+        "name": "tempdev",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "templog",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\templog.ldf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp2",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_2.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp3",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_3.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp4",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_4.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp5",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_5.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp6",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_6.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp7",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_7.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "tempdb",
+        "name": "temp8",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\tempdb_mssql_8.ndf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "model",
+        "name": "modeldev",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\model.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "model",
+        "name": "modellog",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\modellog.ldf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "msdb",
+        "name": "MSDBData",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\MSDBData.mdf",
+        "size": 1992,
+        "growth": 10,
+        "is_percent_growth": true
+      },
+      {
+        "database_name": "msdb",
+        "name": "MSDBLog",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\MSDBLog.ldf",
+        "size": 96,
+        "growth": 10,
+        "is_percent_growth": true
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_n1000_p256",
+        "name": "par_sql_sqlserver_local_n1000_p256",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_n1000_p256.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_n1000_p256",
+        "name": "par_sql_sqlserver_local_n1000_p256_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_n1000_p256_log.ldf",
+        "size": 9216,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_n10000_p256",
+        "name": "par_sql_sqlserver_local_n10000_p256",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_n10000_p256.mdf",
+        "size": 9216,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_n10000_p256",
+        "name": "par_sql_sqlserver_local_n10000_p256_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_n10000_p256_log.ldf",
+        "size": 17408,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_n10000_p2048",
+        "name": "par_sql_sqlserver_local_n10000_p2048",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_n10000_p2048.mdf",
+        "size": 25600,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_n10000_p2048",
+        "name": "par_sql_sqlserver_local_n10000_p2048_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_n10000_p2048_log.ldf",
+        "size": 25600,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_operations",
+        "name": "par_sql_sqlserver_local_operations",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_operations.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_operations",
+        "name": "par_sql_sqlserver_local_operations_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_operations_log.ldf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_restore",
+        "name": "par_sql_sqlserver_local_operations",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_restore.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_local_restore",
+        "name": "par_sql_sqlserver_local_operations_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_local_restore_log.ldf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_n1000_p256",
+        "name": "par_sql_sqlserver_sql_n1000_p256",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_n1000_p256.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_n1000_p256",
+        "name": "par_sql_sqlserver_sql_n1000_p256_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_n1000_p256_log.ldf",
+        "size": 9216,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_n10000_p256",
+        "name": "par_sql_sqlserver_sql_n10000_p256",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_n10000_p256.mdf",
+        "size": 9216,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_n10000_p256",
+        "name": "par_sql_sqlserver_sql_n10000_p256_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_n10000_p256_log.ldf",
+        "size": 17408,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_n10000_p2048",
+        "name": "par_sql_sqlserver_sql_n10000_p2048",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_n10000_p2048.mdf",
+        "size": 25600,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_n10000_p2048",
+        "name": "par_sql_sqlserver_sql_n10000_p2048_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_n10000_p2048_log.ldf",
+        "size": 25600,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_operations",
+        "name": "par_sql_sqlserver_sql_operations",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_operations.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_operations",
+        "name": "par_sql_sqlserver_sql_operations_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_operations_log.ldf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_restore",
+        "name": "par_sql_sqlserver_sql_operations",
+        "type_desc": "ROWS",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_restore.mdf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      },
+      {
+        "database_name": "par_sql_sqlserver_sql_restore",
+        "name": "par_sql_sqlserver_sql_operations_log",
+        "type_desc": "LOG",
+        "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_sql_restore_log.ldf",
+        "size": 1024,
+        "growth": 8192,
+        "is_percent_growth": false
+      }
+    ],
+    "Version": [
+      {
+        "version": "Microsoft SQL Server 2025 (RTM) - 17.0.1000.7 (X64) \n\tOct 21 2025 12:05:57 \n\tCopyright (C) 2025 Microsoft Corporation\n\tStandard Developer Edition (64-bit) on Windows 10 Pro 10.0 <X64> (Build 26200: ) (Hypervisor)\n",
+        "edition": "Standard Developer Edition (64-bit)",
+        "product_version": "17.0.1000.7",
+        "instance": null,
+        "server_name": "CORV-TTA-96",
+        "windows_only": 0
+      }
+    ],
+    "Connection": [
+      {
+        "login_name": "MicrosoftAccount\\thomasmtaylor2@gmail.com",
+        "sysadmin": 1,
+        "net_transport": "TCP",
+        "auth_scheme": "NTLM",
+        "encrypt_option": "TRUE",
+        "local_net_address": "127.0.0.1",
+        "local_tcp_port": 1433,
+        "client_net_address": "127.0.0.1"
+      }
+    ],
+    "Databases": [
+      {
+        "name": "master",
+        "compatibility_level": 170,
+        "recovery_model_desc": "SIMPLE",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "ON",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "tempdb",
+        "compatibility_level": 170,
+        "recovery_model_desc": "SIMPLE",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "model",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "msdb",
+        "compatibility_level": 170,
+        "recovery_model_desc": "SIMPLE",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "ON",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_local_n1000_p256",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_local_n10000_p256",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_local_n10000_p2048",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_local_operations",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_local_restore",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_sql_n1000_p256",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_sql_n10000_p256",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_sql_n10000_p2048",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_sql_operations",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      },
+      {
+        "name": "par_sql_sqlserver_sql_restore",
+        "compatibility_level": 170,
+        "recovery_model_desc": "FULL",
+        "page_verify_option_desc": "CHECKSUM",
+        "delayed_durability_desc": "DISABLED",
+        "is_read_committed_snapshot_on": false,
+        "snapshot_isolation_state_desc": "OFF",
+        "is_auto_close_on": false,
+        "is_auto_shrink_on": false,
+        "is_accelerated_database_recovery_on": false
+      }
+    ]
+  },
+  "Metadata": {
+    "Authentication": "Sql",
+    "WorkerWarmupOperations": 10,
+    "Utc": "2026-11-09T07:03:40.5643525Z",
+    "Connection": "tcp:127.0.0.1,1433; TLS encrypted, server certificate trusted without validation; explicit pooling modes; authentication recorded separately",
+    "Runtime": {
+      "tfm": "net10.0",
+      "includedFrameworks": [
+        {
+          "name": "Microsoft.NETCore.App",
+          "version": "10.0.14"
+        },
+        {
+          "name": "Microsoft.WindowsDesktop.App",
+          "version": "10.0.14"
+        }
+      ],
+      "rollForwardOnNoCandidateFx": 1,
+      "configProperties": {
+        "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+        "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+        "System.Runtime.TieredCompilation": true,
+        "System.Runtime.TieredCompilation.QuickJit": true,
+        "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+        "System.Runtime.Loader.UseRidGraph": true,
+        "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+      }
+    },
+    "Protocol": "review-corrected-v2",
+    "BaseCommit": "68e715b909919b452e3a874ca60615a79c0fe302",
+    "BenchmarkLogin": "par_benchmark_review",
+    "Repetitions": 7,
+    "Seed": 1108,
+    "IndexComparison": "Counterbalanced paired reuse reads; ten checked warm-ups after each condition change",
+    "PowerShell": "7.6.9"
+  },
+  "Protocol": {
+    "Version": "review-corrected-v2",
+    "WorkerWarmupOperations": 10,
+    "IndexComparison": "Counterbalanced paired reuse reads; ten checked warm-ups after each condition change"
+  },
+  "Psu": {
+    "Version": "2026.3.0",
+    "Utc": "2026-11-09T07:04:58.395483Z",
+    "Settings": {
+      "apiSecurityModel": null,
+      "concurrentJobLimit": 1000,
+      "maxJobMemory": 0,
+      "logLevel": null,
+      "scriptBaseFolder": "scripts",
+      "gitSyncEnabled": false
+    },
+    "PreviewHashes": [
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-PostgresEndpoint.ps1",
+        "Hash": "05E21FCC2F3E4D8195B8E42696690165E1C5237D2C4A87C3E00F8C11D0AAB4CA"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-SqliteEndpoint.ps1",
+        "Hash": "334AE7F7E0A98AE63279DC01D60AA6347394D55C90DD61C782FDDC3951EF97BD"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-SqlServerEndpoint.ps1",
+        "Hash": "F0D7B51C2F2C5D290B74A20A6B1FCC47A1EFC298DD99C389BA3D33BE4E4E19E9"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Invoke-SqlServerImport.ps1",
+        "Hash": "D8C643FABC600B9D48EC0F6F2B6C9124459C9D719C8371B911C847462E2FBB83"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Postgres.ps1",
+        "Hash": "753A33E8701710CDE4E1ACF432939235E5CA85A44C2D447E2B5CF93FB4BFB378"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\Sqlite.ps1",
+        "Hash": "046EC1BB10722967795CBA779AB4578CE5B9B58FC1795C74CC0011ADB1A3DB96"
+      },
+      {
+        "Path": "C:\\dev-psu\\Repository\\scripts\\benchmarks\\database\\SqlServer.ps1",
+        "Hash": "A0A4AC5E4819257B0EFFB6B65AB6F137E854260C7AD036BCFD1BA6875028EE2B"
+      }
+    ],
+    "Environments": [
+      {
+        "name": "Integrated",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "PowerShell 7",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "Windows PowerShell 5.1",
+        "version": null,
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      }
+    ]
+  },
+  "Authentication": {
+    "Direct": {
+      "login_name": "par_benchmark_review",
+      "sysadmin": 0,
+      "transport": "TCP",
+      "authentication": "SQL",
+      "address": "127.0.0.1",
+      "port": 1433
+    },
+    "Endpoint": {
+      "login_name": "par_benchmark_review",
+      "sysadmin": 0,
+      "db_owner": 1,
+      "authentication": "SQL",
+      "transport": "TCP"
+    },
+    "Job": {
+      "login_name": "par_benchmark_review",
+      "sysadmin": 0,
+      "db_owner": 1,
+      "authentication": "SQL",
+      "transport": "TCP"
+    },
+    "DiscoveryUsesWindowsAdministrator": true,
+    "WorkloadMode": "Sql"
+  },
+  "Validation": {
+    "ConcurrentOperationsIncludingWarmups": 11200,
+    "Pass": "sqlserver-reviewed",
+    "Files": [
+      {
+        "File": "direct/reads.jsonl",
+        "Samples": 600,
+        "Measured": 525,
+        "Correct": true
+      },
+      {
+        "File": "direct/writes.jsonl",
+        "Samples": 192,
+        "Measured": 168,
+        "Correct": true
+      },
+      {
+        "File": "followup/endpoints.jsonl",
+        "Samples": 168,
+        "Measured": 147,
+        "Correct": true
+      },
+      {
+        "File": "followup/imports.jsonl",
+        "Samples": 32,
+        "Measured": 28,
+        "Correct": true
+      },
+      {
+        "File": "concurrency/bursts.jsonl",
+        "Samples": 20,
+        "Measured": 15,
+        "Correct": true
+      }
+    ],
+    "Correct": true,
+    "RetainedDatabases": [
+      {
+        "Shape": "n1000-p256",
+        "RowsChecked": 1000,
+        "DocumentsChecked": 1000,
+        "Correct": true
+      },
+      {
+        "Shape": "n10000-p256",
+        "RowsChecked": 10000,
+        "DocumentsChecked": 10000,
+        "Correct": true
+      },
+      {
+        "Shape": "n10000-p2048",
+        "RowsChecked": 10000,
+        "DocumentsChecked": 10000,
+        "Correct": true
+      }
+    ],
+    "PreviewRestored": true,
+    "CredentialFilesCreated": true,
+    "OperationalChecks": 7,
+    "TemporaryCredentialRemoved": true
+  },
+  "Evidence": {
+    "Preservation": "Checksum COPY_ONLY native backups of all three measured databases; operational backup actually restored and field-checked; source/schema metadata retained independently of installed server",
+    "Archive": "tools/output/database/sqlserver-reviewed-evidence.zip",
+    "Sources": "direct/source, followup/source, concurrency/source, operations/source, retained/source",
+    "Exclusions": [
+      "sqlserver-discovery",
+      "sqlserver-setup-initial"
+    ],
+    "Root": "tools/output/database/sqlserver-reviewed",
+    "Manifest": "manifest.json SHA256 per file"
+  },
+  "Reads": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 66.7046,
+        "Median": 67.3319,
+        "P95": 69.8912,
+        "Max": 69.8912
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.3476,
+        "Median": 2.6246,
+        "P95": 2.763,
+        "Max": 2.763
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.7797,
+        "Median": 1.9176,
+        "P95": 1.9699,
+        "Max": 1.9699
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.8224,
+        "Median": 1.9393,
+        "P95": 2.2414,
+        "Max": 2.2414
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 65.1178,
+        "Median": 65.2806,
+        "P95": 71.9212,
+        "Max": 71.9212
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.6412,
+        "Median": 0.7899,
+        "P95": 0.9163,
+        "Max": 0.9163
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.425,
+        "Median": 0.5238,
+        "P95": 0.6202,
+        "Max": 0.6202
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 67.6722,
+        "Median": 68.4529,
+        "P95": 69.3085,
+        "Max": 69.3085
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.1997,
+        "Median": 3.5204,
+        "P95": 4.2445,
+        "Max": 4.2445
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.0866,
+        "Median": 3.3837,
+        "P95": 7.397,
+        "Max": 7.397
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 65.9899,
+        "Median": 66.6128,
+        "P95": 71.1299,
+        "Max": 71.1299
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.0344,
+        "Median": 2.2297,
+        "P95": 2.7408,
+        "Max": 2.7408
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.8009,
+        "Median": 2.0239,
+        "P95": 2.2706,
+        "Max": 2.2706
+      },
+      "Rows": 50,
+      "JsonCharacters": 17989
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.7594,
+        "Median": 64.9902,
+        "P95": 67.9071,
+        "Max": 67.9071
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.5517,
+        "Median": 0.682,
+        "P95": 0.8935,
+        "Max": 0.8935
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.368,
+        "Median": 0.5157,
+        "P95": 0.6184,
+        "Max": 0.6184
+      },
+      "Rows": 1,
+      "JsonCharacters": 361
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 65.4396,
+        "Median": 65.7487,
+        "P95": 67.4856,
+        "Max": 67.4856
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.3643,
+        "Median": 1.5245,
+        "P95": 1.8888,
+        "Max": 1.8888
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.0884,
+        "Median": 1.243,
+        "P95": 1.6472,
+        "Max": 1.6472
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 65.8831,
+        "Median": 66.3633,
+        "P95": 67.948,
+        "Max": 67.948
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.6008,
+        "Median": 1.6834,
+        "P95": 2.0592,
+        "Max": 2.0592
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.3207,
+        "Median": 1.5956,
+        "P95": 1.6616,
+        "Max": 1.6616
+      },
+      "Rows": 50,
+      "JsonCharacters": 2239
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 65.8045,
+        "Median": 66.2516,
+        "P95": 69.2322,
+        "Max": 69.2322
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.2637,
+        "Median": 1.3464,
+        "P95": 1.7576,
+        "Max": 1.7576
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.0145,
+        "Median": 1.0994,
+        "P95": 1.3334,
+        "Max": 1.3334
+      },
+      "Rows": 20,
+      "JsonCharacters": 7197
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 73.542,
+        "Median": 75.3319,
+        "P95": 77.4812,
+        "Max": 77.4812
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.7729,
+        "Median": 10.719,
+        "P95": 15.977,
+        "Max": 15.977
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 8.9332,
+        "Median": 9.2843,
+        "P95": 32.3991,
+        "Max": 32.3991
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 23.2105,
+        "Median": 23.376,
+        "P95": 24.2846,
+        "Max": 24.2846
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.0013,
+        "Median": 64.7386,
+        "P95": 68.1412,
+        "Max": 68.1412
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3806,
+        "Median": 0.5588,
+        "P95": 0.6663,
+        "Max": 0.6663
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3164,
+        "Median": 0.4579,
+        "P95": 0.5532,
+        "Max": 0.5532
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 71.6839,
+        "Median": 72.7252,
+        "P95": 75.7263,
+        "Max": 75.7263
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.5258,
+        "Median": 7.6535,
+        "P95": 8.0632,
+        "Max": 8.0632
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.2751,
+        "Median": 7.6709,
+        "P95": 7.9946,
+        "Max": 7.9946
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 78.6716,
+        "Median": 80.4777,
+        "P95": 83.3644,
+        "Max": 83.3644
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 13.4333,
+        "Median": 15.8841,
+        "P95": 37.0661,
+        "Max": 37.0661
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 13.5524,
+        "Median": 16.2488,
+        "P95": 17.9992,
+        "Max": 17.9992
+      },
+      "Rows": 500,
+      "JsonCharacters": 1076385
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.4209,
+        "Median": 64.7229,
+        "P95": 65.5566,
+        "Max": 65.5566
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4796,
+        "Median": 0.4897,
+        "P95": 0.6418,
+        "Max": 0.6418
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.2901,
+        "Median": 0.4184,
+        "P95": 0.568,
+        "Max": 0.568
+      },
+      "Rows": 1,
+      "JsonCharacters": 2154
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.9596,
+        "Median": 65.7958,
+        "P95": 67.9088,
+        "Max": 67.9088
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.4477,
+        "Median": 1.5034,
+        "P95": 1.6383,
+        "Max": 1.6383
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.3067,
+        "Median": 1.3374,
+        "P95": 1.6429,
+        "Max": 1.6429
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 70.5454,
+        "Median": 71.5314,
+        "P95": 74.3495,
+        "Max": 74.3495
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 6.6543,
+        "Median": 6.9102,
+        "P95": 19.4889,
+        "Max": 19.4889
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 6.6399,
+        "Median": 6.7711,
+        "P95": 9.5994,
+        "Max": 9.5994
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.6597,
+        "Median": 65.4282,
+        "P95": 66.9401,
+        "Max": 66.9401
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.9461,
+        "Median": 1.2428,
+        "P95": 1.6066,
+        "Max": 1.6066
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.772,
+        "Median": 0.8711,
+        "P95": 1.2745,
+        "Max": 1.2745
+      },
+      "Rows": 20,
+      "JsonCharacters": 43059
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 80.3461,
+        "Median": 80.9596,
+        "P95": 81.7063,
+        "Max": 81.7063
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.1308,
+        "Median": 17.045,
+        "P95": 21.1423,
+        "Max": 21.1423
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.5488,
+        "Median": 16.6564,
+        "P95": 19.8043,
+        "Max": 19.8043
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-scan",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 15.4535,
+        "Median": 15.6843,
+        "P95": 16.8083,
+        "Max": 16.8083
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.5603,
+        "Median": 65.3313,
+        "P95": 66.6908,
+        "Max": 66.6908
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4391,
+        "Median": 0.5273,
+        "P95": 0.612,
+        "Max": 0.612
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3047,
+        "Median": 0.3794,
+        "P95": 0.5298,
+        "Max": 0.5298
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 82.7402,
+        "Median": 83.5107,
+        "P95": 85.3994,
+        "Max": 85.3994
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.1063,
+        "Median": 18.3327,
+        "P95": 19.4149,
+        "Max": 19.4149
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.9962,
+        "Median": 18.3856,
+        "P95": 19.2024,
+        "Max": 19.2024
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 76.5497,
+        "Median": 77.1917,
+        "P95": 79.7162,
+        "Max": 79.7162
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 12.4947,
+        "Median": 12.7231,
+        "P95": 16.3518,
+        "Max": 16.3518
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 12.3001,
+        "Median": 12.58,
+        "P95": 16.2816,
+        "Max": 16.2816
+      },
+      "Rows": 500,
+      "JsonCharacters": 180385
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.0421,
+        "Median": 64.5155,
+        "P95": 66.0948,
+        "Max": 66.0948
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.4067,
+        "Median": 0.4498,
+        "P95": 0.5951,
+        "Max": 0.5951
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.3099,
+        "Median": 0.3579,
+        "P95": 0.4604,
+        "Max": 0.4604
+      },
+      "Rows": 1,
+      "JsonCharacters": 362
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 66.574,
+        "Median": 67.4396,
+        "P95": 69.8722,
+        "Max": 69.8722
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.492,
+        "Median": 2.8597,
+        "P95": 3.2362,
+        "Max": 3.2362
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-offset",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.3635,
+        "Median": 2.4472,
+        "P95": 3.1129,
+        "Max": 3.1129
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 70.6048,
+        "Median": 71.2149,
+        "P95": 71.9799,
+        "Max": 71.9799
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 6.8233,
+        "Median": 7.1194,
+        "P95": 9.8291,
+        "Max": 9.8291
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 6.671,
+        "Median": 6.7184,
+        "P95": 9.7314,
+        "Max": 9.7314
+      },
+      "Rows": 500,
+      "JsonCharacters": 22885
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "new",
+      "ClientMs": {
+        "N": 7,
+        "Min": 64.8869,
+        "Median": 65.82,
+        "P95": 66.2393,
+        "Max": 66.2393
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "pooled",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.9395,
+        "Median": 1.1674,
+        "P95": 1.4295,
+        "Max": 1.4295
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "Mode": "reuse",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.83,
+        "Median": 0.9701,
+        "P95": 1.2281,
+        "Max": 1.2281
+      },
+      "Rows": 20,
+      "JsonCharacters": 7219
+    }
+  ],
+  "Writes": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "autocommit-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.5327,
+        "Median": 12.3873,
+        "P95": 13.2026,
+        "Max": 13.2026
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.2464,
+        "Median": 7.5409,
+        "P95": 20.0205,
+        "Max": 20.0205
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.0207,
+        "Median": 12.0369,
+        "P95": 13.399,
+        "Max": 13.399
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-documents-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 10.2413,
+        "Median": 14.6493,
+        "P95": 14.7819,
+        "Max": 14.7819
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.8686,
+        "Median": 8.0598,
+        "P95": 8.5565,
+        "Max": 8.5565
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "refresh-rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.4607,
+        "Median": 13.3818,
+        "P95": 13.5459,
+        "Max": 13.5459
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.9911,
+        "Median": 12.0031,
+        "P95": 13.2611,
+        "Max": 13.2611
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.0413,
+        "Median": 1.1079,
+        "P95": 1.3142,
+        "Max": 1.3142
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "autocommit-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 11.8299,
+        "Median": 12.9018,
+        "P95": 15.2048,
+        "Max": 15.2048
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.8302,
+        "Median": 8.5626,
+        "P95": 10.0724,
+        "Max": 10.0724
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.8729,
+        "Median": 9.3176,
+        "P95": 12.4198,
+        "Max": 12.4198
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-documents-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.0076,
+        "Median": 4.1607,
+        "P95": 4.5766,
+        "Max": 4.5766
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.6632,
+        "Median": 3.9824,
+        "P95": 4.3057,
+        "Max": 4.3057
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "refresh-rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1.6046,
+        "Median": 1.6793,
+        "P95": 1.8768,
+        "Max": 1.8768
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 7.2119,
+        "Median": 8.1967,
+        "P95": 9.4246,
+        "Max": 9.4246
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 2.4038,
+        "Median": 2.4427,
+        "P95": 2.4798,
+        "Max": 2.4798
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "autocommit-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 10.2033,
+        "Median": 12.1524,
+        "P95": 13.3747,
+        "Max": 13.3747
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 4.7935,
+        "Median": 5.8826,
+        "P95": 8.0919,
+        "Max": 8.0919
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-documents",
+      "ClientMs": {
+        "N": 7,
+        "Min": 6.2849,
+        "Median": 9.6989,
+        "P95": 11.0995,
+        "Max": 11.0995
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-documents-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 10.7275,
+        "Median": 14.0938,
+        "P95": 14.9149,
+        "Max": 14.9149
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 3.6519,
+        "Median": 4.8128,
+        "P95": 6.1724,
+        "Max": 6.1724
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "refresh-rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 9.3511,
+        "Median": 13.1336,
+        "P95": 13.5496,
+        "Max": 13.5496
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 5.0167,
+        "Median": 5.3308,
+        "P95": 8.1385,
+        "Max": 8.1385
+      },
+      "Rows": 100
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 0.9723,
+        "Median": 1.035,
+        "P95": 1.1126,
+        "Max": 1.1126
+      },
+      "Rows": 100
+    }
+  ],
+  "Endpoints": [
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.9036,
+        "Median": 21.2114,
+        "P95": 22.0445,
+        "Max": 22.0445
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 18.0952,
+        "Median": 20.3949,
+        "P95": 21.216,
+        "Max": 21.216
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.4331,
+        "Median": 0.7084,
+        "P95": 0.795,
+        "Max": 0.795
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 4.2785,
+        "Median": 4.3963,
+        "P95": 4.8502,
+        "Max": 4.8502
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 18098.0,
+        "Median": 18098.0,
+        "P95": 18098.0,
+        "Max": 18098.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.0619,
+        "Median": 17.4751,
+        "P95": 18.7071,
+        "Max": 18.7071
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.8286,
+        "Median": 17.1833,
+        "P95": 18.3599,
+        "Max": 18.3599
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1404,
+        "Median": 0.1596,
+        "P95": 0.2368,
+        "Max": 0.2368
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.4718,
+        "Median": 2.5864,
+        "P95": 2.9324,
+        "Max": 2.9324
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 470.0,
+        "Median": 470.0,
+        "P95": 470.0,
+        "Max": 470.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "document-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 19.2121,
+        "Median": 20.723,
+        "P95": 23.4261,
+        "Max": 23.4261
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 18.7655,
+        "Median": 20.2337,
+        "P95": 22.8486,
+        "Max": 22.8486
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.3625,
+        "Median": 0.3951,
+        "P95": 0.4689,
+        "Max": 0.4689
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 5.2296,
+        "Median": 5.5938,
+        "P95": 6.2747,
+        "Max": 6.2747
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2348.0,
+        "Median": 2348.0,
+        "P95": 2348.0,
+        "Max": 2348.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 19.1958,
+        "Median": 20.6894,
+        "P95": 23.1988,
+        "Max": 23.1988
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 18.2586,
+        "Median": 19.5736,
+        "P95": 22.3116,
+        "Max": 22.3116
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.6841,
+        "Median": 0.7341,
+        "P95": 0.9864,
+        "Max": 0.9864
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 3.8161,
+        "Median": 3.9234,
+        "P95": 4.8518,
+        "Max": 4.8518
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 18097.0,
+        "Median": 18098.0,
+        "P95": 18098.0,
+        "Max": 18098.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.4935,
+        "Median": 17.2428,
+        "P95": 18.288,
+        "Max": 18.288
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.2311,
+        "Median": 17.021,
+        "P95": 18.04,
+        "Max": 18.04
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1403,
+        "Median": 0.1566,
+        "P95": 0.2499,
+        "Max": 0.2499
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.5347,
+        "Median": 2.8068,
+        "P95": 2.9902,
+        "Max": 2.9902
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 468.0,
+        "Median": 470.0,
+        "P95": 470.0,
+        "Max": 470.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.1761,
+        "Median": 18.484,
+        "P95": 22.6399,
+        "Max": 22.6399
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.7074,
+        "Median": 18.0385,
+        "P95": 22.1081,
+        "Max": 22.1081
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.3641,
+        "Median": 0.3765,
+        "P95": 0.4418,
+        "Max": 0.4418
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 3.587,
+        "Median": 3.6811,
+        "P95": 4.0549,
+        "Max": 4.0549
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2347.0,
+        "Median": 2348.0,
+        "P95": 2348.0,
+        "Max": 2348.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n1000-p256",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.36,
+        "Median": 18.5963,
+        "P95": 19.4083,
+        "Max": 19.4083
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.8955,
+        "Median": 18.1405,
+        "P95": 18.966,
+        "Max": 18.966
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.3615,
+        "Median": 0.3731,
+        "P95": 0.4078,
+        "Max": 0.4078
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.9906,
+        "Median": 3.4268,
+        "P95": 4.4349,
+        "Max": 4.4349
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 7306.0,
+        "Median": 7306.0,
+        "P95": 7306.0,
+        "Max": 7306.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 32.5651,
+        "Median": 37.3636,
+        "P95": 50.9328,
+        "Max": 50.9328
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 30.7404,
+        "Median": 34.6056,
+        "P95": 36.3861,
+        "Max": 36.3861
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.7331,
+        "Median": 1.9307,
+        "P95": 16.2752,
+        "Max": 16.2752
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 9.9309,
+        "Median": 10.1371,
+        "P95": 11.375,
+        "Max": 11.375
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 1076494.0,
+        "Median": 1076495.0,
+        "P95": 1076495.0,
+        "Max": 1076495.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.4825,
+        "Median": 17.8671,
+        "P95": 19.1951,
+        "Max": 19.1951
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.3676,
+        "Median": 17.7362,
+        "P95": 19.0151,
+        "Max": 19.0151
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.0722,
+        "Median": 0.0885,
+        "P95": 0.1484,
+        "Max": 0.1484
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.5575,
+        "Median": 2.7416,
+        "P95": 2.9598,
+        "Max": 2.9598
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2262.0,
+        "Median": 2263.0,
+        "P95": 2263.0,
+        "Max": 2263.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "document-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 25.3395,
+        "Median": 27.6316,
+        "P95": 29.4621,
+        "Max": 29.4621
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 24.5345,
+        "Median": 26.8261,
+        "P95": 28.9024,
+        "Max": 28.9024
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.5043,
+        "Median": 0.7559,
+        "P95": 0.9219,
+        "Max": 0.9219
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 9.4747,
+        "Median": 9.75,
+        "P95": 11.9281,
+        "Max": 11.9281
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22992.0,
+        "Median": 22994.0,
+        "P95": 22995.0,
+        "Max": 22995.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 38.9933,
+        "Median": 43.2288,
+        "P95": 61.4662,
+        "Max": 61.4662
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 37.0988,
+        "Median": 40.9387,
+        "P95": 59.5922,
+        "Max": 59.5922
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.8195,
+        "Median": 2.2372,
+        "P95": 9.4494,
+        "Max": 9.4494
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 15.8113,
+        "Median": 16.2168,
+        "P95": 28.9327,
+        "Max": 28.9327
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 1076494.0,
+        "Median": 1076495.0,
+        "P95": 1076495.0,
+        "Max": 1076495.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.6421,
+        "Median": 18.2681,
+        "P95": 22.285,
+        "Max": 22.285
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 17.5161,
+        "Median": 18.1452,
+        "P95": 22.1485,
+        "Max": 22.1485
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.0747,
+        "Median": 0.082,
+        "P95": 0.1296,
+        "Max": 0.1296
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.555,
+        "Median": 2.7981,
+        "P95": 6.738,
+        "Max": 6.738
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 2262.0,
+        "Median": 2262.0,
+        "P95": 2263.0,
+        "Max": 2263.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 25.3892,
+        "Median": 28.728,
+        "P95": 32.2945,
+        "Max": 32.2945
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 24.7993,
+        "Median": 26.7201,
+        "P95": 27.9316,
+        "Max": 27.9316
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.5109,
+        "Median": 0.7469,
+        "P95": 6.5661,
+        "Max": 6.5661
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 8.748,
+        "Median": 9.4295,
+        "P95": 9.5895,
+        "Max": 9.5895
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22993.0,
+        "Median": 22994.0,
+        "P95": 22994.0,
+        "Max": 22994.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 18.2977,
+        "Median": 19.7818,
+        "P95": 20.917,
+        "Max": 20.917
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 18.1146,
+        "Median": 19.564,
+        "P95": 20.6994,
+        "Max": 20.6994
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1429,
+        "Median": 0.1702,
+        "P95": 0.1753,
+        "Max": 0.1753
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.9667,
+        "Median": 3.1332,
+        "P95": 3.5305,
+        "Max": 3.5305
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 43168.0,
+        "Median": 43168.0,
+        "P95": 43168.0,
+        "Max": 43168.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-filter-index",
+      "ClientMs": {
+        "N": 7,
+        "Min": 38.7106,
+        "Median": 42.0444,
+        "P95": 68.7722,
+        "Max": 68.7722
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 36.1045,
+        "Median": 37.5178,
+        "P95": 41.1402,
+        "Max": 41.1402
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.8527,
+        "Median": 2.4724,
+        "P95": 27.5383,
+        "Max": 27.5383
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 18.2197,
+        "Median": 18.3871,
+        "P95": 19.9063,
+        "Max": 19.9063
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 180494.0,
+        "Median": 180495.0,
+        "P95": 180495.0,
+        "Max": 180495.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.2051,
+        "Median": 17.5125,
+        "P95": 18.4516,
+        "Max": 18.4516
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.0732,
+        "Median": 17.2515,
+        "P95": 18.2416,
+        "Max": 18.2416
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.085,
+        "Median": 0.1332,
+        "P95": 0.1706,
+        "Max": 0.1706
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.3968,
+        "Median": 2.6175,
+        "P95": 2.887,
+        "Max": 2.887
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 470.0,
+        "Median": 471.0,
+        "P95": 471.0,
+        "Max": 471.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "document-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 37.552,
+        "Median": 40.0033,
+        "P95": 190.8817,
+        "Max": 190.8817
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 36.1673,
+        "Median": 38.969,
+        "P95": 188.1854,
+        "Max": 188.1854
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.9602,
+        "Median": 1.179,
+        "P95": 6.1411,
+        "Max": 6.1411
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 20.2672,
+        "Median": 20.7534,
+        "P95": 21.182,
+        "Max": 21.182
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22994.0,
+        "Median": 22995.0,
+        "P95": 22995.0,
+        "Max": 22995.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-filter",
+      "ClientMs": {
+        "N": 7,
+        "Min": 34.8825,
+        "Median": 37.271,
+        "P95": 48.0035,
+        "Max": 48.0035
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 32.9273,
+        "Median": 34.7566,
+        "P95": 37.48,
+        "Max": 37.48
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 1.8732,
+        "Median": 2.2208,
+        "P95": 10.4319,
+        "Max": 10.4319
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 14.6943,
+        "Median": 15.0546,
+        "P95": 15.5124,
+        "Max": 15.5124
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 180495.0,
+        "Median": 180495.0,
+        "P95": 180495.0,
+        "Max": 180495.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-key",
+      "ClientMs": {
+        "N": 7,
+        "Min": 16.0035,
+        "Median": 17.5427,
+        "P95": 20.8776,
+        "Max": 20.8776
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 15.8343,
+        "Median": 17.35,
+        "P95": 20.6882,
+        "Max": 20.6882
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1,
+        "Median": 0.1175,
+        "P95": 0.1555,
+        "Max": 0.1555
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 2.463,
+        "Median": 2.579,
+        "P95": 2.8545,
+        "Max": 2.8545
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 470.0,
+        "Median": 471.0,
+        "P95": 471.0,
+        "Max": 471.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-projection",
+      "ClientMs": {
+        "N": 7,
+        "Min": 26.6012,
+        "Median": 27.1475,
+        "P95": 31.2665,
+        "Max": 31.2665
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 24.7723,
+        "Median": 25.646,
+        "P95": 27.0305,
+        "Max": 27.0305
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.9357,
+        "Median": 1.0612,
+        "P95": 5.5367,
+        "Max": 5.5367
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 8.9615,
+        "Median": 9.6033,
+        "P95": 10.2559,
+        "Max": 10.2559
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 22994.0,
+        "Median": 22994.0,
+        "P95": 22995.0,
+        "Max": 22995.0
+      },
+      "PowerShell": "7.6.5"
+    },
+    {
+      "Shape": "n10000-p256",
+      "Case": "row-seek",
+      "ClientMs": {
+        "N": 7,
+        "Min": 17.2861,
+        "Median": 17.8643,
+        "P95": 20.8071,
+        "Max": 20.8071
+      },
+      "HttpMs": {
+        "N": 7,
+        "Min": 16.9727,
+        "Median": 17.6353,
+        "P95": 20.3041,
+        "Max": 20.3041
+      },
+      "ParseMs": {
+        "N": 7,
+        "Min": 0.1671,
+        "Median": 0.2287,
+        "P95": 0.3854,
+        "Max": 0.3854
+      },
+      "HandlerMs": {
+        "N": 7,
+        "Min": 3.0034,
+        "Median": 3.1513,
+        "P95": 5.1154,
+        "Max": 5.1154
+      },
+      "ResponseBytes": {
+        "N": 7,
+        "Min": 7328.0,
+        "Median": 7328.0,
+        "P95": 7328.0,
+        "Max": 7328.0
+      },
+      "PowerShell": "7.6.5"
+    }
+  ],
+  "Imports": [
+    {
+      "Location": "direct",
+      "Method": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 109.6797,
+        "Median": 133.1791,
+        "P95": 139.0267,
+        "Max": 139.0267
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 84.128,
+        "Median": 110.6819,
+        "P95": 116.7071,
+        "Max": 116.7071
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 105.6664,
+        "Median": 129.3289,
+        "P95": 135.0719,
+        "Max": 135.0719
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "direct",
+      "Method": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 29.7835,
+        "Median": 31.6945,
+        "P95": 35.6301,
+        "Max": 35.6301
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 8.0832,
+        "Median": 8.4052,
+        "P95": 8.8988,
+        "Max": 8.8988
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 25.8211,
+        "Median": 27.7178,
+        "P95": 31.6031,
+        "Max": 31.6031
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "job",
+      "Method": "rows",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1805.1159,
+        "Median": 1837.6708,
+        "P95": 1971.5982,
+        "Max": 1971.5982
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 143.8038,
+        "Median": 155.0204,
+        "P95": 164.5862,
+        "Max": 164.5862
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 398.7221,
+        "Median": 411.1673,
+        "P95": 430.0944,
+        "Max": 430.0944
+      },
+      "Rows": 1000
+    },
+    {
+      "Location": "job",
+      "Method": "rows-set",
+      "ClientMs": {
+        "N": 7,
+        "Min": 1701.8608,
+        "Median": 1734.7179,
+        "P95": 1814.5723,
+        "Max": 1814.5723
+      },
+      "DatabaseMs": {
+        "N": 7,
+        "Min": 42.936,
+        "Median": 43.218,
+        "P95": 44.3072,
+        "Max": 44.3072
+      },
+      "ScriptMs": {
+        "N": 7,
+        "Min": 299.0224,
+        "Median": 300.2969,
+        "P95": 304.5528,
+        "Max": 304.5528
+      },
+      "Rows": 1000
+    }
+  ],
+  "Bursts": [
+    {
+      "Readers": 0,
+      "Writers": 1,
+      "Bursts": 3,
+      "OperationsPerBurst": 200,
+      "WallMs": {
+        "N": 3,
+        "Min": 103.0869,
+        "Median": 107.4181,
+        "P95": 111.1482,
+        "Max": 111.1482
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 103.0869,
+        "Median": 107.4181,
+        "P95": 111.1482,
+        "Max": 111.1482
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 1799.3993604934672,
+        "Median": 1861.8836117935432,
+        "P95": 1940.1107221189113,
+        "Max": 1940.1107221189113
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.2065,
+            "Median": 0.42735,
+            "P95": 0.5287,
+            "Max": 1.9861
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 0,
+      "Writers": 4,
+      "Bursts": 3,
+      "OperationsPerBurst": 800,
+      "WallMs": {
+        "N": 3,
+        "Min": 155.6515,
+        "Median": 158.4557,
+        "P95": 175.1545,
+        "Max": 175.1545
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 147.0157,
+        "Median": 150.483,
+        "P95": 165.2442,
+        "Max": 165.2442
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 4567.396213057615,
+        "Median": 5048.729708050893,
+        "P95": 5139.687057304299,
+        "Max": 5139.687057304299
+      },
+      "Roles": [
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 0.245,
+            "Median": 0.65595,
+            "P95": 0.7867,
+            "Max": 20.5647
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 1,
+      "Writers": 0,
+      "Bursts": 3,
+      "OperationsPerBurst": 200,
+      "WallMs": {
+        "N": 3,
+        "Min": 193.2859,
+        "Median": 205.9322,
+        "P95": 210.7345,
+        "Max": 210.7345
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 193.2859,
+        "Median": 205.9322,
+        "P95": 210.7345,
+        "Max": 210.7345
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 949.0614968123397,
+        "Median": 971.1934316245832,
+        "P95": 1034.7366258997681,
+        "Max": 1034.7366258997681
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.7871,
+            "Median": 0.8937999999999999,
+            "P95": 1.1192,
+            "Max": 7.4098
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 3,
+      "Writers": 1,
+      "Bursts": 3,
+      "OperationsPerBurst": 800,
+      "WallMs": {
+        "N": 3,
+        "Min": 213.817,
+        "Median": 222.5522,
+        "P95": 224.3874,
+        "Max": 224.3874
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 109.7589,
+        "Median": 110.2324,
+        "P95": 127.8086,
+        "Max": 127.8086
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 3565.2625771322273,
+        "Median": 3594.662285971561,
+        "P95": 3741.517278794483,
+        "Max": 3741.517278794483
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 1800,
+            "Min": 0.7686,
+            "Median": 0.942,
+            "P95": 1.3393,
+            "Max": 8.292
+          },
+          "Errors": 0
+        },
+        {
+          "Role": "writer",
+          "ClientMs": {
+            "N": 600,
+            "Min": 0.2223,
+            "Median": 0.43085,
+            "P95": 0.6851,
+            "Max": 9.5913
+          },
+          "Errors": 0
+        }
+      ]
+    },
+    {
+      "Readers": 4,
+      "Writers": 0,
+      "Bursts": 3,
+      "OperationsPerBurst": 800,
+      "WallMs": {
+        "N": 3,
+        "Min": 229.0518,
+        "Median": 229.7667,
+        "P95": 238.5436,
+        "Max": 238.5436
+      },
+      "AllWorkersOverlapMs": {
+        "N": 3,
+        "Min": 203.5604,
+        "Median": 208.9778,
+        "P95": 218.3547,
+        "Max": 218.3547
+      },
+      "OperationsPerSecond": {
+        "N": 3,
+        "Min": 3353.6846094382745,
+        "Median": 3481.792618338515,
+        "P95": 3492.6597389760746,
+        "Max": 3492.6597389760746
+      },
+      "Roles": [
+        {
+          "Role": "reader",
+          "ClientMs": {
+            "N": 2400,
+            "Min": 0.7507,
+            "Median": 0.9503,
+            "P95": 1.4029,
+            "Max": 8.4984
+          },
+          "Errors": 0
+        }
+      ]
+    }
+  ],
+  "Operations": {
+    "Rollback": {
+      "Correct": true,
+      "Rows": 100
+    },
+    "RowLocks": {
+      "IndependentRowCommitted": true,
+      "ConflictingRowError": 1222,
+      "LockTimeoutMs": 250,
+      "Correct": true
+    },
+    "ReadCommitted": {
+      "Before": 0,
+      "After": 1,
+      "Correct": true
+    },
+    "RepeatableRead": {
+      "LockTimeoutMs": 250,
+      "Correct": true,
+      "ConflictingWriterBlocked": true
+    },
+    "Integrity": {
+      "Command": "DBCC CHECKDB WITH NO_INFOMSGS, ALL_ERRORMSGS, TABLERESULTS",
+      "Correct": true,
+      "DiagnosticRows": 0
+    },
+    "BackupRestore": {
+      "VerifyOnly": true,
+      "Documents": 100,
+      "Rows": 100,
+      "Checksum": true,
+      "RestoredCheckdb": true,
+      "Correct": true,
+      "ActualRestore": true
+    },
+    "Reopen": {
+      "Correct": true,
+      "Rows": 100
+    }
+  },
+  "Storage": [
+    {
+      "Shape": "n1000-p256",
+      "Relations": [
+        {
+          "name": "par_sql_sqlserver_reviewed_n1000_p256",
+          "type_desc": "ROWS",
+          "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_reviewed_n1000_p256.mdf",
+          "allocated_bytes": 8388608.0,
+          "growth": 8192,
+          "is_percent_growth": false
+        },
+        {
+          "name": "par_sql_sqlserver_reviewed_n1000_p256_log",
+          "type_desc": "LOG",
+          "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_reviewed_n1000_p256_log.ldf",
+          "allocated_bytes": 75497472.0,
+          "growth": 8192,
+          "is_percent_growth": false
+        }
+      ]
+    },
+    {
+      "Shape": "n10000-p2048",
+      "Relations": [
+        {
+          "name": "par_sql_sqlserver_reviewed_n10000_p2048",
+          "type_desc": "ROWS",
+          "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_reviewed_n10000_p2048.mdf",
+          "allocated_bytes": 209715200.0,
+          "growth": 8192,
+          "is_percent_growth": false
+        },
+        {
+          "name": "par_sql_sqlserver_reviewed_n10000_p2048_log",
+          "type_desc": "LOG",
+          "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_reviewed_n10000_p2048_log.ldf",
+          "allocated_bytes": 209715200.0,
+          "growth": 8192,
+          "is_percent_growth": false
+        }
+      ]
+    },
+    {
+      "Shape": "n10000-p256",
+      "Relations": [
+        {
+          "name": "par_sql_sqlserver_reviewed_n10000_p256",
+          "type_desc": "ROWS",
+          "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_reviewed_n10000_p256.mdf",
+          "allocated_bytes": 75497472.0,
+          "growth": 8192,
+          "is_percent_growth": false
+        },
+        {
+          "name": "par_sql_sqlserver_reviewed_n10000_p256_log",
+          "type_desc": "LOG",
+          "physical_name": "C:\\Program Files\\Microsoft SQL Server\\MSSQL17.MSSQLSERVER\\MSSQL\\DATA\\par_sql_sqlserver_reviewed_n10000_p256_log.ldf",
+          "allocated_bytes": 75497472.0,
+          "growth": 8192,
+          "is_percent_growth": false
+        }
+      ]
+    }
+  ],
+  "Monitoring": [
+    {
+      "Phase": "direct",
+      "Samples": 37,
+      "FirstUtc": "2026-11-09T07:03:44.7358883Z",
+      "LastUtc": "2026-11-09T07:04:21.2108066Z",
+      "Counters": [
+        {
+          "Path": "\\\\corv-tta-96\\memory\\available mbytes",
+          "Values": {
+            "N": 37,
+            "Min": 17290.0,
+            "Median": 17511.0,
+            "P95": 17622.0,
+            "Max": 17630.0
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 37,
+            "Min": 0.0,
+            "Median": 3.8457378984651714E-05,
+            "P95": 7.494157706093189E-05,
+            "Max": 0.001522799005681818
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 37,
+            "Min": 5.7470020925038945,
+            "Median": 12.109984556864573,
+            "P95": 18.357691322320402,
+            "Max": 18.89969029439129
+          }
+        }
+      ],
+      "Processes": [
+        {
+          "Id": 4872,
+          "Name": "pwsh",
+          "CpuSamples": 37,
+          "CpuSecondsObserved": 0.03125,
+          "PeakPrivateBytes": 328974336.0,
+          "PeakWorkingSetBytes": 432128000.0
+        },
+        {
+          "Id": 14364,
+          "Name": "pwsh",
+          "CpuSamples": 37,
+          "CpuSecondsObserved": 14.703125,
+          "PeakPrivateBytes": 348971008.0,
+          "PeakWorkingSetBytes": 447311872.0
+        },
+        {
+          "Id": 14752,
+          "Name": "pwsh",
+          "CpuSamples": 37,
+          "CpuSecondsObserved": 0.03125,
+          "PeakPrivateBytes": 48373760.0,
+          "PeakWorkingSetBytes": 128192512.0
+        },
+        {
+          "Id": 15504,
+          "Name": "Universal.Server",
+          "CpuSamples": 37,
+          "CpuSecondsObserved": 0.140625,
+          "PeakPrivateBytes": 408076288.0,
+          "PeakWorkingSetBytes": 706850816.0
+        },
+        {
+          "Id": 20168,
+          "Name": "pwsh",
+          "CpuSamples": 37,
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 44503040.0,
+          "PeakWorkingSetBytes": 113311744.0
+        },
+        {
+          "Id": 20824,
+          "Name": "sqlservr",
+          "CpuSamples": 0,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 1363906560.0,
+          "PeakWorkingSetBytes": 1050738688.0
+        },
+        {
+          "Id": 23560,
+          "Name": "pwsh",
+          "CpuSamples": 37,
+          "CpuSecondsObserved": 1.8125,
+          "PeakPrivateBytes": 61771776.0,
+          "PeakWorkingSetBytes": 132337664.0
+        }
+      ]
+    },
+    {
+      "Phase": "followup",
+      "Samples": 47,
+      "FirstUtc": "2026-11-09T07:04:59.3471879Z",
+      "LastUtc": "2026-11-09T07:05:45.8881984Z",
+      "Counters": [
+        {
+          "Path": "\\\\corv-tta-96\\memory\\available mbytes",
+          "Values": {
+            "N": 47,
+            "Min": 17079.0,
+            "Median": 17210.0,
+            "P95": 17435.0,
+            "Max": 17504.0
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 47,
+            "Min": 2.8951619870410367E-05,
+            "Median": 4.263676470588235E-05,
+            "P95": 5.1296E-05,
+            "Max": 5.809818181818182E-05
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 47,
+            "Min": 7.883288664134858,
+            "Median": 13.893019946174235,
+            "P95": 18.27160306568405,
+            "Max": 20.940724120354915
+          }
+        }
+      ],
+      "Processes": [
+        {
+          "Id": 4320,
+          "Name": "pwsh",
+          "CpuSamples": 47,
+          "CpuSecondsObserved": 12.359375,
+          "PeakPrivateBytes": 320987136.0,
+          "PeakWorkingSetBytes": 419266560.0
+        },
+        {
+          "Id": 4872,
+          "Name": "pwsh",
+          "CpuSamples": 47,
+          "CpuSecondsObserved": 0.046875,
+          "PeakPrivateBytes": 341909504.0,
+          "PeakWorkingSetBytes": 445251584.0
+        },
+        {
+          "Id": 14752,
+          "Name": "pwsh",
+          "CpuSamples": 47,
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 48373760.0,
+          "PeakWorkingSetBytes": 128196608.0
+        },
+        {
+          "Id": 15504,
+          "Name": "Universal.Server",
+          "CpuSamples": 47,
+          "CpuSecondsObserved": 11.203125,
+          "PeakPrivateBytes": 501325824.0,
+          "PeakWorkingSetBytes": 798863360.0
+        },
+        {
+          "Id": 20168,
+          "Name": "pwsh",
+          "CpuSamples": 47,
+          "CpuSecondsObserved": 0.015625,
+          "PeakPrivateBytes": 44503040.0,
+          "PeakWorkingSetBytes": 113311744.0
+        },
+        {
+          "Id": 20824,
+          "Name": "sqlservr",
+          "CpuSamples": 0,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 1369374720.0,
+          "PeakWorkingSetBytes": 1054572544.0
+        },
+        {
+          "Id": 23796,
+          "Name": "pwsh",
+          "CpuSamples": 47,
+          "CpuSecondsObserved": 1.921875,
+          "PeakPrivateBytes": 62324736.0,
+          "PeakWorkingSetBytes": 132792320.0
+        }
+      ]
+    },
+    {
+      "Phase": "concurrency",
+      "Samples": 42,
+      "FirstUtc": "2026-11-09T07:05:47.5079795Z",
+      "LastUtc": "2026-11-09T07:06:29.0874974Z",
+      "Counters": [
+        {
+          "Path": "\\\\corv-tta-96\\memory\\available mbytes",
+          "Values": {
+            "N": 42,
+            "Min": 16921.0,
+            "Median": 17117.5,
+            "P95": 17211.0,
+            "Max": 17212.0
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\physicaldisk(_total)\\avg. disk sec/transfer",
+          "Values": {
+            "N": 42,
+            "Min": 0.0,
+            "Median": 4.042418478260869E-05,
+            "P95": 5.7533333333333334E-05,
+            "Max": 7.066721162579473E-05
+          }
+        },
+        {
+          "Path": "\\\\corv-tta-96\\processor(_total)\\% processor time",
+          "Values": {
+            "N": 42,
+            "Min": 4.183849835724452,
+            "Median": 17.546192021230233,
+            "P95": 28.01905001885896,
+            "Max": 29.593893188867614
+          }
+        }
+      ],
+      "Processes": [
+        {
+          "Id": 392,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 49836032.0,
+          "PeakWorkingSetBytes": 122916864.0
+        },
+        {
+          "Id": 1900,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 49475584.0,
+          "PeakWorkingSetBytes": 122216448.0
+        },
+        {
+          "Id": 2076,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.375,
+          "PeakPrivateBytes": 48582656.0,
+          "PeakWorkingSetBytes": 121085952.0
+        },
+        {
+          "Id": 2188,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.375,
+          "PeakPrivateBytes": 49758208.0,
+          "PeakWorkingSetBytes": 123351040.0
+        },
+        {
+          "Id": 2620,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.4375,
+          "PeakPrivateBytes": 49491968.0,
+          "PeakWorkingSetBytes": 121602048.0
+        },
+        {
+          "Id": 2668,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.4375,
+          "PeakPrivateBytes": 49664000.0,
+          "PeakWorkingSetBytes": 123072512.0
+        },
+        {
+          "Id": 2880,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.375,
+          "PeakPrivateBytes": 61992960.0,
+          "PeakWorkingSetBytes": 134881280.0
+        },
+        {
+          "Id": 3220,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 40050688.0,
+          "PeakWorkingSetBytes": 109694976.0
+        },
+        {
+          "Id": 3404,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.4375,
+          "PeakPrivateBytes": 49123328.0,
+          "PeakWorkingSetBytes": 121028608.0
+        },
+        {
+          "Id": 3672,
+          "Name": "pwsh",
+          "CpuSamples": 4,
+          "CpuSecondsObserved": 0.3125,
+          "PeakPrivateBytes": 56369152.0,
+          "PeakWorkingSetBytes": 129937408.0
+        },
+        {
+          "Id": 4320,
+          "Name": "pwsh",
+          "CpuSamples": 42,
+          "CpuSecondsObserved": 4.859375,
+          "PeakPrivateBytes": 369111040.0,
+          "PeakWorkingSetBytes": 473817088.0
+        },
+        {
+          "Id": 4644,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.5,
+          "PeakPrivateBytes": 55369728.0,
+          "PeakWorkingSetBytes": 129454080.0
+        },
+        {
+          "Id": 4744,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 40337408.0,
+          "PeakWorkingSetBytes": 110104576.0
+        },
+        {
+          "Id": 4872,
+          "Name": "pwsh",
+          "CpuSamples": 42,
+          "CpuSecondsObserved": 0.015625,
+          "PeakPrivateBytes": 351121408.0,
+          "PeakWorkingSetBytes": 454017024.0
+        },
+        {
+          "Id": 6792,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 54091776.0,
+          "PeakWorkingSetBytes": 127131648.0
+        },
+        {
+          "Id": 6924,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.421875,
+          "PeakPrivateBytes": 42647552.0,
+          "PeakWorkingSetBytes": 113668096.0
+        },
+        {
+          "Id": 6964,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.25,
+          "PeakPrivateBytes": 49520640.0,
+          "PeakWorkingSetBytes": 121675776.0
+        },
+        {
+          "Id": 7652,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.375,
+          "PeakPrivateBytes": 48357376.0,
+          "PeakWorkingSetBytes": 120487936.0
+        },
+        {
+          "Id": 7884,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 48979968.0,
+          "PeakWorkingSetBytes": 120401920.0
+        },
+        {
+          "Id": 7972,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.484375,
+          "PeakPrivateBytes": 49238016.0,
+          "PeakWorkingSetBytes": 121253888.0
+        },
+        {
+          "Id": 8096,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.40625,
+          "PeakPrivateBytes": 61464576.0,
+          "PeakWorkingSetBytes": 134418432.0
+        },
+        {
+          "Id": 8176,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.25,
+          "PeakPrivateBytes": 49999872.0,
+          "PeakWorkingSetBytes": 122449920.0
+        },
+        {
+          "Id": 8768,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 49135616.0,
+          "PeakWorkingSetBytes": 121438208.0
+        },
+        {
+          "Id": 9288,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.25,
+          "PeakPrivateBytes": 42762240.0,
+          "PeakWorkingSetBytes": 113479680.0
+        },
+        {
+          "Id": 9404,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.46875,
+          "PeakPrivateBytes": 50176000.0,
+          "PeakWorkingSetBytes": 123682816.0
+        },
+        {
+          "Id": 9856,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 54599680.0,
+          "PeakWorkingSetBytes": 127696896.0
+        },
+        {
+          "Id": 9872,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.5,
+          "PeakPrivateBytes": 41734144.0,
+          "PeakWorkingSetBytes": 111984640.0
+        },
+        {
+          "Id": 11364,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.3125,
+          "PeakPrivateBytes": 49053696.0,
+          "PeakWorkingSetBytes": 121896960.0
+        },
+        {
+          "Id": 11484,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 38428672.0,
+          "PeakWorkingSetBytes": 107077632.0
+        },
+        {
+          "Id": 11652,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.328125,
+          "PeakPrivateBytes": 50823168.0,
+          "PeakWorkingSetBytes": 123789312.0
+        },
+        {
+          "Id": 12088,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.234375,
+          "PeakPrivateBytes": 49131520.0,
+          "PeakWorkingSetBytes": 121909248.0
+        },
+        {
+          "Id": 12792,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.359375,
+          "PeakPrivateBytes": 50819072.0,
+          "PeakWorkingSetBytes": 123887616.0
+        },
+        {
+          "Id": 12812,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.3125,
+          "PeakPrivateBytes": 49266688.0,
+          "PeakWorkingSetBytes": 122191872.0
+        },
+        {
+          "Id": 13264,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.46875,
+          "PeakPrivateBytes": 49414144.0,
+          "PeakWorkingSetBytes": 121856000.0
+        },
+        {
+          "Id": 13720,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 38600704.0,
+          "PeakWorkingSetBytes": 107175936.0
+        },
+        {
+          "Id": 13792,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 49618944.0,
+          "PeakWorkingSetBytes": 121593856.0
+        },
+        {
+          "Id": 14092,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 41238528.0,
+          "PeakWorkingSetBytes": 111177728.0
+        },
+        {
+          "Id": 14104,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 39100416.0,
+          "PeakWorkingSetBytes": 108515328.0
+        },
+        {
+          "Id": 14556,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 39227392.0,
+          "PeakWorkingSetBytes": 108851200.0
+        },
+        {
+          "Id": 14752,
+          "Name": "pwsh",
+          "CpuSamples": 42,
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 48373760.0,
+          "PeakWorkingSetBytes": 128196608.0
+        },
+        {
+          "Id": 14828,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.265625,
+          "PeakPrivateBytes": 49098752.0,
+          "PeakWorkingSetBytes": 121729024.0
+        },
+        {
+          "Id": 15176,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.265625,
+          "PeakPrivateBytes": 49725440.0,
+          "PeakWorkingSetBytes": 122544128.0
+        },
+        {
+          "Id": 15504,
+          "Name": "Universal.Server",
+          "CpuSamples": 42,
+          "CpuSecondsObserved": 0.328125,
+          "PeakPrivateBytes": 473313280.0,
+          "PeakWorkingSetBytes": 773808128.0
+        },
+        {
+          "Id": 19340,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 48349184.0,
+          "PeakWorkingSetBytes": 120037376.0
+        },
+        {
+          "Id": 19404,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 40321024.0,
+          "PeakWorkingSetBytes": 109723648.0
+        },
+        {
+          "Id": 19852,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.28125,
+          "PeakPrivateBytes": 49188864.0,
+          "PeakWorkingSetBytes": 122114048.0
+        },
+        {
+          "Id": 20168,
+          "Name": "pwsh",
+          "CpuSamples": 42,
+          "CpuSecondsObserved": 0.0,
+          "PeakPrivateBytes": 44503040.0,
+          "PeakWorkingSetBytes": 113311744.0
+        },
+        {
+          "Id": 20824,
+          "Name": "sqlservr",
+          "CpuSamples": 0,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 1369407488.0,
+          "PeakWorkingSetBytes": 1054838784.0
+        },
+        {
+          "Id": 21752,
+          "Name": "pwsh",
+          "CpuSamples": 5,
+          "CpuSecondsObserved": 0.15625,
+          "PeakPrivateBytes": 49283072.0,
+          "PeakWorkingSetBytes": 121745408.0
+        },
+        {
+          "Id": 22768,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.296875,
+          "PeakPrivateBytes": 49512448.0,
+          "PeakWorkingSetBytes": 122417152.0
+        },
+        {
+          "Id": 23672,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 51040256.0,
+          "PeakWorkingSetBytes": 123478016.0
+        },
+        {
+          "Id": 23752,
+          "Name": "pwsh",
+          "CpuSamples": 4,
+          "CpuSecondsObserved": 0.09375,
+          "PeakPrivateBytes": 50925568.0,
+          "PeakWorkingSetBytes": 123695104.0
+        },
+        {
+          "Id": 23916,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 39817216.0,
+          "PeakWorkingSetBytes": 109441024.0
+        },
+        {
+          "Id": 24080,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.25,
+          "PeakPrivateBytes": 42541056.0,
+          "PeakWorkingSetBytes": 113410048.0
+        },
+        {
+          "Id": 24136,
+          "Name": "pwsh",
+          "CpuSamples": 42,
+          "CpuSecondsObserved": 1.8125,
+          "PeakPrivateBytes": 63401984.0,
+          "PeakWorkingSetBytes": 133644288.0
+        },
+        {
+          "Id": 24340,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 41500672.0,
+          "PeakWorkingSetBytes": 111869952.0
+        },
+        {
+          "Id": 24384,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 41553920.0,
+          "PeakWorkingSetBytes": 112005120.0
+        },
+        {
+          "Id": 24428,
+          "Name": "pwsh",
+          "CpuSamples": 1,
+          "CpuSecondsObserved": null,
+          "PeakPrivateBytes": 41697280.0,
+          "PeakWorkingSetBytes": 111677440.0
+        },
+        {
+          "Id": 24460,
+          "Name": "pwsh",
+          "CpuSamples": 2,
+          "CpuSecondsObserved": 0.390625,
+          "PeakPrivateBytes": 41988096.0,
+          "PeakWorkingSetBytes": 112312320.0
+        }
+      ]
+    }
+  ],
+  "Limitations": [
+    "Separate warm local provider passes on the same host/storage; neither paired trials nor isolated engine speed.",
+    "At most 10,000 synthetic records, repeated ASCII x payloads. SQL Server uses uncompressed Unicode JSON text and rows; PostgreSQL uses JSONB with unusually effective TOAST compression.",
+    "SQL Server uses JSON text, typed nonpersisted computed columns and B-tree indexes; native SQL Server 2025 JSON type/JSON indexes were not measured. Corrected passes counterbalance paired index-present/absent reuse reads and warm each condition ten times; historical passes used a separate scan phase.",
+    "SQL Server document projection returns typed columns rather than constructing another JSON object in SQL; object mapping and complete fields remain inside the client boundary.",
+    "Direct outer Measure-Command clocks include helper return and connection disposal; serialization/checks follow clocks. SQLite used Stopwatch. No subtraction of harness overhead.",
+    "Memory/cache budgets and encryption differ. SQL Server defaults permit dynamic memory growth and use encrypted TCP trusting the local certificate; PostgreSQL used SSL disabled. Fresh connections include the selected authentication and TLS setup.",
+    "SQL Server/PG endpoints use pooled connections; SQLite endpoints did not. SQL Server direct new/reuse/pooled modes expose the connection choice.",
+    "Per-row writes send one prepared statement per row; OPENJSON set variants send one JSON request and commit once. Batch JSON is outside database timers and inside whole-import clocks. Work tables lack the main filter index.",
+    "Authentication and identities are recorded separately for discovery and workloads. SQL login mode uses a non-sysadmin owner of dedicated databases; Windows baseline used sysadmin. Neither is a production least-privilege service identity. No remote host, frontend, sustained capacity, cold cache, crash, PITR or HA testing.",
+    "No SQL Server endpoint concurrency. Default read committed used locks with RCSI disabled; repeatable read held shared locks. Snapshot isolation was disabled and not tested.",
+    "One-second host samples cannot attribute individual requests; sqlservr CPU values were unavailable under this diagnostic identity, so its CPU delta is null. Agent/tool activity was not isolated or given a paired SQL Server control.",
+    "Seven sequential observations per case and three measured concurrency bursts support bounded choices, not capacity or precise tail estimates."
+  ],
+  "PsuCondition": {
+    "Environments": [
+      {
+        "name": "Integrated",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "PowerShell 7",
+        "version": "7.6.5",
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      },
+      {
+        "name": "Windows PowerShell 5.1",
+        "version": null,
+        "maxRunspaces": 25,
+        "persistentRunspace": false
+      }
+    ],
+    "SystemLogLevel": "Information",
+    "HangfireWorkerCount": null,
+    "Settings": {
+      "concurrentJobLimit": 1000,
+      "maxJobMemory": 0,
+      "scriptBaseFolder": "scripts",
+      "gitSyncEnabled": false
+    },
+    "Runtime": {
+      "Harness": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.14"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App",
+            "version": "10.0.14"
+          }
+        ],
+        "rollForwardOnNoCandidateFx": 1,
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+          "System.Runtime.TieredCompilation": true,
+          "System.Runtime.TieredCompilation.QuickJit": true,
+          "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+          "System.Runtime.Loader.UseRidGraph": true,
+          "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+        }
+      },
+      "PsuJob": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.12"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App",
+            "version": "10.0.12"
+          }
+        ],
+        "rollForwardOnNoCandidateFx": 1,
+        "configProperties": {
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+          "System.Runtime.TieredCompilation": true,
+          "System.Runtime.TieredCompilation.QuickJit": true,
+          "System.Runtime.TieredCompilation.QuickJitForLoops": true,
+          "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+        }
+      },
+      "PsuServer": {
+        "tfm": "net10.0",
+        "includedFrameworks": [
+          {
+            "name": "Microsoft.NETCore.App",
+            "version": "10.0.12"
+          },
+          {
+            "name": "Microsoft.AspNetCore.App",
+            "version": "10.0.12"
+          }
+        ],
+        "configProperties": {
+          "System.GC.Server": true,
+          "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+          "System.Reflection.NullabilityInfoContext.IsSupported": true,
+          "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": true
+        }
+      }
+    },
+    "ApiSecurity": "Strict"
+  }
+}
