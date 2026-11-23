@@ -18,8 +18,10 @@ explains the split. Read `errata.md` before claiming anything about live behavio
 | Synthetic data creation | `tools/factories/` help; SDK model probes `Test-IntuneDeviceModel.ps1`, `Test-EntraUserModel.ps1` |
 | Device-assignment app constraints | `dashboards/ParITInternal/README.md` |
 | Page layout templates | `dashboards/SimpleTemplates/`, `dashboards/MaterialTemplates/` |
+| Public landing page | `dashboards/ParHome/`; its test keeps links in step with `.universal/dashboards.ps1` |
 | Design-principles example | `modules/ParVolumeReport/`, `scripts/Get-VolumeSpaceReport.md` |
 | PSU Git settings and SSH keys | `tools/Invoke-GitSettingsApi.ps1`, `tools/Invoke-SshKeyApi.ps1` help |
+| Authentication and role storage on synced servers | ADR-0011 |
 | Management API schemas | Your instance's `/swagger/index.html` |
 | Experimental performance results | `tools/benchmarks/Findings.md`, `tools/benchmarks/DatabaseProviders.md` |
 | Tests, analysis and delivery | `CONTRIBUTING.md` |
@@ -45,3 +47,4 @@ requirements.
 | [0008](adr/0008-define-documentation-ownership.md) | Define documentation ownership (superseded) |
 | [0009](adr/0009-use-fixed-agent-attribution.md) | Use fixed agent attribution |
 | [0010](adr/0010-separate-agent-and-human-documentation.md) | Separate agent and human documentation |
+| [0011](adr/0011-persist-server-security-in-the-database.md) | Persist server security configuration in the database |
