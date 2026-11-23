@@ -370,6 +370,21 @@ Describe 'PAR IT Internal' {
     }
 
     Context 'PAR IT Internal failed refreshes' {
+        # A PSU server without the Graph SDK fails every refresh; the warning is the operator's only clue.
+        It 'names a missing Graph SDK module in the refresh warning' {
+            $sdkFilter = { $Name -eq 'Microsoft.Graph.DeviceManagement' -and $RequiredVersion -eq '2.41.2' }
+            Mock Import-Module -ModuleName ParData -ParameterFilter $sdkFilter {
+                throw "The specified module '$Name' with version '$RequiredVersion' was not loaded because no valid module file was found in any module directory."
+            }
+
+            $state = New-PITIDeviceAssignmentState -WarningVariable refreshWarnings -WarningAction SilentlyContinue
+
+            $state.Status | Should -BeExactly 'Failed'
+            $state.Snapshot | Should -BeNullOrEmpty
+            $refreshWarnings | Should -HaveCount 1
+            [string] $refreshWarnings[0] | Should -BeLike "Device assignment refresh failed:*'Microsoft.Graph.DeviceManagement'*'2.41.2'*"
+        }
+
         It 'returns no partial result and leaves a previous snapshot intact when <Source> is unreadable' -ForEach @(
             @{ Source = 'IntuneDevice' }
             @{ Source = 'CmdbAsset' }

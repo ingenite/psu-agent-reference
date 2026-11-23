@@ -23,6 +23,9 @@ hand. The rules belong to `ParReports` (`Get-Help Compare-ParDeviceAssignedUser
   prefix.** Import the companion without adding another prefix.
 - PSU must inject `PAR_FixturePaths` (or `*`) into the app's environment. Restart
   the app after changing modules or paths.
+- The PSU server needs the Graph SDK modules listed in the root README. Without
+  them, every refresh shows the source-failure alert. The app log warning
+  `Device assignment refresh failed` names the missing module.
 
 ## Acceptance scenarios
 

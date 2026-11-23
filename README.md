@@ -57,6 +57,13 @@ Use **PowerShell 7.4 or higher**. Module versions in the reference environment:
 | `Microsoft.PowerShell.SecretManagement` | 1.1.2 | Vault-backed AppToken access |
 | `Microsoft.PowerShell.SecretStore` | 1.0.6 | Optional local SecretStore example; other vault providers may be used |
 
+The two Graph modules are also runtime requirements on every PSU server that runs
+`ParData`. Its Intune and Entra loaders build SDK models even from fixtures, and
+Git sync does not deliver modules. Provision them in a module path the PSU process
+reads, pinned to the versions above, separately from development tooling
+(ADR-0005). When they are missing, the device-assignment pages show a source
+failure.
+
 Devolutions provides [documentation via MCP](https://docs.devolutions.net/rdm/ribbon-menu-bar/tools/all-tools/mcp-server/access-devolutions-documentation-mcp-server).
 Configure Codex with:
 
